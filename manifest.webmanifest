@@ -1,0 +1,16 @@
+{
+  "name": "Fartsteroids",
+  "short_name": "Fartsteroids",
+  "description": "Asteroids where every rock you pop lets one rip. Nine themes, 2D or 3D.",
+  "start_url": ".",
+  "scope": ".",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#14150c",
+  "theme_color": "#14150c",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
