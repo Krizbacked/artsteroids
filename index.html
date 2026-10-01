@@ -24,12 +24,8 @@ canvas{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:
 #powers{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase}
 #powers span{border:1px solid var(--accent);color:var(--accent);border-radius:999px;padding:2px 8px}
 #bossbar{position:fixed;z-index:3;top:calc(env(safe-area-inset-top,0px) + 46px);left:50%;transform:translateX(-50%);width:min(360px,60vw);text-align:center;font:400 .95rem var(--display);color:var(--danger);pointer-events:none}
-#bossbar div,#gas div{height:8px;border:1px solid;border-radius:4px;overflow:hidden}
-#bossbar div{margin-top:4px}
-#bossbar i,#gas i{display:block;height:100%;width:100%;background:currentColor}
-#gas{position:fixed;z-index:3;bottom:calc(env(safe-area-inset-bottom,0px) + 20px);left:50%;transform:translateX(-50%);width:min(220px,34vw);display:flex;align-items:center;gap:8px;font:600 .7rem var(--body);letter-spacing:.12em;color:var(--accent);pointer-events:none}
-#gas div{flex:1}
-#gas.low{color:var(--danger)}
+#bossbar div{height:8px;margin-top:4px;border:1px solid;border-radius:4px;overflow:hidden}
+#bossbar i{display:block;height:100%;width:100%;background:currentColor}
 #menu{position:fixed;inset:0;z-index:5;display:flex;flex-direction:column;align-items:center;gap:14px;overflow:auto;text-align:center;padding:24px 16px;background:var(--veil);touch-action:pan-y}
 #menu>:first-child{margin-top:auto}
 #menu>:last-child{margin-bottom:auto}
@@ -62,8 +58,6 @@ body.touch .desktoponly{display:none}
 #fireBtn{right:calc(env(safe-area-inset-right,0px) + 20px);bottom:calc(env(safe-area-inset-bottom,0px) + 22px);width:92px;height:92px}
 #thrustBtn{right:calc(env(safe-area-inset-right,0px) + 124px);bottom:calc(env(safe-area-inset-bottom,0px) + 30px);width:72px;height:72px}
 body:not(.is3d) #thrustBtn{display:none!important}
-body.touch #gas{top:calc(env(safe-area-inset-top,0px) + 40px);bottom:auto;width:min(170px,28vw)}
-body.touch #bossbar{top:calc(env(safe-area-inset-top,0px) + 62px)}
 body.touch #nextTheme{width:min(160px,30vw);padding:4px 8px 6px;font-size:.85rem}
 body.touch #pauseBtn{width:44px;height:44px;font-size:1rem}
 #rotate{position:fixed;inset:0;z-index:9;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;padding:24px;background:var(--bg);color:var(--fg);font:400 1.2rem var(--display)}
@@ -86,7 +80,6 @@ body.touch #pauseBtn{width:44px;height:44px;font-size:1rem}
   <p class="keys desktoponly">Esc or P to resume · T changes the theme</p>
 </div>
 <div id="bossbar" hidden><span id="bossName"></span><div><i></i></div></div>
-<div id="gas" hidden><span id="fuel">GAS</span><div><i></i></div></div>
 <div id="rotate"><p>Turn your phone sideways for the best view.</p><button class="opt" id="portraitOK">Play anyway</button></div>
 <div id="menu">
   <h1 id="title">Fartsteroids</h1>
@@ -131,7 +124,7 @@ document.body.classList.toggle("touch",touchUI);
 // Nothing carries over between them (only Fartsteroids has farts). They swap any time with T, or the Theme button.
 const MAJOR=[0,2,4,5,7,9,11,12];
 const THEMES={
-  classic:{title:"Fartsteroids",unlock:0,fuel:"GAS",tagline:"Shoot the rocks. Big rocks let out long, deep farts and small ones squeak. Pop them fast to play a tune.",
+  classic:{title:"Fartsteroids",unlock:0,tagline:"Shoot the rocks. Big rocks let out long, deep farts and small ones squeak. Pop them fast to play a tune.",
     css:{bg:"#14150c",fg:"#ecebd4",dim:"#8d8f6a",accent:"#b9cc3a",rock:"#c9b98a",veil:"rgb(0 0 0 / .62)",display:'"Bagel Fat One","Arial Black",sans-serif'},
     faces:true,rock:"plain",icons:"fart",pickup:"#8dff6a",combo:"FART",boss:"Mega-Roid",bossDown:"MEGA-ROID DOWN!",ufo:"UFO!",waves:["Pebble Storm","Bean Night","The Big One"],
     names:{beans:"Beans",chili:"Chili",cabbage:"Cabbage",broccoli:"Broccoli",prune:"Prune",sbd:"Silent But Deadly"}},
@@ -418,14 +411,14 @@ function jetOff(){
 }
 
 // ---- game state. Positions are x,y,z: in 2D z stays 0 and the arena is the screen; in 3D the arena is a cube that wraps around.
-const cv=$("c"),g=cv.getContext("2d"),cv3=$("c3"),menu=$("menu"),gasEl=$("gas"),bossEl=$("bossbar");
+const cv=$("c"),g=cv.getContext("2d"),cv3=$("c3"),menu=$("menu"),bossEl=$("bossbar");
 let W=0,H=0,mode3d=false,mouseDX=0,mouseDY=0;
 const A3=1200,RS3=1.6; // 3D arena size, and how much bigger rocks are in 3D so they're easier to see and hit
 const R=[42,24,13],KIND=["big","mid","small"],MOOD=["smug","meh","scared"],POINTS=[20,50,100],keys={};
 const FOOD_TYPES=["beans","chili","cabbage","broccoli","prune","sbd"],FOODS=["beans","beans","chili","chili","cabbage","cabbage","broccoli","broccoli","sbd","sbd","prune"]; // the bomb is the rare one
 const MAXP=touchUI?450:900; // fewer particles on phones
 let ship=null,rocks=[],shots=[],parts=[],foods=[],clouds=[],floaters=[],ufo=null,boss=null,bolts=[],aimT=null;
-let score=0,lives=3,level=0,running=false,cool=0,gas=100,power={},combo=0,comboT=0,foodChance=.15,ufoTimer=0,waveDelay=0,respawn=0,rockId=0;
+let score=0,lives=3,level=0,running=false,cool=0,power={},combo=0,comboT=0,foodChance=.1,ufoTimer=0,waveDelay=0,respawn=0,rockId=0;
 let shake=0,stopFrames=0,slowFrames=0,flash=0,flashColor="#fff",invertFrames=0,lastInvert=-99,now=0,muzzleAt=-99,paused=false,relock=false,storm=0;
 const stick={on:false,id:null,ox:0,oy:0,x:0,y:0}; // touch joystick, x and y from -1 to 1
 
@@ -453,7 +446,7 @@ function rock(x,y,z,s,o={}){
   return{x,y,z,s,r:R[s]*(o.scale||1)*(mode3d?RS3:1),id:rockId++,seed:Math.random()*99,vx:dx*sp,vy:dy*sp,vz:dz*sp,rot:Math.random()*6.28,spin:(Math.random()-.5)*.04,
     pts:Array.from({length:11},()=>.72+Math.random()*.28),veins:Array.from({length:2},()=>[Math.random()*6.28,Math.random()*6.28,Math.random()-.5])};
 }
-const food=o=>({x:o.x,y:o.y,z:o.z,vx:(o.vx||0)*.3,vy:(o.vy||0)*.3,vz:(o.vz||0)*.3,type:pick(FOODS),life:mode3d?1200:720,spin:Math.random()*6});
+const food=o=>({x:o.x,y:o.y,z:o.z,vx:(o.vx||0)*.3,vy:(o.vy||0)*.3,vz:(o.vz||0)*.3,type:pick(FOODS),life:mode3d?900:720,spin:Math.random()*6});
 function newShip(){
   if(!mode3d){ship={x:W/2,y:H/2,z:0,vx:0,vy:0,vz:0,a:-Math.PI/2,f:[0,-1,0],u:[0,0,-1],safe:120};return}
   let best=center(),room=-1; // in 3D, come back wherever there's the most room
@@ -469,12 +462,12 @@ function bossHud(){bossEl.hidden=!(boss&&running);$("bossName").textContent=them
 
 // waves: four named rock waves, then a boss every 5th
 function wave(){
-  level++;foodChance=.15;gas=Math.min(100,gas+25);
+  level++;foodChance=mode3d?.06:.1; // rare enough that each power-up is an event; 3D is lower because power-ups fly to you there
   const min=mode3d?380:180,kind=level%5,add=(n,s,o)=>{for(let i=0;i<n;i++){const p=spot(min);rocks.push(rock(p.x,p.y,p.z,s,o))}};
   if(kind===0){spawnBoss(spot(min+150));announce(theme.boss.toUpperCase());return hud()}
   if(kind===1)add(Math.min(level+2,10),0);
   if(kind===2){add(Math.min(6+level,16),2);add(2,1)}
-  if(kind===3){foodChance=.35;add(Math.min(level+1,9),0)}
+  if(kind===3){foodChance=mode3d?.18:.28;add(Math.min(level+1,9),0)}
   if(kind===4)add(Math.min((level>>1)+2,7),0,{scale:1.35,speed:.6});
   announce(kind===1?"Wave "+level:theme.waves[kind-2]);hud();
 }
@@ -496,11 +489,11 @@ function start(want3d){ // 2D and 3D are separate modes, picked here
   if(want3d&&!R3.init()){$("note").textContent="3D needs an internet connection and WebGL, so this game is in 2D.";want3d=false}
   mode3d=want3d;cv3.hidden=!want3d;document.body.classList.toggle("is3d",want3d);store.set("3d",want3d);R3.reset();paused=false;$("pause").hidden=true;
   ac.resume();if(endBus){endBus.gain.setTargetAtTime(0,ac.currentTime,.05);endBus=null} // cut off the game-over music
-  score=0;lives=3;level=0;rocks=[];shots=[];parts=[];foods=[];clouds=[];floaters=[];bolts=[];ufo=null;boss=null;power={};gas=100;combo=0;comboT=0;aimT=null;
+  score=0;lives=3;level=0;rocks=[];shots=[];parts=[];foods=[];clouds=[];floaters=[];bolts=[];ufo=null;boss=null;power={};combo=0;comboT=0;aimT=null;
   ufoTimer=900;waveDelay=0;respawn=0;stopFrames=slowFrames=flash=invertFrames=0;shake=0;
-  running=true;newShip();wave();menu.hidden=true;gasEl.hidden=false;hud();
+  running=true;newShip();wave();menu.hidden=true;hud();
 }
-function puff(o,n,spread,kind="gas"){if(touchUI)n=Math.ceil(n*.6);for(let i=0;i<n;i++){const [dx,dy,dz]=rdir(),v=Math.random()*spread;parts.push({x:o.x,y:o.y,z:o.z,vx:dx*v,vy:dy*v,vz:dz*v,r:3+Math.random()*5,life:45,max:45,kind,c:pcol(kind)})}}
+function puff(o,n,spread,kind="puff"){if(touchUI)n=Math.ceil(n*.6);for(let i=0;i<n;i++){const [dx,dy,dz]=rdir(),v=Math.random()*spread;parts.push({x:o.x,y:o.y,z:o.z,vx:dx*v,vy:dy*v,vz:dz*v,r:3+Math.random()*5,life:45,max:45,kind,c:pcol(kind)})}}
 function pcol(kind){ // particle color for the current theme
   const T=theme;if(T.mono)return T.mono;
   if(kind==="flame")return T.flame?T.flame():T.hue?`hsl(${(hue+Math.random()*60)%360|0},100%,58%)`:`hsl(${10+Math.random()*35|0},100%,55%)`;
@@ -508,7 +501,7 @@ function pcol(kind){ // particle color for the current theme
   if(T.hue)return `hsl(${(hue+Math.random()*90)%360|0},95%,62%)`;
   return T.spark?pick(T.spark):T.css.accent;
 }
-const shieldCol=()=>theme.mono||theme.shield||"#6fd16a",cloudCol=()=>theme.mono||theme.cloud||"#8fd16a",foodCol=()=>theme.mono||theme.pickup||"#8dff6a";
+const dangerCol=()=>theme.mono||(theme.light?"#c0392b":"#ff5a4f"),shieldCol=()=>theme.mono||theme.shield||"#6fd16a",cloudCol=()=>theme.mono||theme.cloud||"#8fd16a",foodCol=()=>theme.mono||theme.pickup||"#8dff6a";
 const shotCol=()=>theme.mono||(theme.bolts?"#bfe3ff":theme.hue?`hsl(${hue|0},100%,75%)`:theme.shot||theme.css.fg);
 
 // combo ladder: each quick hit plays the next note up the theme's scale and multiplies the points
@@ -554,12 +547,12 @@ function killUfo(){
 }
 function popCloud(i){const cl=clouds[i];clouds.splice(i,1);puff(cl,8,1.2);sfx("cloud")}
 function eat(f){
-  gas=Math.min(100,gas+40);sfx("eat");
+  sfx("eat");
   const msg=pickupText(f.type);
   if(mode3d)floaters.push({kind:"pickup",type:f.type,text:msg,life:130,max:130}); // 3D: a fixed spot on screen, so it's easy to read while you fly
   else floaters.push({kind:"text",x:f.x,y:f.y,z:f.z,oy:14,food:f.type,text:msg,life:80,max:80,size:16});
   if(f.type==="prune")return pruneBomb();
-  power[f.type]=f.type==="broccoli"?600:480;
+  power[f.type]=f.type==="broccoli"?400:300;
 }
 function pruneBomb(){
   kick(25);slowFrames=60;
@@ -580,7 +573,7 @@ function die(){
   puff(ship,24,2.5);kick(30);ship=null;sfx("death");lives--;power={};combo=comboT=0;aimT=null;hud();
   if(lives>0)respawn=72;
   else{
-    running=false;bank();gasEl.hidden=true;bossHud();hud();sfx("gameOver",newEndBus());if(document.pointerLockElement)document.exitPointerLock();
+    running=false;bank();bossHud();hud();sfx("gameOver",newEndBus());if(document.pointerLockElement)document.exitPointerLock();
     floaters=floaters.filter(f=>f.kind==="toast"); // don't leave wave banners behind the menu
     gameOverMsg=`Game over on wave ${level}. You scored ${score.toLocaleString()}.`;$("msg").textContent=gameOverMsg;menu.hidden=false;
   }
@@ -625,8 +618,8 @@ function update(dt){
   if(ship){
     steer(dt);
     const F=fwd(),thrust=thrustKey(),brake=mode3d&&keys.s,back=mode3d?14:10;
-    if((thrust||brake)&&gas>0){
-      const k=(thrust?.14:-.09)*dt;ship.vx+=F[0]*k;ship.vy+=F[1]*k;ship.vz+=F[2]*k;gas=Math.max(0,gas-(mode3d?.12:.2)*dt);
+    if(thrust||brake){
+      const k=(thrust?.14:-.09)*dt;ship.vx+=F[0]*k;ship.vy+=F[1]*k;ship.vz+=F[2]*k;
       if(thrust){
         const fire=!!power.chili,kind=fire?"flame":"thrust",[jx,jy,jz]=rdir(),sp=fire?3.2:2,keep=mode3d?1:0,life=mode3d?(fire?24:16):(fire?32:28); // in 3D exhaust keeps the ship's speed, so it trails behind instead of streaming into the camera
         if(Math.random()<(fire?1:.7))parts.push({x:ship.x-F[0]*back,y:ship.y-F[1]*back,z:ship.z-F[2]*back,vx:ship.vx*keep-F[0]*sp+jx*.5,vy:ship.vy*keep-F[1]*sp+jy*.5,vz:ship.vz*keep-F[2]*sp+jz*.5,
@@ -645,12 +638,13 @@ function update(dt){
       sfx(power.beans?"beans":"shot");
     }
   }
-  running&&ship&&gas>0&&thrustKey()?jetOn():jetOff();
+  running&&ship&&thrustKey()?jetOn():jetOff();
   for(const k in power)if((power[k]-=dt)<=0)delete power[k];
   if((comboT-=dt)<=0)combo=0;
 
   const mv=o=>{o.x+=o.vx*dt;o.y+=o.vy*dt;o.z+=o.vz*dt};
   for(const o of rocks){mv(o);o.rot+=o.spin*dt;wrap(o)}
+  if(mode3d&&ship&&ship.safe<=0){const k=(.001+Math.min(level,20)*.00045)*dt;for(const o of rocks){const d=delta(o,ship),l=Math.hypot(d[0],d[1],d[2]),s=Math.hypot(o.vx,o.vy,o.vz);if(l>1&&l<800){o.vx+=d[0]/l*s*k;o.vy+=d[1]/l*s*k;o.vz+=d[2]/l*s*k;const f=s/Math.hypot(o.vx,o.vy,o.vz);o.vx*=f;o.vy*=f;o.vz*=f}}} // 3D: rocks bend gently toward you (turning 5 degrees a second on wave 1 up to 35 by wave 20, same speed), never while you respawn
   for(const o of shots){mv(o);o.life-=dt;wrap(o)}
   for(const o of foods){mv(o);o.life-=dt;o.spin+=.03*dt;wrap(o)}
   for(const o of parts){mv(o);o.life-=dt;o.r+=(o.kind==="toxic"?.02:.15)*dt}
@@ -664,7 +658,7 @@ function update(dt){
     if(mode3d)wrap(b);
     else{if(b.x<b.r){b.x=b.r;b.vx=Math.abs(b.vx)}if(b.x>W-b.r){b.x=W-b.r;b.vx=-Math.abs(b.vx)}if(b.y<b.r){b.y=b.r;b.vy=Math.abs(b.vy)}if(b.y>H-b.r){b.y=H-b.r;b.vy=-Math.abs(b.vy)}}
   }
-  if(running&&level>=3&&!ufo&&(ufoTimer-=dt)<=0){spawnUfo();ufoTimer=900+Math.random()*600}
+  if(running&&level>=(mode3d?2:3)&&!ufo&&(ufoTimer-=dt)<=0){spawnUfo();ufoTimer=mode3d?600+Math.random()*400:900+Math.random()*600} // 3D saucers come sooner and more often: they're the main threat out there
   if(ufo){
     ufo.t+=dt;ufo.life-=dt;
     if(mode3d){mv(ufo);wrap(ufo)}else{ufo.x+=ufo.vx*dt;ufo.y=ufo.y0+Math.sin(ufo.t*.03)*60}
@@ -715,7 +709,7 @@ function tick(real){ // one frame of game time; real is how many 60fps frames ha
   if(waveDelay>0&&(waveDelay-=real)<=0&&running)wave();
   if(respawn>0&&(respawn-=real)<=0&&running&&!ship){
     const c=center(),clear=mode3d||(!boss||dist(c,boss)>boss.r+140)&&rocks.every(r=>dist(c,r)>r.r+120); // in 2D, wait until the middle is clear
-    if(clear){newShip();gas=100}else respawn=1;
+    if(clear)newShip();else respawn=1;
   }
   shake*=.86**real;if(flash>0)flash-=real;if(invertFrames>0)invertFrames-=real;
   if(storm>0)storm-=real;else if(theme.backdrop==="storm"&&Math.random()<.0025*real)storm=8; // distant lightning over Olympus
@@ -803,7 +797,7 @@ function drawRock(o,isBoss){ // one rock (or the boss) in the theme's style
   if(isBoss)drawCracks(o);
   if(T.faces)drawFace(g,o.x,o.y,o.r,isBoss?"angry":MOOD[o.s],faceColor());
 }
-function drawCracks(b){g.save();g.translate(b.x,b.y);g.rotate(b.rot);g.strokeStyle=theme.mono||(theme.light?"#c0392b":"#ff5a4f");g.lineWidth=2;for(const cr of b.cracks){g.beginPath();cr.forEach(([x,y],k)=>k?g.lineTo(x,y):g.moveTo(x,y));g.stroke()}g.restore()}
+function drawCracks(b){g.save();g.translate(b.x,b.y);g.rotate(b.rot);g.strokeStyle=dangerCol();g.lineWidth=2;for(const cr of b.cracks){g.beginPath();cr.forEach(([x,y],k)=>k?g.lineTo(x,y):g.moveTo(x,y));g.stroke()}g.restore()}
 
 // ---- power-up icons: six per theme, one for each power (rapid fire, flame, spread, shield, bomb, stealth trail)
 const FOOD_COL={beans:["#9b5a2e","#d9a16b"],chili:["#e5322d","#4f9e3a"],cabbage:["#9bd17a","#5f9a46"],broccoli:["#8cc46a","#2f8a3c"],prune:["#5b2a5e","#331435"],sbd:["#9fb08a","#26301f"]};
@@ -937,6 +931,11 @@ function backdrop(){ // each theme's background scenery (2D)
     g.globalAlpha=.75;g.fillStyle="#c0392b";g.fillRect(W-58,H-58,26,26)} // a brushed ink circle and a red seal
   g.restore();
 }
+function onCourse(o,reach,torus){ // 2D: will o pass within reach of the ship in the next ~0.75s (45 frames)? closest approach on straight lines, nearest wrapped copy for things that wrap
+  let dx=o.x-ship.x,dy=o.y-ship.y;if(torus){dx-=W*Math.round(dx/W);dy-=H*Math.round(dy/H)}
+  const vx=o.vx-ship.vx,vy=o.vy-ship.vy,t=Math.min(45,Math.max(0,-(dx*vx+dy*vy)/(vx*vx+vy*vy||1)));
+  return Math.hypot(dx+vx*t,dy+vy*t)<reach;
+}
 function draw2d(){
   const T=theme,C=T.css,glowAmt=(T.glow||0)*(touchUI?.5:1),glow=()=>{g.shadowBlur=glowAmt;g.shadowColor=T.rock==="neon"?"#ff3fbf":C.fg};
   g.globalAlpha=T.smear||1;g.fillStyle=C.bg;g.fillRect(0,0,W,H);g.globalAlpha=1; // Cosmic Trip only half-clears, so things smear
@@ -956,6 +955,12 @@ function draw2d(){
     g.beginPath();g.ellipse(0,0,20,7,0,0,6.28);g.fill();g.stroke();g.beginPath();g.ellipse(0,-5,9,7,0,Math.PI,0);g.stroke();
     for(let k=-1;k<=1;k++){g.fillStyle=((now/8|0)+k+2)%2?C.accent:C.fg;g.beginPath();g.arc(k*10,1,1.8,0,6.28);g.fill()}
     g.restore();
+  }
+  if(ship&&ship.safe<=0&&!power.broccoli){ // warning ring on anything about to hit you (same reach as the collision check)
+    g.strokeStyle=dangerCol();g.lineWidth=2.5;g.globalAlpha=.7+.3*Math.sin(now*.6);const p=Math.sin(now*.6)*2;
+    for(const r of rocks)if(onCourse(r,r.r*.85+9,true)){g.beginPath();g.arc(r.x,r.y,r.r+6+p,0,6.28);g.stroke()}
+    for(const o of clouds)if(onCourse(o,o.r+8,false)){g.beginPath();g.arc(o.x,o.y,o.r+6+p,0,6.28);g.stroke()}
+    g.globalAlpha=1;
   }
   g.shadowBlur=0;
   for(const p of parts){
@@ -1135,7 +1140,7 @@ const R3=(()=>{
     shipM.visible=!!ship&&!(ship.safe>0&&(ship.safe|0)%12<6);
     if(ship){
       shipM.position.set(0,0,0);gv(ship.f,Fv);gv(ship.u,Uv);Lv.crossVectors(Uv,Fv);Mx.makeBasis(Fv,Lv,Uv);shipM.quaternion.setFromRotationMatrix(Mx);
-      const S=shipM.userData,on=running&&gas>0&&thrustKey();
+      const S=shipM.userData,on=running&&thrustKey();
       bank+=((ship.yawIn||0)*.5-bank)*.12;S.body.rotation.x=bank; // lean into turns
       for(const g of S.glows){g.visible=on;if(on)g.scale.setScalar(4.5+Math.random()*3)} // small hot cores, so they don't hide the ship from the chase camera
       S.mats.glow.color.set(glowCol()).multiplyScalar(on?1:.35);
@@ -1204,10 +1209,9 @@ function render(){
 function helpHtml(){
   const T=theme,n=t=>`<b>${T.names[t]}</b>`,later=ORDER.slice(1).map(k=>`${THEMES[k].title} at ${THEMES[k].unlock.toLocaleString()}`).join(", ");
   return[`<b>Combos:</b> pop rocks within a second of each other and each pop goes up a note. The combo multiplies your points.`,
-    `<b>${T.fuel||"Fuel"}:</b> thrusting burns it. Every power-up refills 40, and each new wave adds 25.`,
     `<b>Power-ups</b> sometimes drop from popped rocks. Fly into them: ${n("beans")} rapid fire · ${n("chili")} flaming exhaust that burns rocks · ${n("cabbage")} 5-way spread shot · ${n("broccoli")} shield, rocks bounce off · ${n("prune")} pops every rock · ${n("sbd")} a trail that quietly dissolves rocks.`,
-    `<b>Saucers</b> show up from wave 3 and throw blobs at you. Shoot the blobs or dodge them. <b>${T.boss}</b> shows up every 5 waves.`,
-    `<b>Play 3D:</b> you fly through a cube of space that wraps around. Shots lock on to whatever is inside the brackets, the radar shows everything around you, the arrow points to the nearest rock, and round badges point to power-ups. Power-ups fly to you once you're close. The pause menu switches between 2D and 3D without losing your score.`,
+    `<b>Saucers</b> show up from wave 3 (wave 2 in 3D) and throw blobs at you. Shoot the blobs or dodge them. <b>${T.boss}</b> shows up every 5 waves.`,
+    `<b>Play 3D:</b> you fly through a cube of space that wraps around, and nearby rocks slowly drift toward you. Shots lock on to whatever is inside the brackets, the radar shows everything around you, the arrow points to the nearest rock, and round badges point to power-ups. Power-ups fly to you once you're close. The pause menu switches between 2D and 3D without losing your score.`,
     touchUI?`<b>Controls:</b> drag anywhere on the left half to steer. In 2D the ship turns toward your thumb, and pushing far thrusts. Hold FIRE to shoot, and in 3D hold GO to thrust. II pauses, and the pause screen has the theme button.`
       :`<b>Controls:</b> 2D: arrows turn, ↑ thrusts, Space fires. 3D: arrows or mouse steer (click the game to use the mouse), W thrusts, S brakes, Q and E roll, Space or left click fires.`,
     `<b>Themes</b> change everything: look, sounds, power-ups. Points from all your games add up to unlock them: ${later}. The card under your score shows how close the next one is, and a new theme switches on the moment you unlock it.`].map(s=>`<li>${s}</li>`).join("");
@@ -1217,7 +1221,7 @@ function setTheme(k){
   for(const [n,v] of Object.entries(theme.css))document.documentElement.style.setProperty("--"+n,v);
   document.documentElement.style.colorScheme=theme.light?"light":"dark";
   document.title=theme.title;$("title").textContent=theme.title;$("msg").textContent=gameOverMsg&&!running?gameOverMsg:theme.tagline;
-  $("help").innerHTML=helpHtml();$("fuel").textContent=(theme.fuel||"Fuel").toUpperCase();$("bossName").textContent=theme.boss;
+  $("help").innerHTML=helpHtml();$("bossName").textContent=theme.boss;
   $("scan").hidden=!theme.scan;route();$("themeBtn").textContent=$("pauseTheme").textContent="Theme: "+theme.title;
   if(jet){jetOff()} // the thruster restarts in the new theme's sound
   R3.applyTheme();
@@ -1253,15 +1257,14 @@ function quitToMenu(){
   if(running)bank();
   paused=false;$("pause").hidden=true;ac.resume();jetOff();releaseTouch();
   running=false;ship=null;boss=null;ufo=null;shots=[];clouds=[];foods=[];power={};aimT=null;floaters=floaters.filter(f=>f.kind==="toast");
-  gasEl.hidden=true;bossHud();hud();gameOverMsg="";$("msg").textContent=theme.tagline;menu.hidden=false;
+  bossHud();hud();gameOverMsg="";$("msg").textContent=theme.tagline;menu.hidden=false;
 }
-let last=0,powHtml="",gasShown=-1,filterOn=false,touchShown=false,nextShown,nextW="";
+let last=0,powHtml="",filterOn=false,touchShown=false,nextShown,nextW="";
 function frame(t){
   if(!paused)tick(Math.min((t-last)/16.67,3));last=t;render();
   const btn=$("pauseBtn");if(btn.hidden===(running&&!paused))btn.hidden=!(running&&!paused);
   const showTouch=touchUI&&running&&!paused;if(showTouch!==touchShown){touchShown=showTouch;for(const id of["stickZone","stickBase","fireBtn","thrustBtn"])$(id).hidden=!showTouch;if(!showTouch)releaseTouch()}
   if((invertFrames>0)!==filterOn){filterOn=invertFrames>0;cv.style.filter=cv3.style.filter=filterOn?"invert(1) hue-rotate(180deg)":""}
-  if(Math.round(gas)!==gasShown){gasShown=Math.round(gas);gasEl.querySelector("i").style.width=gasShown+"%";gasEl.classList.toggle("low",gas<20)}
   const html=Object.entries(power).map(([k,v])=>`<span>${foodName(k)} ${Math.ceil(v/60)}</span>`).join("");
   if(html!==powHtml)$("powers").innerHTML=powHtml=html;
   const nk=running&&ORDER.find(k=>!unlocked.has(k)),nt=$("nextTheme"); // progress to the next locked theme, dressed in that theme's own colors and font
