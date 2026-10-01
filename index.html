@@ -135,46 +135,46 @@ const THEMES={
     css:{bg:"#14150c",fg:"#ecebd4",dim:"#8d8f6a",accent:"#b9cc3a",rock:"#c9b98a",veil:"rgb(0 0 0 / .62)",display:'"Bagel Fat One","Arial Black",sans-serif'},
     faces:true,rock:"plain",icons:"fart",pickup:"#8dff6a",combo:"FART",boss:"Mega-Roid",bossDown:"MEGA-ROID DOWN!",ufo:"UFO!",waves:["Pebble Storm","Bean Night","The Big One"],
     names:{beans:"Beans",chili:"Chili",cabbage:"Cabbage",broccoli:"Broccoli",prune:"Prune",sbd:"Silent But Deadly"}},
-  rainbow:{title:"Sugar Rush",unlock:1500,tagline:"Smash the candy rocks before the sugar crash. Quick smashes ring out a tune.",
+  rainbow:{title:"Sugar Rush",unlock:2500,tagline:"Smash the candy rocks before the sugar crash. Quick smashes ring out a tune.",
     css:{bg:"#1a0f24",fg:"#fff4fb",dim:"#b49acb",accent:"#ff6ad5",rock:"#ffd36a",veil:"rgb(26 15 36 / .72)",display:'"Chewy","Bagel Fat One",cursive'},
     hue:true,trail:true,faces:true,rock:"candy",icons:"candy",backdrop:"candy",pickup:"#7df3ff",shield:"#ff6ad5",cloud:"#b6ff5c",toxic:"#ffffff",
     combo:"SWEET",boss:"King Gumball",bossDown:"GUMBALL CRUSHED!",ufo:"SOUR!",waves:["Sprinkle Shower","Candy Rain","Jawbreakers"],
     names:{beans:"Jelly Beans",chili:"Fireball Candy",cabbage:"Sprinkles",broccoli:"Bubblegum Shield",prune:"Sugar Bomb",sbd:"Glitter Trail"}},
-  crt:{title:"Vector Blaster '81",unlock:4500,tagline:"INSERT COIN. Blast the vector rocks. Fast hits chain into a combo.",
+  crt:{title:"Vector Blaster '81",unlock:7500,tagline:"INSERT COIN. Blast the vector rocks. Fast hits chain into a combo.",
     css:{bg:"#020b05",fg:"#4dff88",dim:"#1f8f47",accent:"#4dff88",rock:"#4dff88",veil:"rgb(2 11 5 / .75)",display:'"VT323",ui-monospace,monospace'},
     mono:"#4dff88",glow:10,scan:true,flicker:true,wire:true,crush:true,rock:"plain",icons:"vector",
     combo:"COMBO",boss:"MOTHERSHIP",bossDown:"MOTHERSHIP DESTROYED",ufo:"SAUCER!",waves:["ASTEROID FIELD","BONUS ROUND","HEAVY METAL"],
     names:{beans:"RAPID",chili:"FLAME",cabbage:"SPREAD",broccoli:"SHIELD",prune:"SMART BOMB",sbd:"CLOAK"}},
-  psych:{title:"Cosmic Trip",unlock:9000,tagline:"Far out. Zap the wobbling rocks and ride the vibes. Fast zaps play a groove.",
+  psych:{title:"Cosmic Trip",unlock:12500,tagline:"Far out. Zap the wobbling rocks and ride the vibes. Fast zaps play a groove.",
     css:{bg:"#0d0217",fg:"#fdf3ff",dim:"#b48ad8",accent:"#3cf2c4",rock:"#ff4fd8",veil:"rgb(13 2 23 / .7)",display:'"Monoton","Arial Black",sans-serif'},
     hue:true,smear:.14,wobble:.14,invert:true,rock:"plain",icons:"cosmic",pickup:"#ffe14d",shield:"#3cf2c4",cloud:"#ff4fd8",toxic:"#b48ad8",
     combo:"GROOVY",boss:"The Third Eye",bossDown:"THE EYE IS CLOSED",ufo:"FAR OUT!",waves:["Stardust","Magic Hour","Heavy Vibes"],
     names:{beans:"Lava Lamp",chili:"Sitar Fire",cabbage:"Kaleidoscope",broccoli:"Mind Shield",prune:"Big Bang",sbd:"Incense Trail"}},
-  zeus:{title:"Wrath of Olympus",unlock:18000,tagline:"The Titans hurl boulders at Olympus. Smite them with lightning. Swift smiting sings on the lyre.",
+  zeus:{title:"Wrath of Olympus",unlock:17500,tagline:"The Titans hurl boulders at Olympus. Smite them with lightning. Swift smiting sings on the lyre.",
     css:{bg:"#0f1726",fg:"#f5efe0",dim:"#9aa6b8",accent:"#e8c45a",rock:"#d9d3c4",veil:"rgb(15 23 38 / .7)",display:'"Cinzel",Georgia,serif'},
     marble:true,bolts:true,echo:true,thunder:true,rock:"marble",icons:"olympus",backdrop:"storm",pickup:"#ffd34d",shield:"#e8c45a",cloud:"#6b5a8a",toxic:"#8a6fb3",
     flame:()=>`hsl(${38+Math.random()*16|0},100%,60%)`,spark:["#e8c45a","#fff1a8","#f5efe0"],
     combo:"SMITE",boss:"Kronos the Titan",bossDown:"KRONOS FALLS!",ufo:"SMITTEN!",waves:["Hail of Stones","Feast of the Gods","Titans' Fall"],
     names:{beans:"Ambrosia",chili:"Prometheus' Fire",cabbage:"Golden Arrows",broccoli:"Aegis",prune:"Thunderbolt",sbd:"Hades' Mist"}},
-  abyss:{title:"Abyss",unlock:30000,tagline:"Deep down, glowing jellies drift in the dark. Pop them before they sting. Quick pops ping like sonar.",
+  abyss:{title:"Abyss",unlock:22500,tagline:"Deep down, glowing jellies drift in the dark. Pop them before they sting. Quick pops ping like sonar.",
     css:{bg:"#021421",fg:"#d8f6ff",dim:"#4f8aa3",accent:"#3fe0d0",rock:"#5ff3ff",veil:"rgb(2 20 33 / .72)",display:'"Comfortaa","Rubik",sans-serif'},
     rock:"jelly",particles:"bubble",backdrop:"rays",echo:true,muffle:true,icons:"abyss",pickup:"#ffe66b",shield:"#ffb36b",cloud:"#c86bff",toxic:"#7df9ff",shot:"#d8f6ff",
     flame:()=>`hsl(${45+Math.random()*20|0},100%,65%)`,spark:["#7df9ff","#d8f6ff","#3fe0d0"],scale:[0,2,4,7,9,12,14,16],sky:{stars:false,fog:[150,780],dust:"#9fdcff",dustSize:2.4},
     combo:"DEPTH",boss:"The Kraken",bossDown:"KRAKEN SLAIN!",ufo:"SUNK!",waves:["Bubble Swarm","Feeding Frenzy","The Deep"],
     names:{beans:"Torpedoes",chili:"Anglerfish Flame",cabbage:"Squid Ink",broccoli:"Shell Shield",prune:"Depth Charge",sbd:"Eel Trail"}},
-  haunted:{title:"Haunted Hollow",unlock:45000,tagline:"Pumpkins, tombstones and skulls rise from the fog. Smash them all. Fast smashes play the organ.",
+  haunted:{title:"Haunted Hollow",unlock:27500,tagline:"Pumpkins, tombstones and skulls rise from the fog. Smash them all. Fast smashes play the organ.",
     css:{bg:"#140b1f",fg:"#f2e7ff",dim:"#8e78a8",accent:"#ff8a1f",rock:"#ff8a1f",veil:"rgb(20 11 31 / .72)",display:'"Creepster","Bagel Fat One",cursive'},
     faces:true,rock:"spooky",backdrop:"moon",icons:"haunted",pickup:"#ffb347",shield:"#fffbe0",cloud:"#9dff6b",toxic:"#e8f0ff",shot:"#ffb347",
     flame:()=>`hsl(${150+Math.random()*30|0},90%,65%)`,spark:["#ff8a1f","#c9b6ff","#9dff6b"],scale:[0,2,3,5,7,8,11,12],sky:{obj:"moon",fog:[250,950]},
     combo:"SPOOKY",boss:"Headless Horseman",bossDown:"THE HORSEMAN RIDES NO MORE",ufo:"BOO!",waves:["Graveyard Shift","Trick or Treat","The Witching Hour"],
     names:{beans:"Candy Corn",chili:"Will-o'-Wisp",cabbage:"Bat Swarm",broccoli:"Garlic Shield",prune:"Full Moon",sbd:"Ghost Trail"}},
-  outrun:{title:"Neon Outrun",unlock:66000,tagline:"Midnight on the neon grid. Blast the polygons and keep the streak alive.",
+  outrun:{title:"Neon Outrun",unlock:32500,tagline:"Midnight on the neon grid. Blast the polygons and keep the streak alive.",
     css:{bg:"#120626",fg:"#ffe9ff",dim:"#9b6bc4",accent:"#ff3fbf",rock:"#3ff6ff",veil:"rgb(18 6 38 / .72)",display:'"Audiowide","Rubik",sans-serif'},
     rock:"neon",glow:12,backdrop:"sunset",icons:"outrun",pickup:"#fff04d",shield:"#3ff6ff",cloud:"#ff3fbf",toxic:"#b46bff",shot:"#ff3fbf",
     flame:()=>pick(["#ff3fbf","#3ff6ff","#fff04d"]),spark:["#ff3fbf","#3ff6ff","#fff04d"],scale:[0,3,5,7,10,12,15,17],sky:{obj:"sun",fog:[300,1000]},
     combo:"STREAK",boss:"The Mainframe",bossDown:"MAINFRAME OFFLINE",ufo:"HACKED!",waves:["Night Drive","Synth Storm","Heavy Traffic"],
     names:{beans:"Overdrive",chili:"Nitro",cabbage:"Laser Fan",broccoli:"Holo Shield",prune:"EMP",sbd:"Ghost Mode"}},
-  ink:{title:"Ink & Steel",unlock:90000,tagline:"Brush and blade. Cut down the ink stones. Swift strikes ring the shamisen.",
+  ink:{title:"Ink & Steel",unlock:37500,tagline:"Brush and blade. Cut down the ink stones. Swift strikes ring the shamisen.",
     css:{bg:"#efe6d2",fg:"#1b1b1b",dim:"#7d7468",accent:"#c0392b",rock:"#1b1b1b",veil:"rgb(239 230 210 / .82)",display:'"Shojumaru","Cinzel",serif'},
     light:true,rock:"ink",backdrop:"paper",icons:"ink",pickup:"#c0392b",shield:"#3c6e47",cloud:"#1b1b1b",toxic:"#8a8a8a",shot:"#1b1b1b",
     flame:()=>`hsl(${5+Math.random()*20|0},85%,50%)`,spark:["#1b1b1b","#3a3a3a","#c0392b"],scale:[0,1,5,7,8,12,13,17],sky:{stars:false,fog:[300,1100],dust:"#5a5248"},
@@ -183,7 +183,10 @@ const THEMES={
 };
 const ORDER=["classic","rainbow","crt","psych","zeus","abyss","haunted","outrun","ink"];
 const POWER_WHAT={beans:"rapid fire",chili:"flaming exhaust",cabbage:"spread shot",broccoli:"shield",prune:"pops everything",sbd:"stealth trail"};
-let theme=THEMES.classic,themeKey="classic",hue=0,unlocked=new Set(["classic",...store.get("unlocks",[]).filter(k=>THEMES[k])]); // only Fartsteroids until you score
+let theme=THEMES.classic,themeKey="classic",hue=0,unlocked=new Set(["classic",...store.get("unlocks",[]).filter(k=>THEMES[k])]);
+// themes unlock on total points: finished games are banked, so progress carries over from one game to the next
+let banked=Math.max(store.get("points",0),...[...unlocked].map(k=>THEMES[k].unlock));
+const bank=()=>{banked+=score;store.set("points",banked)};
 const foodName=t=>theme.names[t],pickupText=t=>`${foodName(t)}: ${POWER_WHAT[t]}`; // worked out when drawn, so a theme swap renames messages already on screen
 
 // ---- sound
@@ -461,7 +464,7 @@ const kick=n=>{if(!calm)shake=Math.min(shake+n,40)};
 const announce=text=>{floaters=floaters.filter(f=>f.kind!=="announce");floaters.push({kind:"announce",text,life:120,max:120})};
 const toast=text=>floaters.push({kind:"toast",text,life:180,max:180});
 function hud(){$("score").textContent=score.toLocaleString();$("wave").textContent=running?"Wave "+level:"";$("lives").textContent="▲".repeat(Math.max(lives,0))}
-function addScore(p){score+=p;hud();for(const k of ORDER){const t=THEMES[k];if(!unlocked.has(k)&&score>=t.unlock){unlocked.add(k);store.set("unlocks",[...unlocked]);setTheme(k);announce(t.title);sfx("waveClear");toast(`New theme unlocked! ${touchUI?"Switch back from the pause menu":"Press T to switch back"}`)}}}
+function addScore(p){score+=p;hud();for(const k of ORDER){const t=THEMES[k];if(!unlocked.has(k)&&banked+score>=t.unlock){unlocked.add(k);store.set("unlocks",[...unlocked]);setTheme(k);announce(t.title);sfx("waveClear");toast(`New theme unlocked! ${touchUI?"Switch back from the pause menu":"Press T to switch back"}`)}}}
 function bossHud(){bossEl.hidden=!(boss&&running);$("bossName").textContent=theme.boss;if(boss)bossEl.querySelector("i").style.width=Math.max(0,boss.hp/boss.max*100)+"%"}
 
 // waves: four named rock waves, then a boss every 5th
@@ -577,7 +580,7 @@ function die(){
   puff(ship,24,2.5);kick(30);ship=null;sfx("death");lives--;power={};combo=comboT=0;aimT=null;hud();
   if(lives>0)respawn=72;
   else{
-    running=false;gasEl.hidden=true;bossHud();hud();sfx("gameOver",newEndBus());if(document.pointerLockElement)document.exitPointerLock();
+    running=false;bank();gasEl.hidden=true;bossHud();hud();sfx("gameOver",newEndBus());if(document.pointerLockElement)document.exitPointerLock();
     floaters=floaters.filter(f=>f.kind==="toast"); // don't leave wave banners behind the menu
     gameOverMsg=`Game over on wave ${level}. You scored ${score.toLocaleString()}.`;$("msg").textContent=gameOverMsg;menu.hidden=false;
   }
@@ -1207,7 +1210,7 @@ function helpHtml(){
     `<b>Play 3D:</b> you fly through a cube of space that wraps around. Shots lock on to whatever is inside the brackets, the radar shows everything around you, the arrow points to the nearest rock, and round badges point to power-ups. Power-ups fly to you once you're close. The pause menu switches between 2D and 3D without losing your score.`,
     touchUI?`<b>Controls:</b> drag anywhere on the left half to steer. In 2D the ship turns toward your thumb, and pushing far thrusts. Hold FIRE to shoot, and in 3D hold GO to thrust. II pauses, and the pause screen has the theme button.`
       :`<b>Controls:</b> 2D: arrows turn, ↑ thrusts, Space fires. 3D: arrows or mouse steer (click the game to use the mouse), W thrusts, S brakes, Q and E roll, Space or left click fires.`,
-    `<b>Themes</b> change everything: look, sounds, power-ups. Unlock them by scoring in one game: ${later}. The card under your score shows how close the next one is, and a new theme switches on the moment you unlock it.`].map(s=>`<li>${s}</li>`).join("");
+    `<b>Themes</b> change everything: look, sounds, power-ups. Points from all your games add up to unlock them: ${later}. The card under your score shows how close the next one is, and a new theme switches on the moment you unlock it.`].map(s=>`<li>${s}</li>`).join("");
 }
 function setTheme(k){
   theme=THEMES[k];themeKey=k;
@@ -1222,7 +1225,7 @@ function setTheme(k){
 function cycleTheme(){
   const open=ORDER.filter(k=>unlocked.has(k)),next=open[(open.indexOf(themeKey)+1)%open.length],locked=ORDER.find(k=>!unlocked.has(k));
   setTheme(next);
-  $("note").textContent=locked?`Next theme: ${THEMES[locked].title}, unlocks at ${THEMES[locked].unlock.toLocaleString()} points.`:"All themes unlocked.";
+  $("note").textContent=locked?`Next theme: ${THEMES[locked].title}, ${Math.max(0,THEMES[locked].unlock-banked-(running?score:0)).toLocaleString()} points to go.`:"All themes unlocked.";
   if(running)announce(theme.title);
 }
 
@@ -1247,6 +1250,7 @@ function resume(byClick=false){
   if(byClick&&relock&&mode3d)lockMouse(); // a click can take the mouse back for steering; a key press isn't allowed to
 }
 function quitToMenu(){
+  if(running)bank();
   paused=false;$("pause").hidden=true;ac.resume();jetOff();releaseTouch();
   running=false;ship=null;boss=null;ufo=null;shots=[];clouds=[];foods=[];power={};aimT=null;floaters=floaters.filter(f=>f.kind==="toast");
   gasEl.hidden=true;bossHud();hud();gameOverMsg="";$("msg").textContent=theme.tagline;menu.hidden=false;
@@ -1261,8 +1265,9 @@ function frame(t){
   const html=Object.entries(power).map(([k,v])=>`<span>${foodName(k)} ${Math.ceil(v/60)}</span>`).join("");
   if(html!==powHtml)$("powers").innerHTML=powHtml=html;
   const nk=running&&ORDER.find(k=>!unlocked.has(k)),nt=$("nextTheme"); // progress to the next locked theme, dressed in that theme's own colors and font
-  if(nk!==nextShown){nextShown=nk;nt.hidden=!nk;if(nk){const T=THEMES[nk],C=T.css;Object.assign(nt.style,{background:C.bg,color:C.accent,borderColor:C.accent,fontFamily:C.display});nt.querySelector("small").style.color=C.dim;$("nextName").textContent=T.title;$("nextAt").textContent=T.unlock.toLocaleString()}}
-  if(nk){const w=Math.min(100,score/THEMES[nk].unlock*100).toFixed(1);if(w!==nextW){nextW=w;nt.querySelector("i").style.width=w+"%"}}
+  if(nk!==nextShown){nextShown=nk;nt.hidden=!nk;if(nk){const T=THEMES[nk],C=T.css;Object.assign(nt.style,{background:C.bg,color:C.accent,borderColor:C.accent,fontFamily:C.display});nt.querySelector("small").style.color=C.dim;$("nextName").textContent=T.title}}
+  if(nk){const need=THEMES[nk].unlock,from=THEMES[ORDER[ORDER.indexOf(nk)-1]].unlock,total=banked+score,w=Math.max(0,Math.min(100,(total-from)/(need-from)*100)).toFixed(1); // the bar runs from the last unlock to the next
+    if(w!==nextW){nextW=w;nt.querySelector("i").style.width=w+"%";$("nextAt").textContent=Math.max(0,need-total).toLocaleString()+" to go"}}
   requestAnimationFrame(frame);
 }
 
