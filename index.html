@@ -17,6 +17,10 @@ canvas{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:
 #scan{position:fixed;inset:0;z-index:2;pointer-events:none;background:repeating-linear-gradient(to bottom,rgb(0 0 0 / .3) 0 1px,transparent 1px 3px)}
 .hud{position:fixed;z-index:3;top:calc(env(safe-area-inset-top,0px) + 12px);left:calc(env(safe-area-inset-left,0px) + 16px);right:calc(env(safe-area-inset-right,0px) + 16px);display:flex;justify-content:space-between;align-items:flex-start;gap:12px;font:600 1.1rem var(--body);font-variant-numeric:tabular-nums;pointer-events:none}
 #wave{display:block;font-size:.72rem;color:var(--dim);letter-spacing:.08em;text-transform:uppercase}
+#nextTheme{margin-top:8px;width:min(200px,36vw);padding:5px 10px 7px;border:1px solid;border-radius:10px;font:400 1rem var(--display);line-height:1.15;box-shadow:0 2px 10px rgb(0 0 0 / .35)}
+#nextTheme small{display:flex;justify-content:space-between;gap:8px;font:600 .6rem var(--body);letter-spacing:.1em;text-transform:uppercase}
+#nextTheme div{height:5px;margin-top:5px;border-radius:3px;overflow:hidden;background:rgb(128 128 128 / .35)}
+#nextTheme i{display:block;height:100%;width:0;background:currentColor;transition:width .25s}
 #powers{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase}
 #powers span{border:1px solid var(--accent);color:var(--accent);border-radius:999px;padding:2px 8px}
 #bossbar{position:fixed;z-index:3;top:calc(env(safe-area-inset-top,0px) + 46px);left:50%;transform:translateX(-50%);width:min(360px,60vw);text-align:center;font:400 .95rem var(--display);color:var(--danger);pointer-events:none}
@@ -60,6 +64,7 @@ body.touch .desktoponly{display:none}
 body:not(.is3d) #thrustBtn{display:none!important}
 body.touch #gas{top:calc(env(safe-area-inset-top,0px) + 40px);bottom:auto;width:min(170px,28vw)}
 body.touch #bossbar{top:calc(env(safe-area-inset-top,0px) + 62px)}
+body.touch #nextTheme{width:min(160px,30vw);padding:4px 8px 6px;font-size:.85rem}
 body.touch #pauseBtn{width:44px;height:44px;font-size:1rem}
 #rotate{position:fixed;inset:0;z-index:9;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;padding:24px;background:var(--bg);color:var(--fg);font:400 1.2rem var(--display)}
 @media (orientation:portrait) and (max-width:700px){body.touch:not(.portraitOK) #rotate{display:flex}} /* phones only; tablets play fine upright */
@@ -68,7 +73,7 @@ body.touch #pauseBtn{width:44px;height:44px;font-size:1rem}
 <canvas id="c3" hidden></canvas>
 <canvas id="c"></canvas>
 <div id="scan" hidden></div>
-<div class="hud"><span><span id="score">0</span><span id="wave"></span></span><div id="powers"></div><span id="lives"></span></div>
+<div class="hud"><div><span id="score">0</span><span id="wave"></span><div id="nextTheme" hidden><small><span>Next theme</span><span id="nextAt"></span></small><span id="nextName"></span><div><i></i></div></div></div><div id="powers"></div><span id="lives"></span></div>
 <button id="pauseBtn" aria-label="Pause" hidden>II</button>
 <div id="stickZone" class="touchonly" hidden></div>
 <div id="stickBase" class="touchonly" hidden><div id="stickKnob"></div></div>
@@ -77,7 +82,7 @@ body.touch #pauseBtn{width:44px;height:44px;font-size:1rem}
 <div id="pause" hidden>
   <h2>Paused</h2>
   <div class="row"><button class="play" id="resume">Resume</button><button class="opt" id="quit">Back to menu</button></div>
-  <div class="row"><button class="opt" id="pauseTheme">Theme</button></div>
+  <div class="row"><button class="opt" id="modeBtn">Switch to 3D</button><button class="opt" id="pauseTheme">Theme</button></div>
   <p class="keys desktoponly">Esc or P to resume · T changes the theme</p>
 </div>
 <div id="bossbar" hidden><span id="bossName"></span><div><i></i></div></div>
@@ -456,7 +461,7 @@ const kick=n=>{if(!calm)shake=Math.min(shake+n,40)};
 const announce=text=>{floaters=floaters.filter(f=>f.kind!=="announce");floaters.push({kind:"announce",text,life:120,max:120})};
 const toast=text=>floaters.push({kind:"toast",text,life:180,max:180});
 function hud(){$("score").textContent=score.toLocaleString();$("wave").textContent=running?"Wave "+level:"";$("lives").textContent="▲".repeat(Math.max(lives,0))}
-function addScore(p){score+=p;hud();for(const k of ORDER){const t=THEMES[k];if(!unlocked.has(k)&&score>=t.unlock){unlocked.add(k);store.set("unlocks",[...unlocked]);toast(`${t.title} unlocked! ${touchUI?"Pause to switch":"Press T"}`)}}}
+function addScore(p){score+=p;hud();for(const k of ORDER){const t=THEMES[k];if(!unlocked.has(k)&&score>=t.unlock){unlocked.add(k);store.set("unlocks",[...unlocked]);setTheme(k);announce(t.title);sfx("waveClear");toast(`New theme unlocked! ${touchUI?"Switch back from the pause menu":"Press T to switch back"}`)}}}
 function bossHud(){bossEl.hidden=!(boss&&running);$("bossName").textContent=theme.boss;if(boss)bossEl.querySelector("i").style.width=Math.max(0,boss.hp/boss.max*100)+"%"}
 
 // waves: four named rock waves, then a boss every 5th
@@ -1199,10 +1204,10 @@ function helpHtml(){
     `<b>${T.fuel||"Fuel"}:</b> thrusting burns it. Every power-up refills 40, and each new wave adds 25.`,
     `<b>Power-ups</b> sometimes drop from popped rocks. Fly into them: ${n("beans")} rapid fire · ${n("chili")} flaming exhaust that burns rocks · ${n("cabbage")} 5-way spread shot · ${n("broccoli")} shield, rocks bounce off · ${n("prune")} pops every rock · ${n("sbd")} a trail that quietly dissolves rocks.`,
     `<b>Saucers</b> show up from wave 3 and throw blobs at you. Shoot the blobs or dodge them. <b>${T.boss}</b> shows up every 5 waves.`,
-    `<b>Play 3D:</b> you fly through a cube of space that wraps around. Shots lock on to whatever is inside the brackets, the radar shows everything around you, the arrow points to the nearest rock, and round badges point to power-ups. Power-ups fly to you once you're close.`,
+    `<b>Play 3D:</b> you fly through a cube of space that wraps around. Shots lock on to whatever is inside the brackets, the radar shows everything around you, the arrow points to the nearest rock, and round badges point to power-ups. Power-ups fly to you once you're close. The pause menu switches between 2D and 3D without losing your score.`,
     touchUI?`<b>Controls:</b> drag anywhere on the left half to steer. In 2D the ship turns toward your thumb, and pushing far thrusts. Hold FIRE to shoot, and in 3D hold GO to thrust. II pauses, and the pause screen has the theme button.`
       :`<b>Controls:</b> 2D: arrows turn, ↑ thrusts, Space fires. 3D: arrows or mouse steer (click the game to use the mouse), W thrusts, S brakes, Q and E roll, Space or left click fires.`,
-    `<b>Themes</b> change everything: look, sounds, power-ups. Unlock them by scoring: ${later}.`].map(s=>`<li>${s}</li>`).join("");
+    `<b>Themes</b> change everything: look, sounds, power-ups. Unlock them by scoring in one game: ${later}. The card under your score shows how close the next one is, and a new theme switches on the moment you unlock it.`].map(s=>`<li>${s}</li>`).join("");
 }
 function setTheme(k){
   theme=THEMES[k];themeKey=k;
@@ -1229,7 +1234,13 @@ function pause(fromLock=false){
   if(!running||paused)return;
   paused=true;relock=fromLock||!!document.pointerLockElement;for(const k in keys)keys[k]=false;releaseTouch();jetOff();ac.suspend();
   if(document.pointerLockElement)document.exitPointerLock();
+  $("modeBtn").textContent=mode3d?"Switch to 2D":"Switch to 3D";$("modeBtn").hidden=!mode3d&&!window.THREE; // no 3D library (offline before it was ever loaded): no 3D
   $("pause").hidden=false;$("resume").focus();
+}
+function switchMode(){ // same game in the other view: score, lives, wave and power-ups carry over, and the current wave starts over
+  const keep={score,lives,level,power};
+  appMode();start(!mode3d);
+  ({score,lives,power}=keep);level=keep.level-1;rocks=[];boss=null;wave();bossHud();
 }
 function resume(byClick=false){
   if(!paused)return;paused=false;$("pause").hidden=true;ac.resume();
@@ -1240,7 +1251,7 @@ function quitToMenu(){
   running=false;ship=null;boss=null;ufo=null;shots=[];clouds=[];foods=[];power={};aimT=null;floaters=floaters.filter(f=>f.kind==="toast");
   gasEl.hidden=true;bossHud();hud();gameOverMsg="";$("msg").textContent=theme.tagline;menu.hidden=false;
 }
-let last=0,powHtml="",gasShown=-1,filterOn=false,touchShown=false;
+let last=0,powHtml="",gasShown=-1,filterOn=false,touchShown=false,nextShown,nextW="";
 function frame(t){
   if(!paused)tick(Math.min((t-last)/16.67,3));last=t;render();
   const btn=$("pauseBtn");if(btn.hidden===(running&&!paused))btn.hidden=!(running&&!paused);
@@ -1249,6 +1260,9 @@ function frame(t){
   if(Math.round(gas)!==gasShown){gasShown=Math.round(gas);gasEl.querySelector("i").style.width=gasShown+"%";gasEl.classList.toggle("low",gas<20)}
   const html=Object.entries(power).map(([k,v])=>`<span>${foodName(k)} ${Math.ceil(v/60)}</span>`).join("");
   if(html!==powHtml)$("powers").innerHTML=powHtml=html;
+  const nk=running&&ORDER.find(k=>!unlocked.has(k)),nt=$("nextTheme"); // progress to the next locked theme, dressed in that theme's own colors and font
+  if(nk!==nextShown){nextShown=nk;nt.hidden=!nk;if(nk){const T=THEMES[nk],C=T.css;Object.assign(nt.style,{background:C.bg,color:C.accent,borderColor:C.accent,fontFamily:C.display});nt.querySelector("small").style.color=C.dim;$("nextName").textContent=T.title;$("nextAt").textContent=T.unlock.toLocaleString()}}
+  if(nk){const w=Math.min(100,score/THEMES[nk].unlock*100).toFixed(1);if(w!==nextW){nextW=w;nt.querySelector("i").style.width=w+"%"}}
   requestAnimationFrame(frame);
 }
 
@@ -1299,7 +1313,7 @@ function appMode(){ // phones: tapping Play or Resume goes full screen and holds
 const iOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1;
 if(touchUI&&iOS)$("note").textContent="No sound? Turn off silent mode on your phone.";
 
-$("pauseBtn").onclick=()=>pause();$("resume").onclick=()=>{appMode();resume(true)};$("quit").onclick=quitToMenu;$("pauseTheme").onclick=cycleTheme;
+$("pauseBtn").onclick=()=>pause();$("resume").onclick=()=>{appMode();resume(true)};$("quit").onclick=quitToMenu;$("pauseTheme").onclick=cycleTheme;$("modeBtn").onclick=switchMode;
 $("play").onclick=()=>{appMode();start(false)};$("play3d").onclick=()=>{appMode();start(true)};$("themeBtn").onclick=cycleTheme;
 
 // ---- boot
