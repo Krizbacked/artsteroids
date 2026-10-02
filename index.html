@@ -134,7 +134,7 @@ body.touch #pauseBtn{width:44px;height:44px;font-size:1rem}
 <div id="menu">
   <h1 id="title">Fartsteroids</h1>
   <p id="msg"></p>
-  <p class="keys desktoponly">2D: ← → turn · ↑ thrust · Space fire<br>3D: arrows or mouse steer · W thrust · S brake · Q/E roll · Space or left click fire<br>Esc or P pauses · T changes the theme · M music</p>
+  <p class="keys desktoponly">2D: ← → turn · ↑ thrust · Space fire<br>3D: arrows or mouse steer · W thrust · S reverse · Q/E roll · Space or left click fire<br>Esc or P pauses · T changes the theme · M music</p>
   <p class="keys touchonly">Left thumb steers (2D: push further to thrust; 3D flies forward by itself) · Right thumb: FIRE · II pauses</p>
   <div class="row"><button class="play" id="play">Play 2D</button><button class="play" id="play3d">Play 3D</button></div>
   <div class="row"><button class="opt" id="themeBtn">Theme</button><button class="opt" id="musicBtn">Music</button><button class="opt" id="skinBtn" hidden></button><button class="opt" id="trailBtn" hidden></button><button class="opt" id="talkBtn" hidden></button><button class="opt" id="bossTestBtn" hidden>Boss test (500 HP)</button></div>
@@ -806,14 +806,15 @@ const throttle=()=>keys.up&&!mode3d||keys.w||keys.boost?1:mode3d?(touchUI?.3:0):
 function update(dt){
   if(ship){
     steer(dt);
-    const F=fwd(),thrust=thrustKey(),thr=throttle(),brake=mode3d&&keys.s,back=mode3d?14:10;
-    if(thr||brake){
-      const k=(thr?.14*thr:-.09)*dt;ship.vx+=F[0]*k;ship.vy+=F[1]*k;ship.vz+=F[2]*k;
+    const F=fwd(),thrust=thrustKey(),thr=throttle(),rev=mode3d&&keys.s&&!thr,back=mode3d?14:10; // rev: 3D reverse thrust (S), at 80% of forward
+    if(thr||rev){
+      const k=(thr?.14*thr:-.11)*dt;ship.vx+=F[0]*k;ship.vy+=F[1]*k;ship.vz+=F[2]*k;
       if(thrust){
         const [jx,jy,jz]=rdir(),sp=2,keep=mode3d?1:0,life=mode3d?16:28; // in 3D exhaust keeps the ship's speed, so it trails behind instead of streaming into the camera
         if(Math.random()<.7)parts.push({x:ship.x-F[0]*back,y:ship.y-F[1]*back,z:ship.z-F[2]*back,vx:ship.vx*keep-F[0]*sp+jx*.5,vy:ship.vy*keep-F[1]*sp+jy*.5,vz:ship.vz*keep-F[2]*sp+jz*.5,
           r:(3+Math.random()*3)*(mode3d?.55:1),life,max:life,kind:"thrust",c:pcol("thrust")});
       }
+      if(rev&&Math.random()<.6){const [jx,jy,jz]=rdir();parts.push({x:ship.x+F[0]*12,y:ship.y+F[1]*12,z:ship.z+F[2]*12,vx:ship.vx+F[0]*2+jx*.4,vy:ship.vy+F[1]*2+jy*.4,vz:ship.vz+F[2]*2+jz*.4,r:(2+Math.random()*2)*.55,life:14,max:14,kind:"thrust",c:pcol("thrust")})} // reverse thrusters fire out of the nose
     }
     if(theme.trail)parts.push({x:ship.x-F[0]*8,y:ship.y-F[1]*8,z:ship.z-F[2]*8,vx:0,vy:0,vz:0,r:2.5,life:26,max:26,kind:"trail",c:`hsl(${hue|0},95%,62%)`});
     const tr=TRAILS[trailI];if(tr.c&&Math.random()<(touchUI?.45:.8)){const [jx,jy,jz]=rdir();parts.push({x:ship.x-F[0]*back,y:ship.y-F[1]*back,z:ship.z-F[2]*back,vx:jx*tr.j,vy:jy*tr.j,vz:jz*tr.j,r:tr.r*(mode3d?.8:1)*(.7+Math.random()*.6),life:tr.life,max:tr.life,kind:"trail",c:theme.mono||tr.c()})}
@@ -833,7 +834,7 @@ function update(dt){
       for(let i=0;i<power.missile.n;i++){const sp=Math.hypot(ship.vx,ship.vy,ship.vz)+(mode3d?7:5);shots.push({x:ship.x,y:ship.y,z:ship.z,vx:F[0]*sp,vy:F[1]*sp,vz:F[2]*sp,life:mode3d?150:120,sp,homing:pick(boss?[...rocks,boss]:rocks)});stats.shots++}
     }
   }
-  running&&ship&&thrustKey()?jetOn():jetOff();
+  running&&ship&&(thrustKey()||mode3d&&keys.s)?jetOn():jetOff();
   if(god)for(const k of["beans","cabbage","missile"])power[k]={t:900,n:3}; // god mode keeps every power-up topped up, fully stacked
   for(const k in power)if((power[k].t-=dt)<=0)delete power[k];
   if((comboT-=dt)<=0)combo=0;
@@ -1434,7 +1435,7 @@ function size(){const d=Math.min(devicePixelRatio||1,2);W=cv.clientWidth;H=cv.cl
 // ---- pausing: everything stops, sound included, until you resume or go back to the menu
 function pause(){
   if(!running||paused)return;
-  paused=true;mouseAt=null;mouseFire=clickQ=false;for(const k in keys)keys[k]=false;releaseTouch();jetOff();ac.suspend();
+  paused=true;mouseAt=null;mouseFire=clickQ=false;window.speechSynthesis?.cancel();for(const k in keys)keys[k]=false;releaseTouch();jetOff();ac.suspend();
   $("modeBtn").textContent=mode3d?"Switch to 2D":"Switch to 3D";$("modeBtn").hidden=!mode3d&&!window.THREE; // no 3D library (offline before it was ever loaded): no 3D
   renderPicker();$("pause").hidden=false;$("resume").focus();
 }
@@ -1447,7 +1448,7 @@ function resume(){
   if(!paused)return;paused=false;$("pause").hidden=true;ac.resume();
 }
 function quitToMenu(){
-  if(running)bank();
+  if(running)bank();window.speechSynthesis?.cancel();
   paused=false;$("pause").hidden=$("over").hidden=true;ac.resume();jetOff();releaseTouch();
   running=false;musicStop(.8);ship=null;boss=null;ufos=[];shower=null;shots=[];clouds=[];foods=[];power={};aimT=null;floaters=floaters.filter(f=>f.kind==="toast");
   bossHud();hud();menu.hidden=false;
@@ -1469,7 +1470,7 @@ function frame(t){
 
 // ---- AI edition: boss trash talk, written by Claude through the claude.ai sample capability. Anywhere else (GitHub) none of it shows.
 // One quick call per theme per visit, made on a click (Play, the toggle) or on a theme change once Claude has been allowed, so no consent prompt pops up mid-fight.
-const TALK={},TALK_KINDS=["intro","hit","low","gloat","defeat","taunt"];
+const TALK={},TALK_KINDS=["intro","hit","low","gloat","defeat","taunt"],BOSS_VOICE={classic:[.4,.9],rainbow:[1.7,1.15],crt:[.1,1.05],psych:[.8,.75],zeus:[.2,.8],abyss:[.1,.7],haunted:[.5,.8],outrun:[.7,1.2],ink:[.3,.85]}; // [pitch, rate] of each boss's voice
 let testBoss=0,talkOn=store.get("talk",true),talkOK=false,talkDead=false,talkAt=-1e9,talkTimer=0,sampleFn=null;
 window.claude?.use?.("sample").then(s=>{if(!s)return;sampleFn=s;$("talkBtn").hidden=$("bossTestBtn").hidden=false;talkBtn()}).catch(()=>{});
 function talkBtn(){const b=$("talkBtn");b.textContent=talkDead?"Boss trash talk: unavailable":"Boss trash talk: "+(talkOn?"on":"off");b.disabled=talkDead}
@@ -1488,7 +1489,8 @@ function talk(kind,cut){ // the boss says a line from this theme's set, no repea
   const t=TALK[themeKey];if(!talkOn||!t?.all||!t.all[kind].length||(!cut&&performance.now()-talkAt<4500))return;
   if(!t.q[kind]?.length)t.q[kind]=[...t.all[kind]];
   const el=$("bossTalk"),q=t.q[kind];const who=el.querySelector("b");who.textContent=theme.boss;who.hidden=!!boss; // the health bar already names a living boss
-  el.querySelector("span").textContent=q.splice(Math.random()*q.length|0,1)[0];
+  const line=q.splice(Math.random()*q.length|0,1)[0];el.querySelector("span").textContent=line;
+  if(window.speechSynthesis){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(line),[pi,ra]=BOSS_VOICE[themeKey]||[1,1];u.pitch=pi;u.rate=ra;u.lang="en-US";speechSynthesis.speak(u)} // and says it out loud
   el.hidden=false;el.classList.remove("show");void el.offsetWidth;el.classList.add("show");talkAt=performance.now();
   clearTimeout(talkTimer);talkTimer=setTimeout(()=>el.hidden=true,4200);
 }
