@@ -96,7 +96,7 @@ body.touch #pauseBtn{width:44px;height:44px;font-size:1rem}
   <p class="keys desktoponly">Esc or P to resume · T changes the theme · M music</p>
 </div>
 <div id="over" hidden>
-  <h2>Game over</h2>
+  <h2 id="overHead"></h2>
   <div><span id="overScore">0</span><span id="newBest" hidden>New best!</span></div>
   <p id="overBest"></p>
   <dl id="overStats"></dl>
@@ -114,7 +114,6 @@ body.touch #pauseBtn{width:44px;height:44px;font-size:1rem}
   <div class="row"><button class="play" id="play">Play 2D</button><button class="play" id="play3d">Play 3D</button></div>
   <div class="row"><button class="opt" id="themeBtn">Theme</button><button class="opt" id="musicBtn">Music</button><button class="opt" id="skinBtn" hidden></button><button class="opt" id="trailBtn" hidden></button></div>
   <p id="note"></p>
-  <details><summary>How to play</summary><ul id="help"></ul></details>
   <details>
     <summary>Credits</summary>
     <ul>
@@ -152,52 +151,52 @@ const MAJOR=[0,2,4,5,7,9,11,12];
 const THEMES={
   classic:{title:"Fartsteroids",unlock:0,tagline:"Shoot the rocks. Big rocks let out long, deep farts and small ones squeak. Pop them fast to play a tune.",
     css:{bg:"#14150c",fg:"#ecebd4",dim:"#8d8f6a",accent:"#b9cc3a",rock:"#c9b98a",veil:"rgb(0 0 0 / .62)",display:'"Bagel Fat One","Arial Black",sans-serif'},
-    faces:true,rock:"plain",icons:"fart",pickup:"#8dff6a",combo:"FART",boss:"Mega-Roid",bossDown:"MEGA-ROID DOWN!",ufo:"UFO!",waves:["Pebble Storm","Bean Night","The Big One","The Dutch Oven","Toot Squadron","Gale Force Toots"],
+    faces:true,rock:"plain",icons:"fart",pickup:"#8dff6a",combo:"FART",boss:"Mega-Roid",bossDown:"MEGA-ROID DOWN!",ufo:"UFO!",over:["Out of gas","Farts ripped","Best fart chain","Mega-Roids down","UFOs downed","Snacks eaten"],waves:["Pebble Storm","Bean Night","The Big One","The Dutch Oven","Toot Squadron","Gale Force Toots"],
     names:{beans:"Beans",chili:"Chili",cabbage:"Cabbage",broccoli:"Broccoli",prune:"Prune",sbd:"Silent But Deadly"}},
   rainbow:{title:"Sugar Rush",unlock:2500,tagline:"Smash the candy rocks before the sugar crash. Quick smashes ring out a tune.",
     css:{bg:"#1a0f24",fg:"#fff4fb",dim:"#b49acb",accent:"#ff6ad5",rock:"#ffd36a",veil:"rgb(26 15 36 / .72)",display:'"Chewy","Bagel Fat One",cursive'},
     hue:true,trail:true,faces:true,rock:"candy",icons:"candy",backdrop:"candy",pickup:"#7df3ff",shield:"#ff6ad5",cloud:"#b6ff5c",toxic:"#ffffff",
-    combo:"SWEET",boss:"King Gumball",bossDown:"GUMBALL CRUSHED!",ufo:"SOUR!",waves:["Sprinkle Shower","Candy Rain","Jawbreakers","Ring Pop","Sour Patrol","Pop Rocks"],
+    combo:"SWEET",boss:"King Gumball",bossDown:"GUMBALL CRUSHED!",ufo:"SOUR!",over:["Sugar crash","Candies smashed","Sweetest streak","Gumballs crushed","Sours squashed","Treats grabbed"],waves:["Sprinkle Shower","Candy Rain","Jawbreakers","Ring Pop","Sour Patrol","Pop Rocks"],
     names:{beans:"Jelly Beans",chili:"Fireball Candy",cabbage:"Sprinkles",broccoli:"Bubblegum Shield",prune:"Sugar Bomb",sbd:"Glitter Trail"}},
   crt:{title:"Vector Blaster '81",unlock:7500,tagline:"INSERT COIN. Blast the vector rocks. Fast hits chain into a combo.",
     css:{bg:"#020b05",fg:"#4dff88",dim:"#1f8f47",accent:"#4dff88",rock:"#4dff88",veil:"rgb(2 11 5 / .75)",display:'"VT323",ui-monospace,monospace'},
     mono:"#4dff88",glow:10,scan:true,flicker:true,wire:true,crush:true,rock:"plain",icons:"vector",
-    combo:"COMBO",boss:"MOTHERSHIP",bossDown:"MOTHERSHIP DESTROYED",ufo:"SAUCER!",waves:["ASTEROID FIELD","BONUS ROUND","HEAVY METAL","PINCER ATTACK","SAUCER SQUADRON","METEOR STORM"],
+    combo:"COMBO",boss:"MOTHERSHIP",bossDown:"MOTHERSHIP DESTROYED",ufo:"SAUCER!",over:["GAME OVER","ROCKS BLASTED","MAX COMBO","MOTHERSHIPS DOWN","SAUCERS SHOT","POWER-UPS"],waves:["ASTEROID FIELD","BONUS ROUND","HEAVY METAL","PINCER ATTACK","SAUCER SQUADRON","METEOR STORM"],
     names:{beans:"RAPID",chili:"FLAME",cabbage:"SPREAD",broccoli:"SHIELD",prune:"SMART BOMB",sbd:"CLOAK"}},
   psych:{title:"Cosmic Trip",unlock:12500,tagline:"Far out. Zap the wobbling rocks and ride the vibes. Fast zaps play a groove.",
     css:{bg:"#0d0217",fg:"#fdf3ff",dim:"#b48ad8",accent:"#3cf2c4",rock:"#ff4fd8",veil:"rgb(13 2 23 / .7)",display:'"Monoton","Arial Black",sans-serif'},
     hue:true,smear:.14,wobble:.14,invert:true,rock:"plain",icons:"cosmic",pickup:"#ffe14d",shield:"#3cf2c4",cloud:"#ff4fd8",toxic:"#b48ad8",
-    combo:"GROOVY",boss:"The Third Eye",bossDown:"THE EYE IS CLOSED",ufo:"FAR OUT!",waves:["Stardust","Magic Hour","Heavy Vibes","Mandala","Close Encounters","Shooting Stars"],
+    combo:"GROOVY",boss:"The Third Eye",bossDown:"THE EYE IS CLOSED",ufo:"FAR OUT!",over:["Trip's over","Rocks zapped","Grooviest run","Third Eyes closed","Saucers zapped","Vibes caught"],waves:["Stardust","Magic Hour","Heavy Vibes","Mandala","Close Encounters","Shooting Stars"],
     names:{beans:"Lava Lamp",chili:"Sitar Fire",cabbage:"Kaleidoscope",broccoli:"Mind Shield",prune:"Big Bang",sbd:"Incense Trail"}},
   zeus:{title:"Wrath of Olympus",unlock:17500,tagline:"The Titans hurl boulders at Olympus. Smite them with lightning. Swift smiting sings on the lyre.",
     css:{bg:"#0f1726",fg:"#f5efe0",dim:"#9aa6b8",accent:"#e8c45a",rock:"#d9d3c4",veil:"rgb(15 23 38 / .7)",display:'"Cinzel",Georgia,serif'},
     marble:true,bolts:true,echo:true,thunder:true,rock:"marble",icons:"olympus",backdrop:"storm",pickup:"#ffd34d",shield:"#e8c45a",cloud:"#6b5a8a",toxic:"#8a6fb3",
     flame:()=>`hsl(${38+Math.random()*16|0},100%,60%)`,spark:["#e8c45a","#fff1a8","#f5efe0"],
-    combo:"SMITE",boss:"Kronos the Titan",bossDown:"KRONOS FALLS!",ufo:"SMITTEN!",waves:["Hail of Stones","Feast of the Gods","Titans' Fall","Phalanx","The Harpies","Rain of Fire"],
+    combo:"SMITE",boss:"Kronos the Titan",bossDown:"KRONOS FALLS!",ufo:"SMITTEN!",over:["Fallen from Olympus","Boulders smitten","Mightiest smiting","Titans felled","Harpies slain","Gifts of the gods"],waves:["Hail of Stones","Feast of the Gods","Titans' Fall","Phalanx","The Harpies","Rain of Fire"],
     names:{beans:"Ambrosia",chili:"Prometheus' Fire",cabbage:"Golden Arrows",broccoli:"Aegis",prune:"Thunderbolt",sbd:"Hades' Mist"}},
   abyss:{title:"Abyss",unlock:22500,tagline:"Deep down, glowing jellies drift in the dark. Pop them before they sting. Quick pops ping like sonar.",
     css:{bg:"#021421",fg:"#d8f6ff",dim:"#4f8aa3",accent:"#3fe0d0",rock:"#5ff3ff",veil:"rgb(2 20 33 / .72)",display:'"Comfortaa","Rubik",sans-serif'},
     rock:"jelly",particles:"bubble",backdrop:"rays",echo:true,muffle:true,icons:"abyss",pickup:"#ffe66b",shield:"#ffb36b",cloud:"#c86bff",toxic:"#7df9ff",shot:"#d8f6ff",
     flame:()=>`hsl(${45+Math.random()*20|0},100%,65%)`,spark:["#7df9ff","#d8f6ff","#3fe0d0"],scale:[0,2,4,7,9,12,14,16],sky:{stars:false,fog:[150,780],dust:"#9fdcff",dustSize:2.4},
-    combo:"DEPTH",boss:"The Kraken",bossDown:"KRAKEN SLAIN!",ufo:"SUNK!",waves:["Bubble Swarm","Feeding Frenzy","The Deep","The Whirlpool","Wolf Pack","Riptide"],
+    combo:"DEPTH",boss:"The Kraken",bossDown:"KRAKEN SLAIN!",ufo:"SUNK!",over:["Lost to the deep","Jellies popped","Deepest dive","Krakens slain","Subs sunk","Treasures found"],waves:["Bubble Swarm","Feeding Frenzy","The Deep","The Whirlpool","Wolf Pack","Riptide"],
     names:{beans:"Torpedoes",chili:"Anglerfish Flame",cabbage:"Squid Ink",broccoli:"Shell Shield",prune:"Depth Charge",sbd:"Eel Trail"}},
   haunted:{title:"Haunted Hollow",unlock:27500,tagline:"Pumpkins, tombstones and skulls rise from the fog. Smash them all. Fast smashes play the organ.",
     css:{bg:"#140b1f",fg:"#f2e7ff",dim:"#8e78a8",accent:"#ff8a1f",rock:"#ff8a1f",veil:"rgb(20 11 31 / .72)",display:'"Creepster","Bagel Fat One",cursive'},
     faces:true,rock:"spooky",backdrop:"moon",icons:"haunted",pickup:"#ffb347",shield:"#fffbe0",cloud:"#9dff6b",toxic:"#e8f0ff",shot:"#ffb347",
     flame:()=>`hsl(${150+Math.random()*30|0},90%,65%)`,spark:["#ff8a1f","#c9b6ff","#9dff6b"],scale:[0,2,3,5,7,8,11,12],sky:{obj:"moon",fog:[250,950]},
-    combo:"SPOOKY",boss:"Headless Horseman",bossDown:"THE HORSEMAN RIDES NO MORE",ufo:"BOO!",waves:["Graveyard Shift","Trick or Treat","The Witching Hour","The Coven","Banshee Flight","Grave Rain"],
+    combo:"SPOOKY",boss:"Headless Horseman",bossDown:"THE HORSEMAN RIDES NO MORE",ufo:"BOO!",over:["Rest in peace","Spooks smashed","Spookiest chain","Horsemen felled","Banshees banished","Treats taken"],waves:["Graveyard Shift","Trick or Treat","The Witching Hour","The Coven","Banshee Flight","Grave Rain"],
     names:{beans:"Candy Corn",chili:"Will-o'-Wisp",cabbage:"Bat Swarm",broccoli:"Garlic Shield",prune:"Full Moon",sbd:"Ghost Trail"}},
   outrun:{title:"Neon Outrun",unlock:32500,tagline:"Midnight on the neon grid. Blast the polygons and keep the streak alive.",
     css:{bg:"#120626",fg:"#ffe9ff",dim:"#9b6bc4",accent:"#ff3fbf",rock:"#3ff6ff",veil:"rgb(18 6 38 / .72)",display:'"Audiowide","Rubik",sans-serif'},
     rock:"neon",glow:12,backdrop:"sunset",icons:"outrun",pickup:"#fff04d",shield:"#3ff6ff",cloud:"#ff3fbf",toxic:"#b46bff",shot:"#ff3fbf",
     flame:()=>pick(["#ff3fbf","#3ff6ff","#fff04d"]),spark:["#ff3fbf","#3ff6ff","#fff04d"],scale:[0,3,5,7,10,12,15,17],sky:{obj:"sun",fog:[300,1000]},
-    combo:"STREAK",boss:"The Mainframe",bossDown:"MAINFRAME OFFLINE",ufo:"HACKED!",waves:["Night Drive","Synth Storm","Heavy Traffic","Gridlock","Police Chase","Data Stream"],
+    combo:"STREAK",boss:"The Mainframe",bossDown:"MAINFRAME OFFLINE",ufo:"HACKED!",over:["Signal lost","Polygons blasted","Longest streak","Mainframes crashed","Chasers hacked","Boosts grabbed"],waves:["Night Drive","Synth Storm","Heavy Traffic","Gridlock","Police Chase","Data Stream"],
     names:{beans:"Overdrive",chili:"Nitro",cabbage:"Laser Fan",broccoli:"Holo Shield",prune:"EMP",sbd:"Ghost Mode"}},
   ink:{title:"Ink & Steel",unlock:37500,tagline:"Brush and blade. Cut down the ink stones. Swift strikes ring the shamisen.",
     css:{bg:"#efe6d2",fg:"#1b1b1b",dim:"#7d7468",accent:"#c0392b",rock:"#1b1b1b",veil:"rgb(239 230 210 / .82)",display:'"Shojumaru","Cinzel",serif'},
     light:true,rock:"ink",backdrop:"paper",icons:"ink",pickup:"#c0392b",shield:"#3c6e47",cloud:"#1b1b1b",toxic:"#8a8a8a",shot:"#1b1b1b",
     flame:()=>`hsl(${5+Math.random()*20|0},85%,50%)`,spark:["#1b1b1b","#3a3a3a","#c0392b"],scale:[0,1,5,7,8,12,13,17],sky:{stars:false,fog:[300,1100],dust:"#5a5248"},
-    combo:"STRIKE",boss:"Oni Demon",bossDown:"THE ONI IS VANQUISHED",ufo:"SLAIN!",waves:["Falling Leaves","Festival Night","Mountain Pass","Ambush","Shadow Clan","Arrow Storm"],
+    combo:"STRIKE",boss:"Oni Demon",bossDown:"THE ONI IS VANQUISHED",ufo:"SLAIN!",over:["The ink dries","Stones cut","Longest strike","Oni vanquished","Ninjas slain","Gear gathered"],waves:["Falling Leaves","Festival Night","Mountain Pass","Ambush","Shadow Clan","Arrow Storm"],
     names:{beans:"Sake",chili:"Fire Arrows",cabbage:"Shuriken Spread",broccoli:"Bamboo Shield",prune:"Divine Wind",sbd:"Smoke Bomb"}},
 };
 const ORDER=["classic","rainbow","crt","psych","zeus","abyss","haunted","outrun","ink"];
@@ -728,14 +727,18 @@ function die(){
     floaters=[];gameOver(); // no banners or toasts behind the game-over screen: it lists this game's unlocks itself
   }
 }
+function overText(){ // the heading and stat names follow the theme, also when T switches it on the game-over screen
+  const S=stats,L=theme.over,sec=S.t/60|0;$("overHead").textContent=L[0];
+  $("overStats").innerHTML=[["Wave",level],["Time",`${sec/60|0}:${String(sec%60).padStart(2,"0")}`],[L[1],S.rocks],[L[2],S.combo>1?"x"+S.combo:"-"],
+    [L[3],S.bosses],[L[4],S.ufos],[L[5],S.pows],["Accuracy",S.shots?Math.round(S.hits/S.shots*100)+"%":"-"]]
+    .map(([k,v])=>`<div><dt>${k}</dt><dd>${v.toLocaleString()}</dd></div>`).join("");
+}
 function gameOver(){ // final score, the saved best for this mode (2D and 3D apart), this game's stats and theme progress
-  const S=stats,bk=mode3d?"best3d":"best2d",prev=store.get(bk,0),nb=score>prev,sec=S.t/60|0,M=mode3d?"3D":"2D",nk=ORDER.find(k=>!unlocked.has(k)),nu=nk?THEMES[nk]:COSM.find(c=>!got.has(c.title));
+  const S=stats,bk=mode3d?"best3d":"best2d",prev=store.get(bk,0),nb=score>prev,M=mode3d?"3D":"2D",nk=ORDER.find(k=>!unlocked.has(k)),nu=nk?THEMES[nk]:COSM.find(c=>!got.has(c.title));
   if(nb)store.set(bk,score);
   $("overScore").textContent=score.toLocaleString();$("newBest").hidden=!nb;
   $("overBest").innerHTML=nb&&prev?`Old best in ${M}: <b>${prev.toLocaleString()}</b>`:`Best in ${M}: <b>${Math.max(prev,score).toLocaleString()}</b>`;
-  $("overStats").innerHTML=[["Wave",level],["Time",`${sec/60|0}:${String(sec%60).padStart(2,"0")}`],["Rocks popped",S.rocks],["Best combo",S.combo>1?"x"+S.combo:"-"],
-    ["Bosses beaten",S.bosses],["Saucers downed",S.ufos],["Power-ups",S.pows],["Accuracy",S.shots?Math.round(S.hits/S.shots*100)+"%":"-"]]
-    .map(([k,v])=>`<div><dt>${k}</dt><dd>${v.toLocaleString()}</dd></div>`).join("");
+  overText();
   $("overProg").innerHTML=`<b>+${score.toLocaleString()}</b> points banked`+(S.unl.length?` · unlocked <b>${S.unl.join(", ")}</b>`:"")
     +(nu?` · <b>${(nu.unlock-banked).toLocaleString()}</b> more for ${nu.title}`:" · everything unlocked");
   $("over").hidden=false;overAt=performance.now();$("again").focus();
@@ -1382,24 +1385,13 @@ function render(){
   else draw2d();
 }
 
-// ---- themes: switching, and the menu text that goes with them
-function helpHtml(){
-  const T=theme,n=t=>`<b>${T.names[t]}</b>`,later=ORDER.slice(1).map(k=>`${THEMES[k].title} at ${THEMES[k].unlock.toLocaleString()}`).join(", ");
-  return[`<b>Combos:</b> pop rocks within a second of each other and each pop goes up a note. The combo multiplies your points.`,
-    `<b>Power-ups</b> sometimes drop from popped rocks. Fly into them: ${n("beans")} rapid fire · ${n("chili")} flaming exhaust that burns rocks · ${n("cabbage")} 5-way spread shot · ${n("broccoli")} shield, rocks bounce off · ${n("prune")} pops every rock · ${n("sbd")} a trail that quietly dissolves rocks.`,
-    `<b>Saucers</b> show up from wave 3 (wave 2 in 3D) and throw blobs at you. Shoot the blobs or dodge them. <b>${T.boss}</b> shows up every 5 waves.`,
-    `<b>Play 3D:</b> you fly through a cube of space that wraps around, and nearby rocks slowly drift toward you. Shots lock on to whatever is inside the brackets, the radar shows everything around you, the arrow points to the nearest rock, and round badges point to power-ups. Power-ups fly to you once you're close. The pause menu switches between 2D and 3D without losing your score.`,
-    touchUI?`<b>Controls:</b> drag anywhere on the left half to steer. In 2D the ship turns toward your thumb, and pushing further thrusts harder; let go and it slows down. In 3D the ship flies forward on its own. Hold FIRE to shoot: shots lean toward the target in the brackets. Power-ups drift to you when you're close. II pauses, and the pause screen has the theme button.`
-      :`<b>Controls:</b> 2D: arrows turn, ↑ thrusts, Space fires. 3D: arrows or mouse steer (click the game to use the mouse), W thrusts, S brakes, Q and E roll, Space or left click fires.`,
-    `<b>Themes</b> change everything: look, sounds, power-ups. Points from all your games add up to unlock them: ${later}. The card under your score shows how close the next one is, and a new theme switches on the moment you unlock it.`,
-    `<b>Ships and trails</b> unlock after the themes, starting at 45,000 points: ${COSM.map(c=>c.title).join(", ")}. A new one is put on right away; change them with the Ship and Trail buttons in the menu${touchUI?" or the pause menu":""}.`].map(s=>`<li>${s}</li>`).join("");
-}
+// ---- themes: switching
 function setTheme(k){
   theme=THEMES[k];themeKey=k;
   for(const [n,v] of Object.entries(theme.css))document.documentElement.style.setProperty("--"+n,v);
   document.documentElement.style.colorScheme=theme.light?"light":"dark";
   document.title=theme.title;$("title").textContent=theme.title;$("msg").textContent=theme.tagline;
-  $("help").innerHTML=helpHtml();$("bossName").textContent=theme.boss;
+  $("bossName").textContent=theme.boss;if(!$("over").hidden)overText();
   $("scan").hidden=!theme.scan;route();$("themeBtn").textContent=$("pauseTheme").textContent="Theme: "+theme.title;
   if(song)musicPlay(); // crossfade to the new theme's track
   if(jet){jetOff()} // the thruster restarts in the new theme's sound
