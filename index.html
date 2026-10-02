@@ -555,7 +555,7 @@ const R=[42,24,13],KIND=["big","mid","small"],MOOD=["smug","meh","scared"],POINT
 const FOOD_TYPES=["beans","chili","cabbage","broccoli","prune","sbd"],FOODS=["beans","beans","chili","chili","cabbage","cabbage","broccoli","broccoli","sbd","sbd","prune"]; // the bomb is the rare one
 const MAXP=touchUI?450:900; // fewer particles on phones
 let ship=null,rocks=[],shots=[],parts=[],foods=[],clouds=[],floaters=[],ufos=[],boss=null,bolts=[],aimT=null;
-let score=0,lives=3,level=0,running=false,cool=0,power={},combo=0,comboT=0,foodChance=.1,ufoTimer=0,waveDelay=0,respawn=0,rockId=0,shower=null;
+let score=0,lives=3,level=0,running=false,cool=0,power={},combo=0,comboT=0,foodChance=.1,ufoTimer=0,waveDelay=0,respawn=0,rockId=0,shower=null,god=false;
 let shake=0,stopFrames=0,slowFrames=0,flash=0,flashColor="#fff",invertFrames=0,lastInvert=-99,now=0,muzzleAt=-99,paused=false,relock=false,storm=0;
 const stick={on:false,id:null,ox:0,oy:0,x:0,y:0}; // touch joystick, x and y from -1 to 1
 const newStats=()=>({t:0,rocks:0,combo:0,bosses:0,ufos:0,pows:0,shots:0,hits:0,unl:[]}); // this game's numbers for the game-over screen
@@ -639,7 +639,7 @@ function start(want3d){ // 2D and 3D are separate modes, picked here
   if(want3d&&!R3.init()){$("note").textContent="3D needs an internet connection and WebGL, so this game is in 2D.";want3d=false}
   mode3d=want3d;cv3.hidden=!want3d;document.body.classList.toggle("is3d",want3d);store.set("3d",want3d);R3.reset();paused=false;$("pause").hidden=true;
   ac.resume();if(endBus){endBus.gain.setTargetAtTime(0,ac.currentTime,.05);endBus=null} // cut off the game-over music
-  score=0;lives=3;level=0;rocks=[];shots=[];parts=[];foods=[];clouds=[];floaters=[];bolts=[];ufos=[];shower=null;boss=null;power={};combo=0;comboT=0;aimT=null;
+  score=0;lives=3;level=0;rocks=[];shots=[];parts=[];foods=[];clouds=[];floaters=[];bolts=[];ufos=[];shower=null;boss=null;power={};god=false;combo=0;comboT=0;aimT=null;
   ufoTimer=900;waveDelay=0;respawn=0;stopFrames=slowFrames=flash=invertFrames=0;shake=0;stats=newStats();
   running=true;newShip();wave();menu.hidden=$("over").hidden=true;hud();musicPlay();
 }
@@ -809,6 +809,7 @@ function update(dt){
     }
   }
   running&&ship&&thrustKey()?jetOn():jetOff();
+  if(god)Object.assign(power,{beans:300,chili:300,cabbage:300,sbd:300,broccoli:400}); // god mode keeps every power-up topped up
   for(const k in power)if((power[k]-=dt)<=0)delete power[k];
   if((comboT-=dt)<=0)combo=0;
 
@@ -1416,9 +1417,9 @@ function pause(fromLock=false){
   $("pause").hidden=false;$("resume").focus();
 }
 function switchMode(){ // same game in the other view: score, lives, wave and power-ups carry over, and the current wave starts over
-  const keep={score,lives,level,power,stats};
+  const keep={score,lives,level,power,stats,god};
   appMode();start(!mode3d);
-  ({score,lives,power,stats}=keep);level=keep.level-1;rocks=[];boss=null;wave();bossHud();
+  ({score,lives,power,stats,god}=keep);level=keep.level-1;rocks=[];boss=null;wave();bossHud();
 }
 function resume(byClick=false){
   if(!paused)return;paused=false;$("pause").hidden=true;ac.resume();
@@ -1436,7 +1437,7 @@ function frame(t){
   const btn=$("pauseBtn");if(btn.hidden===(running&&!paused))btn.hidden=!(running&&!paused);
   const showTouch=touchUI&&running&&!paused;if(showTouch!==touchShown){touchShown=showTouch;for(const id of["stickZone","stickBase","fireBtn"])$(id).hidden=!showTouch;if(!showTouch)releaseTouch()}
   if((invertFrames>0)!==filterOn){filterOn=invertFrames>0;cv.style.filter=cv3.style.filter=filterOn?"invert(1) hue-rotate(180deg)":""}
-  const html=Object.entries(power).map(([k,v])=>`<span>${foodName(k)} ${Math.ceil(v/60)}</span>`).join("");
+  const html=Object.entries(power).map(([k,v])=>`<span>${foodName(k)} ${god?"∞":Math.ceil(v/60)}</span>`).join("");
   if(html!==powHtml)$("powers").innerHTML=powHtml=html;
   const nk=running&&ORDER.find(k=>!unlocked.has(k)),nc=running&&!nk&&COSM.find(c=>!got.has(c.title)),nu=nk?THEMES[nk]:nc,nt=$("nextTheme"),key=nu&&nu.title+themeKey; // progress to the next locked theme (in that theme's own colors and font), then the next ship or trail
   if(key!==nextShown){nextShown=key;nt.hidden=!nu;if(nu){const C=(nk?nu:theme).css;Object.assign(nt.style,{background:C.bg,color:C.accent,borderColor:C.accent,fontFamily:C.display});nt.querySelector("small").style.color=C.dim;nt.querySelector("small span").textContent=nk?"Next theme":nc.c?"Next trail":"Next ship";$("nextName").textContent=nu.title}}
@@ -1452,6 +1453,7 @@ addEventListener("keydown",e=>{
   if(e.code==="KeyM"){if(!e.repeat)toggleMusic();return}
   if(e.code==="Escape"||e.code==="KeyP"){if(!e.repeat)paused?resume():pause();return}
   if(paused)return;
+  if(e.code==="KeyG"){if(!e.repeat&&running){god=!god;toast(god?"God mode on":"God mode off");if(god)pruneBomb()}return} // cheat: every power-up at once, for this game
   if(!running&&(e.code==="Enter"||e.code==="Space")){e.preventDefault();if(!e.repeat&&performance.now()-overAt>700)start(store.get("3d",false));return} // replays the last mode; not in the first moment of game over, so a fire key still held from playing can't skip the stats
   if(MAP[e.code]){e.preventDefault();keys[MAP[e.code]]=true}
 });
