@@ -176,55 +176,55 @@ const THEMES={
   classic:{title:"Fartsteroids",unlock:0,tagline:"Shoot the rocks. Big rocks let out long, deep farts and small ones squeak. Pop them fast to play a tune.",
     css:{bg:"#14150c",fg:"#ecebd4",dim:"#8d8f6a",accent:"#b9cc3a",rock:"#c9b98a",veil:"rgb(0 0 0 / .62)",display:'"Bagel Fat One","Arial Black",sans-serif'},
     faces:true,rock:"plain",icons:"fart",pickup:"#8dff6a",combo:"FART",boss:"Mega-Roid",bossDown:"MEGA-ROID DOWN!",ufo:"UFO!",over:["Out of gas","Farts ripped","Best fart chain","Mega-Roids down","UFOs downed","Snacks eaten"],
-    names:{beans:"Beans",chili:"Chili",cabbage:"Cabbage",broccoli:"Broccoli",prune:"Prune",sbd:"Silent But Deadly"}},
+    names:{beans:"Beans",cabbage:"Cabbage",missile:"Burrito",prune:"Prune"}},
   rainbow:{title:"Sugar Rush",unlock:2500,tagline:"Smash the candy rocks before the sugar crash. Quick smashes ring out a tune.",
     css:{bg:"#1a0f24",fg:"#fff4fb",dim:"#b49acb",accent:"#ff6ad5",rock:"#ffd36a",veil:"rgb(26 15 36 / .72)",display:'"Chewy","Bagel Fat One",cursive'},
-    hue:true,trail:true,faces:true,rock:"candy",icons:"candy",backdrop:"candy",pickup:"#7df3ff",shield:"#ff6ad5",cloud:"#b6ff5c",toxic:"#ffffff",
+    hue:true,trail:true,faces:true,rock:"candy",icons:"candy",backdrop:"candy",pickup:"#7df3ff",cloud:"#b6ff5c",
     combo:"SWEET",boss:"King Gumball",bossDown:"GUMBALL CRUSHED!",ufo:"SOUR!",over:["Sugar crash","Candies smashed","Sweetest streak","Gumballs crushed","Sours squashed","Treats grabbed"],
-    names:{beans:"Jelly Beans",chili:"Fireball Candy",cabbage:"Sprinkles",broccoli:"Bubblegum Shield",prune:"Sugar Bomb",sbd:"Glitter Trail"}},
+    names:{beans:"Jelly Beans",cabbage:"Sprinkles",missile:"Rocket Pops",prune:"Sugar Bomb"}},
   crt:{title:"Vector Blaster '81",unlock:7500,tagline:"INSERT COIN. Blast the vector rocks. Fast hits chain into a combo.",
     css:{bg:"#020b05",fg:"#4dff88",dim:"#1f8f47",accent:"#4dff88",rock:"#4dff88",veil:"rgb(2 11 5 / .75)",display:'"VT323",ui-monospace,monospace'},
     mono:"#4dff88",glow:10,scan:true,flicker:true,wire:true,crush:true,rock:"plain",icons:"vector",
     combo:"COMBO",boss:"MOTHERSHIP",bossDown:"MOTHERSHIP DESTROYED",ufo:"SAUCER!",over:["GAME OVER","ROCKS BLASTED","MAX COMBO","MOTHERSHIPS DOWN","SAUCERS SHOT","POWER-UPS"],
-    names:{beans:"RAPID",chili:"FLAME",cabbage:"SPREAD",broccoli:"SHIELD",prune:"SMART BOMB",sbd:"CLOAK"}},
+    names:{beans:"RAPID",cabbage:"SPREAD",missile:"HOMING",prune:"SMART BOMB"}},
   psych:{title:"Cosmic Trip",unlock:12500,tagline:"Far out. Zap the wobbling rocks and ride the vibes. Fast zaps play a groove.",
     css:{bg:"#0d0217",fg:"#fdf3ff",dim:"#b48ad8",accent:"#3cf2c4",rock:"#ff4fd8",veil:"rgb(13 2 23 / .7)",display:'"Monoton","Arial Black",sans-serif'},
-    hue:true,smear:.14,wobble:.14,invert:true,rock:"plain",icons:"cosmic",pickup:"#ffe14d",shield:"#3cf2c4",cloud:"#ff4fd8",toxic:"#b48ad8",
+    hue:true,smear:.14,wobble:.14,invert:true,rock:"plain",icons:"cosmic",pickup:"#ffe14d",cloud:"#ff4fd8",
     combo:"GROOVY",boss:"The Third Eye",bossDown:"THE EYE IS CLOSED",ufo:"FAR OUT!",over:["Trip's over","Rocks zapped","Grooviest run","Third Eyes closed","Saucers zapped","Vibes caught"],
-    names:{beans:"Lava Lamp",chili:"Sitar Fire",cabbage:"Kaleidoscope",broccoli:"Mind Shield",prune:"Big Bang",sbd:"Incense Trail"}},
+    names:{beans:"Lava Lamp",cabbage:"Kaleidoscope",missile:"Shooting Stars",prune:"Big Bang"}},
   zeus:{title:"Wrath of Olympus",unlock:17500,tagline:"The Titans hurl boulders at Olympus. Smite them with lightning. Swift smiting sings on the lyre.",
     css:{bg:"#0f1726",fg:"#f5efe0",dim:"#9aa6b8",accent:"#e8c45a",rock:"#d9d3c4",veil:"rgb(15 23 38 / .7)",display:'"Cinzel",Georgia,serif'},
-    marble:true,bolts:true,echo:true,thunder:true,rock:"marble",icons:"olympus",backdrop:"storm",pickup:"#ffd34d",shield:"#e8c45a",cloud:"#6b5a8a",toxic:"#8a6fb3",
-    flame:()=>`hsl(${38+Math.random()*16|0},100%,60%)`,spark:["#e8c45a","#fff1a8","#f5efe0"],
+    marble:true,bolts:true,echo:true,thunder:true,rock:"marble",icons:"olympus",backdrop:"storm",pickup:"#ffd34d",cloud:"#6b5a8a",
+    spark:["#e8c45a","#fff1a8","#f5efe0"],
     combo:"SMITE",boss:"Kronos the Titan",bossDown:"KRONOS FALLS!",ufo:"SMITTEN!",over:["Fallen from Olympus","Boulders smitten","Mightiest smiting","Titans felled","Harpies slain","Gifts of the gods"],
-    names:{beans:"Ambrosia",chili:"Prometheus' Fire",cabbage:"Golden Arrows",broccoli:"Aegis",prune:"Thunderbolt",sbd:"Hades' Mist"}},
+    names:{beans:"Ambrosia",cabbage:"Golden Arrows",missile:"Hermes' Darts",prune:"Thunderbolt"}},
   abyss:{title:"Abyss",unlock:22500,tagline:"Deep down, glowing jellies drift in the dark. Pop them before they sting. Quick pops ping like sonar.",
     css:{bg:"#021421",fg:"#d8f6ff",dim:"#4f8aa3",accent:"#3fe0d0",rock:"#5ff3ff",veil:"rgb(2 20 33 / .72)",display:'"Comfortaa","Rubik",sans-serif'},
-    rock:"jelly",particles:"bubble",backdrop:"rays",echo:true,muffle:true,icons:"abyss",pickup:"#ffe66b",shield:"#ffb36b",cloud:"#c86bff",toxic:"#7df9ff",shot:"#d8f6ff",
-    flame:()=>`hsl(${45+Math.random()*20|0},100%,65%)`,spark:["#7df9ff","#d8f6ff","#3fe0d0"],scale:[0,2,4,7,9,12,14,16],sky:{stars:false,fog:[150,780],dust:"#9fdcff",dustSize:2.4},
+    rock:"jelly",particles:"bubble",backdrop:"rays",echo:true,muffle:true,icons:"abyss",pickup:"#ffe66b",cloud:"#c86bff",shot:"#d8f6ff",
+    spark:["#7df9ff","#d8f6ff","#3fe0d0"],scale:[0,2,4,7,9,12,14,16],sky:{stars:false,fog:[150,780],dust:"#9fdcff",dustSize:2.4},
     combo:"DEPTH",boss:"The Kraken",bossDown:"KRAKEN SLAIN!",ufo:"SUNK!",over:["Lost to the deep","Jellies popped","Deepest dive","Krakens slain","Subs sunk","Treasures found"],
-    names:{beans:"Torpedoes",chili:"Anglerfish Flame",cabbage:"Squid Ink",broccoli:"Shell Shield",prune:"Depth Charge",sbd:"Eel Trail"}},
+    names:{beans:"Torpedoes",cabbage:"Squid Ink",missile:"Piranhas",prune:"Depth Charge"}},
   haunted:{title:"Haunted Hollow",unlock:27500,tagline:"Pumpkins, tombstones and skulls rise from the fog. Smash them all. Fast smashes play the organ.",
     css:{bg:"#140b1f",fg:"#f2e7ff",dim:"#8e78a8",accent:"#ff8a1f",rock:"#ff8a1f",veil:"rgb(20 11 31 / .72)",display:'"Creepster","Bagel Fat One",cursive'},
-    faces:true,rock:"spooky",backdrop:"moon",icons:"haunted",pickup:"#ffb347",shield:"#fffbe0",cloud:"#9dff6b",toxic:"#e8f0ff",shot:"#ffb347",
-    flame:()=>`hsl(${150+Math.random()*30|0},90%,65%)`,spark:["#ff8a1f","#c9b6ff","#9dff6b"],scale:[0,2,3,5,7,8,11,12],sky:{obj:"moon",fog:[250,950]},
+    faces:true,rock:"spooky",backdrop:"moon",icons:"haunted",pickup:"#ffb347",cloud:"#9dff6b",shot:"#ffb347",
+    spark:["#ff8a1f","#c9b6ff","#9dff6b"],scale:[0,2,3,5,7,8,11,12],sky:{obj:"moon",fog:[250,950]},
     combo:"SPOOKY",boss:"Headless Horseman",bossDown:"THE HORSEMAN RIDES NO MORE",ufo:"BOO!",over:["Rest in peace","Spooks smashed","Spookiest chain","Horsemen felled","Banshees banished","Treats taken"],
-    names:{beans:"Candy Corn",chili:"Will-o'-Wisp",cabbage:"Bat Swarm",broccoli:"Garlic Shield",prune:"Full Moon",sbd:"Ghost Trail"}},
+    names:{beans:"Candy Corn",cabbage:"Bat Swarm",missile:"Will-o'-Wisps",prune:"Full Moon"}},
   outrun:{title:"Neon Outrun",unlock:32500,tagline:"Midnight on the neon grid. Blast the polygons and keep the streak alive.",
     css:{bg:"#120626",fg:"#ffe9ff",dim:"#9b6bc4",accent:"#ff3fbf",rock:"#3ff6ff",veil:"rgb(18 6 38 / .72)",display:'"Audiowide","Rubik",sans-serif'},
-    rock:"neon",glow:12,backdrop:"sunset",icons:"outrun",pickup:"#fff04d",shield:"#3ff6ff",cloud:"#ff3fbf",toxic:"#b46bff",shot:"#ff3fbf",
-    flame:()=>pick(["#ff3fbf","#3ff6ff","#fff04d"]),spark:["#ff3fbf","#3ff6ff","#fff04d"],scale:[0,3,5,7,10,12,15,17],sky:{obj:"sun",fog:[300,1000]},
+    rock:"neon",glow:12,backdrop:"sunset",icons:"outrun",pickup:"#fff04d",cloud:"#ff3fbf",shot:"#ff3fbf",
+    spark:["#ff3fbf","#3ff6ff","#fff04d"],scale:[0,3,5,7,10,12,15,17],sky:{obj:"sun",fog:[300,1000]},
     combo:"STREAK",boss:"The Mainframe",bossDown:"MAINFRAME OFFLINE",ufo:"HACKED!",over:["Signal lost","Polygons blasted","Longest streak","Mainframes crashed","Chasers hacked","Boosts grabbed"],
-    names:{beans:"Overdrive",chili:"Nitro",cabbage:"Laser Fan",broccoli:"Holo Shield",prune:"EMP",sbd:"Ghost Mode"}},
+    names:{beans:"Overdrive",cabbage:"Laser Fan",missile:"Seekers",prune:"EMP"}},
   ink:{title:"Ink & Steel",unlock:37500,tagline:"Brush and blade. Cut down the ink stones. Swift strikes ring the shamisen.",
     css:{bg:"#efe6d2",fg:"#1b1b1b",dim:"#7d7468",accent:"#c0392b",rock:"#1b1b1b",veil:"rgb(239 230 210 / .82)",display:'"Shojumaru","Cinzel",serif'},
-    light:true,rock:"ink",backdrop:"paper",icons:"ink",pickup:"#c0392b",shield:"#3c6e47",cloud:"#1b1b1b",toxic:"#8a8a8a",shot:"#1b1b1b",
-    flame:()=>`hsl(${5+Math.random()*20|0},85%,50%)`,spark:["#1b1b1b","#3a3a3a","#c0392b"],scale:[0,1,5,7,8,12,13,17],sky:{stars:false,fog:[300,1100],dust:"#5a5248"},
+    light:true,rock:"ink",backdrop:"paper",icons:"ink",pickup:"#c0392b",cloud:"#1b1b1b",shot:"#1b1b1b",
+    spark:["#1b1b1b","#3a3a3a","#c0392b"],scale:[0,1,5,7,8,12,13,17],sky:{stars:false,fog:[300,1100],dust:"#5a5248"},
     combo:"STRIKE",boss:"Oni Demon",bossDown:"THE ONI IS VANQUISHED",ufo:"SLAIN!",over:["The ink dries","Stones cut","Longest strike","Oni vanquished","Ninjas slain","Gear gathered"],
-    names:{beans:"Sake",chili:"Fire Arrows",cabbage:"Shuriken Spread",broccoli:"Bamboo Shield",prune:"Divine Wind",sbd:"Smoke Bomb"}},
+    names:{beans:"Sake",cabbage:"Shuriken Spread",missile:"Paper Cranes",prune:"Divine Wind"}},
 };
 const ORDER=["classic","rainbow","crt","psych","zeus","abyss","haunted","outrun","ink"];
-const POWER_WHAT={beans:"rapid fire",chili:"flaming exhaust",cabbage:"spread shot",broccoli:"shield",prune:"pops everything",sbd:"stealth trail"};
+const POWER_WHAT={beans:"rapid fire",cabbage:"spread shot",missile:"homing missiles",prune:"pops everything"};
 let theme=THEMES.classic,themeKey="classic",hue=0,unlocked=new Set(["classic",...store.get("unlocks",[]).filter(k=>THEMES[k])]);
 // themes unlock on total points: finished games are banked, so progress carries over from one game to the next
 let banked=Math.max(store.get("points",0),...[...unlocked].map(k=>THEMES[k].unlock));
@@ -360,13 +360,13 @@ const NOTE={big:131,mid:196,small:262},PENTA=[262,294,330,392,440,523,587,659,78
 const KITS={
   classic:{jet:{type:"bandpass",f0:350,f1:3500,q:.7,vol:.2},
     pop:(k,m)=>fart(k,m),shot:()=>{},beans:()=>toot(1.7+Math.random()*.4,.08,.25),prune:()=>play(pick(LIB.over),.85,.5,2.5), // plain shots stay silent so the pops stand out
-    eat:()=>toot(1.5,.25,.5),bounce:()=>toot(1.6,.12,.3),cloud:()=>toot(1.2,.12,.4),
+    eat:()=>toot(1.5,.25,.5),cloud:()=>toot(1.2,.12,.4),
     bossSpawn:()=>fart("big",.6,.55),bossHit:m=>fart("mid",.7*m),bossDie:()=>play(pick(LIB.over),.9,.8,4),ufo:()=>toot(.9,.1,.5),ufoDie:m=>fart("mid",1.5*m),
     death:()=>fart("big",.55),gameOver:out=>play(pick(LIB.over),1,1,0,out),waveClear:()=>[1,1.26,1.5].forEach((r,i)=>play(pick(LIB.small),r,.22,.45,master,i*.14))},
   rainbow:{jet:{type:"bandpass",f0:2500,f1:6500,q:1,lfo:[7,1800],vol:.16}, // sparkly shimmer
     pop:(k,m)=>{chimeNote(NOTE[k]*m*4,{big:.65,mid:.32,small:.14}[k]);sparkle(k==="big"?5:3,.05);tone("sine",280,900,.07,{big:.3,mid:.2,small:.12}[k])},
     shot:()=>tone("sine",2400,3400,.06,.045),beans:()=>tone("sine",2800,3800,.05,.035),eat:()=>[1047,1319,1568,2093].forEach((f,i)=>chimeNote(f,.1,{t:at(i*.06)})),
-    bounce:()=>boing(.18),cloud:()=>tone("sine",400,1400,.12,.3),prune:()=>{PENTA.forEach((f,i)=>chimeNote(f*2,.25,{t:at(i*.035)}));sparkle(10,.08)},
+    cloud:()=>tone("sine",400,1400,.12,.3),prune:()=>{PENTA.forEach((f,i)=>chimeNote(f*2,.25,{t:at(i*.035)}));sparkle(10,.08)},
     bossSpawn:()=>[659,622,587].forEach((f,i)=>chimeNote(f,.38,{t:at(i*.25)})),bossHit:m=>{boing(.15);chimeNote(330*m,.15)},
     bossDie:()=>{PENTA.forEach((f,i)=>chimeNote(f*2,.28,{t:at(i*.05)}));[523,659,784,1047].forEach(f=>chimeNote(f,.24,{t:at(.6)}))},
     ufo:()=>[1568,1319].forEach((f,i)=>chimeNote(f,.08,{t:at(i*.15)})),ufoDie:m=>{sparkle(6,.06);chimeNote(784*m,.15)},
@@ -376,7 +376,7 @@ const KITS={
   crt:{jet:{type:"lowpass",f0:500,f1:1400,q:1,rate:.3,vol:.22}, // grainy engine rumble
     pop:(k,m)=>{const b=k==="big",d=k==="mid";noise(b?.9:d?.45:.22,b?1:d?.45:.2,{f0:b?2600:4000,f1:b?120:350,rate:b?.16:d?.28:.5,q:1});if(b)chip("square",[220,165,110,82],.06,.2);chip("square",[NOTE[k]*m*4],.07,.08)},
     shot:()=>tone("square",1400,260,.08,.06),beans:()=>tone("square",1900,500,.05,.05),eat:()=>chip("square",[523,659,784,1047,1319],.045,.09),
-    bounce:()=>tone("triangle",440,170,.12,.3),cloud:()=>noise(.14,.3,{rate:.45,f0:3000,f1:500}),
+    cloud:()=>noise(.14,.3,{rate:.45,f0:3000,f1:500}),
     prune:()=>{noise(1.6,.6,{rate:.12,f0:3000,f1:70,q:1});chip("square",[880,660,440,330,220,110],.07,.12)},
     bossSpawn:()=>chip("square",[110,147,110,147,110,147],.12,.3),bossHit:m=>{noise(.3,.32,{rate:.2,f0:2000,f1:200});tone("square",130*m,55,.22,.16)},
     bossDie:()=>{noise(2,.6,{rate:.1,f0:2500,f1:60,q:1});chip("square",[262,330,392,523,659,784,1047],.08,.13,{t:at(.7)})},
@@ -387,7 +387,7 @@ const KITS={
   psych:{jet:{type:"bandpass",f0:250,f1:4000,q:2,lfo:[.7,1400],vol:.25}, // phasing whoosh
     pop:(k,m)=>{const b=k==="big",d=k==="mid",n=NOTE[k]*m;fm(n,1.5,b?7:d?5:3,b?1.3:d?.7:.4,b?.6:d?.32:.16,{slide:.55});tone("sine",n*2,n*1.5,b?.9:.5,b?.2:.12,{vib:[6,.05]})},
     shot:()=>fm(900,1.5,2,.1,.035,{slide:.6}),beans:()=>fm(1300,1.5,2,.07,.03,{slide:.6}),eat:()=>wah(2,.55),
-    bounce:()=>tone("sine",250,500,.35,.16,{vib:[14,.3]}),cloud:()=>swell(.3,.3),prune:()=>{swell(1.1,.35,{chord:[110,165,220]});fm(55,1.41,9,2.2,.4,{slide:.5,t:at(1.1)})},
+    cloud:()=>swell(.3,.3),prune:()=>{swell(1.1,.35,{chord:[110,165,220]});fm(55,1.41,9,2.2,.4,{slide:.5,t:at(1.1)})},
     bossSpawn:()=>{tone("sawtooth",65,65,2.5,.08,{attack:.5});fm(49,1.41,10,2.5,.25,{slide:.8})},bossHit:m=>fm(70*m,1.41,8,.9,.26,{slide:.7}),
     bossDie:()=>{fm(49,1.41,10,2,.45,{slide:.5});swell(1.2,.35,{chord:[131,196,262],t:at(.4)});fm(65,1.41,10,3,.45,{slide:.4,t:at(1.6)})},
     ufo:()=>tone("sine",600,1300,1,.07,{vib:[6,.04]}),ufoDie:m=>fm(1200*m,2,4,.3,.25,{slide:.4}), // theremin
@@ -396,7 +396,7 @@ const KITS={
   zeus:{jet:{type:"lowpass",f0:280,f1:1000,q:.6,lfo:[.35,250],vol:.3}, // wind, with gusts
     pop:(k,m)=>{const b=k==="big",d=k==="mid";if(b)thunderClap(2.6,.95);else if(d)thunderClap(1.1,.45);else zap(.4);pluck(NOTE[k]*m*2,b?.45:d?.35:.25,{bright:.55})},
     shot:()=>zap(.045,{f:4500}),beans:()=>zap(.035,{f:5200}),eat:()=>[392,494,587,784].forEach((f,i)=>pluck(f,.32,{t:at(i*.07)})),
-    bounce:()=>bell(520,.16,{dur:1.3}),cloud:()=>noise(.6,.35,{type:"lowpass",f0:250,f1:900,attack:.2}),prune:()=>{thunderClap(3.2,.95);zap(.45)},
+    cloud:()=>noise(.6,.35,{type:"lowpass",f0:250,f1:900,attack:.2}),prune:()=>{thunderClap(3.2,.95);zap(.45)},
     bossSpawn:()=>{choir([98,147,196],.3,2.6,{vowel:OOH});bell(49,.3,{dur:4,partials:GONG})},bossHit:m=>{thunderClap(.9,.28);bell(82*m,.16,{dur:1.6,partials:GONG})},
     bossDie:()=>{thunderClap(3,.95);choir([262,330,392],.42,3.2);PENTA.forEach((f,i)=>pluck(f,.3,{t:at(.4+i*.05)}))},
     ufo:()=>choir([147],.12,1.3,{vowel:OOH}),ufoDie:m=>{zap(.22);pluck(392*m,.35)},
@@ -406,7 +406,7 @@ const KITS={
   abyss:{jet:{type:"lowpass",f0:140,f1:420,q:.8,vol:.2,brown:true}, // deep propeller rumble
     pop:(k,m)=>{const b=k==="big",d=k==="mid";if(b){boom(70,1.2,.7);bubbles(10,.06)}else if(d){boom(110,.6,.45);bubbles(6,.05)}else bubbles(4,.09);sonar(NOTE[k]*m*4,b?.25:d?.18:.12)},
     shot:()=>noise(.12,.07,{type:"bandpass",f0:500,f1:2000,q:2}),beans:()=>bubbles(1,.05),eat:()=>[523,659,784,1047].forEach((f,i)=>tone("sine",f,f*1.5,.12,.13,{t:at(i*.06)})),
-    bounce:()=>{tone("sine",620,520,.12,.28);noise(.03,.12,{type:"highpass",f0:3000})},cloud:()=>{noise(.25,.3,{f0:600,f1:150});bubbles(3,.05)},
+    cloud:()=>{noise(.25,.3,{f0:600,f1:150});bubbles(3,.05)},
     prune:()=>{boom(45,2.5,.9);bubbles(18,.07);sonar(330,.2,{t:at(.6)})},
     bossSpawn:()=>whale(80,60,3,.45),bossHit:m=>{boom(90,.6,.4);sonar(220*m,.15)},
     bossDie:()=>{boom(40,2.8,.9);bubbles(24,.07);whale(200,400,2.5,.25,{t:at(.4)})},
@@ -417,7 +417,7 @@ const KITS={
   haunted:{jet:{type:"bandpass",f0:400,f1:1200,q:3,lfo:[.5,300],vol:.4}, // howling wind
     pop:(k,m)=>{const n=NOTE[k]*m;if(k==="big"){organ([n,n*1.19,n*1.5],.9,.55);boom(60,.8,.4)}else if(k==="mid"){wail(n*3,n*2,.5,.22);organ([n*2],.4,.28)}else{tone("sine",2600,3400,.06,.12);tone("sine",3000,2200,.06,.1,{t:at(.07)});organ([n*2],.3,.18)}},
     shot:()=>noise(.08,.06,{type:"highpass",f0:3000}),beans:()=>tone("sine",1800,2400,.04,.05),eat:()=>[659,622,587,554].forEach((f,i)=>bell(f,.12,{dur:.6,t:at(i*.09)})),
-    bounce:()=>noise(.25,.22,{type:"bandpass",f0:5000,q:1}),cloud:()=>wail(500,300,.4,.14),
+    cloud:()=>wail(500,300,.4,.14),
     prune:()=>{wail(300,900,1.2,.32);wail(900,700,1,.26,{t:at(1.2)})}, // a wolf howls at the full moon
     bossSpawn:()=>{organ([880],.12,.4);organ([784],.12,.4,{t:at(.15)});organ([880],.9,.45,{t:at(.3)});organ([147,175,220],2,.45,{t:at(1.4)})},
     bossHit:m=>{organ([110*m,165*m],.5,.38);boom(70,.4,.3)},bossDie:()=>{organ([147,175,220,294],2.5,.6);wail(700,300,1.5,.28,{t:at(.3)})},
@@ -428,7 +428,7 @@ const KITS={
   outrun:{jet:{type:"lowpass",f0:200,f1:900,q:6,vol:.07,osc:["sawtooth",55]}, // engine hum: a low saw through a resonant filter
     pop:(k,m)=>{const n=NOTE[k]*m;if(k==="big"){bassDrum(.95);snare(.45,{t:at(.02)});synth([n,n*1.5],.5,.7)}else if(k==="mid"){snare(.45);synth([n*2],.3,.5)}else{hat(.3);synth([n*4],.18,.38,{open:5000})}},
     shot:()=>laser(.06),beans:()=>laser(.045),eat:()=>[0,4,7,12].forEach((s,i)=>synth([523*2**(s/12)],.18,.2,{t:at(i*.07),open:5000})),
-    bounce:()=>fm(1200,2.5,3,.4,.15),cloud:()=>chip("square",[2000,1200,1800],.03,.1),
+    cloud:()=>chip("square",[2000,1200,1800],.03,.1),
     prune:()=>{tone("sine",1200,40,1.2,.45);noise(1,.3,{f0:3000,f1:100});bassDrum(.85,{t:at(1.1)})}, // EMP: everything powers down
     bossSpawn:()=>[55,55,65,55,82,73].forEach((f,i)=>synth([f],.22,.5,{t:at(i*.22),open:1200,close:150})),
     bossHit:m=>{snare(.32);synth([110*m],.25,.35)},bossDie:()=>{bassDrum(.9);snare(.5,{t:at(.05)});synth([131,196,262,330],2.2,.55,{open:6000,close:200,t:at(.1)})},
@@ -439,7 +439,7 @@ const KITS={
   ink:{jet:{type:"bandpass",f0:500,f1:1600,q:1.2,vol:.26}, // breathy wind
     pop:(k,m)=>{const b=k==="big",d=k==="mid";if(b){taiko(.75);swish(.2)}else if(d){taiko(.4);swish(.25)}else swish(.32);pluck(NOTE[k]*m*2,b?.42:.32,{bright:.85})}, // shamisen-bright pluck on the in scale
     shot:()=>swish(.06),beans:()=>swish(.045),eat:()=>INSEN.slice(0,5).forEach((f,i)=>pluck(f,.32,{bright:.85,t:at(i*.07)})),
-    bounce:()=>clack(.2),cloud:()=>noise(.3,.18,{f0:1200,f1:300}),
+    cloud:()=>noise(.3,.18,{f0:1200,f1:300}),
     prune:()=>{noise(1.6,.45,{type:"bandpass",f0:300,f1:2500,q:.8,attack:.4});[0,.12,.24,.36,.48].forEach(s=>taiko(.45,{t:at(s)}))}, // divine wind and a taiko roll
     bossSpawn:()=>{[0,.4,.7,.9,1.05,1.15,1.22].forEach(s=>taiko(.45,{t:at(s)}));flute(294,1.5,.22,{t:at(1.4)})},
     bossHit:m=>{taiko(.42);bell(440*m,.12,{dur:.8})},bossDie:()=>{taiko(.9);bell(110,.38,{dur:3,partials:GONG});INSEN.forEach((f,i)=>pluck(f,.3,{bright:.85,t:at(.3+i*.06)}))},
@@ -577,10 +577,10 @@ const cv=$("c"),g=cv.getContext("2d"),cv3=$("c3"),menu=$("menu"),bossEl=$("bossb
 let W=0,H=0,mode3d=false,mouseAt=null,mouseFire=false,clickQ=false; // 3D mouse: the cursor once it moves (it steers until a steering key takes over), the left button held, a click still owed a shot
 const A3=1200,RS3=1.6; // 3D arena size, and how much bigger rocks are in 3D so they're easier to see and hit
 const R=[42,24,13],KIND=["big","mid","small"],MOOD=["smug","meh","scared"],POINTS=[20,50,100],keys={};
-const FOOD_TYPES=["beans","chili","cabbage","broccoli","prune","sbd"],FOODS=["beans","beans","chili","chili","cabbage","cabbage","broccoli","broccoli","sbd","sbd","prune"]; // the bomb is the rare one
+const FOOD_TYPES=["beans","cabbage","missile","prune"];
 const MAXP=touchUI?450:900; // fewer particles on phones
 let ship=null,rocks=[],shots=[],parts=[],foods=[],clouds=[],floaters=[],ufos=[],boss=null,bolts=[],aimT=null;
-let score=0,lives=3,level=0,running=false,cool=0,power={},combo=0,comboT=0,foodChance=.1,ufoTimer=0,waveDelay=0,respawn=0,rockId=0,shower=null,god=false;
+let score=0,lives=3,level=0,running=false,cool=0,power={},combo=0,comboT=0,foodChance=.1,ufoTimer=0,waveDelay=0,respawn=0,rockId=0,shower=null,god=false,mslT=0;
 let shake=0,stopFrames=0,slowFrames=0,flash=0,flashColor="#fff",invertFrames=0,lastInvert=-99,now=0,muzzleAt=-99,paused=false,storm=0;
 const stick={on:false,id:null,ox:0,oy:0,x:0,y:0}; // touch joystick, x and y from -1 to 1
 const newStats=()=>({t:0,rocks:0,combo:0,bosses:0,ufos:0,pows:0,shots:0,hits:0,unl:[]}); // this game's numbers for the game-over screen
@@ -610,7 +610,7 @@ function rock(x,y,z,s,o={}){
   return{x,y,z,s,r:R[s]*(o.scale||1)*(mode3d?RS3:1),id:rockId++,seed:Math.random()*99,vx:dx*sp,vy:dy*sp,vz:dz*sp,rot:Math.random()*6.28,spin:(Math.random()-.5)*.04,
     pts:Array.from({length:11},()=>.72+Math.random()*.28),veins:Array.from({length:2},()=>[Math.random()*6.28,Math.random()*6.28,Math.random()-.5])};
 }
-const food=o=>({x:o.x,y:o.y,z:o.z,vx:(o.vx||0)*.3,vy:(o.vy||0)*.3,vz:(o.vz||0)*.3,type:pick(FOODS),life:mode3d?900:720,spin:Math.random()*6});
+const food=o=>({x:o.x,y:o.y,z:o.z,vx:(o.vx||0)*.3,vy:(o.vy||0)*.3,vz:(o.vz||0)*.3,type:Math.random()<2/33?"prune":pick(["beans","cabbage","missile"]),life:mode3d?900:720,spin:Math.random()*6});
 function newShip(){
   if(!mode3d){ship={x:W/2,y:H/2,z:0,vx:0,vy:0,vz:0,a:-Math.PI/2,f:[0,-1,0],u:[0,0,-1],safe:120};return}
   let best=center(),room=-1; // in 3D, come back wherever there's the most room
@@ -630,12 +630,12 @@ function bossHud(){bossEl.hidden=!(boss&&running);$("bossName").textContent=them
 
 // waves: four kinds of rock wave, then a boss every 5th. Boss waves are announced by the boss's name, the rest as WAVE N. From wave 6 three more kinds rotate in: 5 a closing ring, 6 a saucer squadron, 7 a meteor shower
 function wave(){
-  level++;foodChance=mode3d?.06:.1; // rare enough that each power-up is an event; 3D is lower because power-ups fly to you there
+  level++;foodChance=mode3d?.09:.15; // rare enough that each power-up is an event; 3D is lower because power-ups fly to you there
   const min=mode3d?380:180,kind=level<6||level%5===0?level%5:[5,2,6,7,3,4,1][(level-(level/5|0)-5)%7],add=(n,s,o)=>{for(let i=0;i<n;i++){const p=spot(min);rocks.push(rock(p.x,p.y,p.z,s,o))}};
   if(kind===0)spawnBoss(spot(min+150));
   if(kind===1)add(Math.min(level+2,10),0);
   if(kind===2){add(Math.min(6+level,16),2);add(2,1)}
-  if(kind===3){foodChance=mode3d?.18:.28;add(Math.min(level+1,9),0)}
+  if(kind===3){foodChance=mode3d?.27:.42;add(Math.min(level+1,9),0)}
   if(kind===4)add(Math.min((level>>1)+2,7),0,{scale:1.35,speed:.6});
   if(kind===5){ // a ring (a sphere in 3D) of rocks around you that spirals in
     const n=Math.min(8+(level>>2),14),c=ship||center(),R0=mode3d?600:Math.max(200,Math.min(W,H)*.45),sp=(mode3d?1.2:.7)+Math.min(level,20)*.025;
@@ -671,12 +671,10 @@ function start(want3d){ // 2D and 3D are separate modes, picked here
 function puff(o,n,spread,kind="puff"){if(touchUI)n=Math.ceil(n*.6);for(let i=0;i<n;i++){const [dx,dy,dz]=rdir(),v=Math.random()*spread;parts.push({x:o.x,y:o.y,z:o.z,vx:dx*v,vy:dy*v,vz:dz*v,r:3+Math.random()*5,life:45,max:45,kind,c:pcol(kind)})}}
 function pcol(kind){ // particle color for the current theme
   const T=theme;if(T.mono)return T.mono;
-  if(kind==="flame")return T.flame?T.flame():T.hue?`hsl(${(hue+Math.random()*60)%360|0},100%,58%)`:`hsl(${10+Math.random()*35|0},100%,55%)`;
-  if(kind==="toxic")return T.toxic||"#9fe08a";
   if(T.hue)return `hsl(${(hue+Math.random()*90)%360|0},95%,62%)`;
   return T.spark?pick(T.spark):T.css.accent;
 }
-const dangerCol=()=>theme.mono||(theme.light?"#c0392b":"#ff5a4f"),shieldCol=()=>theme.mono||theme.shield||"#6fd16a",cloudCol=()=>theme.mono||theme.cloud||"#8fd16a",foodCol=()=>theme.mono||theme.pickup||"#8dff6a";
+const dangerCol=()=>theme.mono||(theme.light?"#c0392b":"#ff5a4f"),cloudCol=()=>theme.mono||theme.cloud||"#8fd16a",foodCol=()=>theme.mono||theme.pickup||"#8dff6a";
 const shotCol=()=>theme.mono||(theme.bolts?"#bfe3ff":theme.hue?`hsl(${hue|0},100%,75%)`:theme.shot||theme.css.fg);
 
 // combo ladder: each quick hit plays the next note up the theme's scale and multiplies the points
@@ -687,7 +685,6 @@ function comboHit(o,oy=10){
 }
 function popRock(i,how="shot"){
   const r=rocks[i];rocks.splice(i,1);stats.rocks++;
-  if(how==="toxic"){addScore(POINTS[r.s]);puff(r,4+r.r/6,.8,"toxic");return checkClear()} // the stealth trail: no sound, no split
   sfx("pop",KIND[r.s],comboHit(r));addScore(POINTS[r.s]*combo);
   if(theme.faces)floaters.push({kind:"face",x:r.x,y:r.y,z:r.z,r:r.r,s:r.s,life:8,max:8});
   kick([10,6,3][r.s]);
@@ -700,7 +697,6 @@ function popRock(i,how="shot"){
 function checkClear(){if(running&&!rocks.length&&!boss&&!shower&&!ufos.some(u=>u.squad&&u.life>0)&&waveDelay<=0){slowFrames=60;waveDelay=100;announce("Wave cleared!");sfx("waveClear")}}
 function psychFlash(){if(theme.invert&&!calm&&now-lastInvert>40){invertFrames=8;lastInvert=now}}
 function bossHit(d,how="shot"){
-  if(how==="flame"){if(boss.iframes>0)return;boss.iframes=20}
   boss.hp-=d;boss.hurt=6;
   sfx("bossHit",comboHit(boss,boss.r*.6));addScore(25*combo);kick(12);buzz(20);
   let a=Math.random()*6.28,rr=boss.r*.15;const crack=[[Math.cos(a)*rr,Math.sin(a)*rr]];
@@ -727,7 +723,7 @@ function eat(f){
   if(mode3d)floaters.push({kind:"pickup",type:f.type,text:msg,life:130,max:130}); // 3D: a fixed spot on screen, so it's easy to read while you fly
   else floaters.push({kind:"text",x:f.x,y:f.y,z:f.z,oy:14,food:f.type,text:msg,life:80,max:80,size:16});
   if(f.type==="prune")return pruneBomb();
-  power[f.type]=f.type==="broccoli"?400:300;
+  const p=power[f.type];power[f.type]={t:900,n:Math.min(3,(p?p.n:0)+1)}; // 15 s; one you already have stacks, up to x3, and refills
 }
 function pruneBomb(){
   kick(25);slowFrames=60;
@@ -737,13 +733,6 @@ function pruneBomb(){
   if(theme.thunder){flash=14;flashColor="#ffffff";bolts=Array.from({length:4},()=>{const p=[];let x=Math.random()*W;for(let y=0;y<=H+1;y+=H/12){p.push([x,y]);x+=(Math.random()-.5)*80}return p})}
   else{flash=8;flashColor=theme.light?"#ffffff":theme.css.accent;bolts=[]}
 }
-function bounce(r,d,reach){ // the shield knocks rocks away
-  const n=delta(ship,r).map(v=>v/(d||1)),vn=r.vx*n[0]+r.vy*n[1]+r.vz*n[2];
-  if(vn<0){r.vx-=2*vn*n[0];r.vy-=2*vn*n[1];r.vz-=2*vn*n[2]}
-  r.x=ship.x+n[0]*reach;r.y=ship.y+n[1]*reach;r.z=ship.z+n[2]*reach;wrap(r);
-  if(!(r.bump>now)){r.bump=now+20;sfx("bounce")}
-}
-function pushOff(b,d,reach){const n=delta(b,ship).map(v=>v/(d||1));ship.x=b.x+n[0]*reach;ship.y=b.y+n[1]*reach;ship.z=b.z+n[2]*reach;ship.vx=n[0]*3;ship.vy=n[1]*3;ship.vz=n[2]*3;wrap(ship);sfx("bounce")}
 function die(){
   puff(ship,24,2.5);kick(30);ship=null;sfx("death");buzz([60,40,120]);lives--;power={};combo=comboT=0;aimT=null;hud();
   if(lives>0)respawn=72;
@@ -796,9 +785,9 @@ function aimDir(F,sp){ // lead the locked target so the shot meets it
   if(!aimT)return F;const d=delta(ship,aimT),t=Math.hypot(d[0],d[1],d[2])/sp;
   return norm3([d[0]+(aimT.vx-ship.vx)*t,d[1]+(aimT.vy-ship.vy)*t,d[2]+(aimT.vz-ship.vz)*t]);
 }
-function spread(d){
-  if(!mode3d){const a=Math.atan2(d[1],d[0]);return[-.3,-.15,0,.15,.3].map(o=>[Math.cos(a+o),Math.sin(a+o),0])}
-  const u=ship.u,r=cross3(d,u);return[[0,0],[.12,0],[-.12,0],[0,.12],[0,-.12]].map(([a,b])=>norm3([d[0]+r[0]*a+u[0]*b,d[1]+r[1]*a+u[1]*b,d[2]+r[2]*a+u[2]*b]));
+function spread(d,n=1){ // 5, 7 or 9 shots as the spread stacks
+  if(!mode3d){const a=Math.atan2(d[1],d[0]);return Array.from({length:2*n+3},(_,i)=>(i-n-1)*.15).map(o=>[Math.cos(a+o),Math.sin(a+o),0])}
+  const u=ship.u,r=cross3(d,u);return[[0,0],[.12,0],[-.12,0],[0,.12],[0,-.12],[.12,.12],[-.12,-.12],[.12,-.12],[-.12,.12]].slice(0,2*n+3).map(([a,b])=>norm3([d[0]+r[0]*a+u[0]*b,d[1]+r[1]*a+u[1]*b,d[2]+r[2]*a+u[2]*b]));
 }
 const stickOff=()=>{const d=Math.atan2(stick.y,stick.x)-ship.a;return Math.atan2(Math.sin(d),Math.cos(d))}; // how far the nose is from where the stick points
 const stickThrust=()=>{ // 2D touch: thrust grows as the stick goes past .4 (full at .85), and only once the nose faces that way, so turning around doesn't shove you sideways
@@ -814,12 +803,11 @@ function update(dt){
     if(thr||brake){
       const k=(thr?.14*thr:-.09)*dt;ship.vx+=F[0]*k;ship.vy+=F[1]*k;ship.vz+=F[2]*k;
       if(thrust){
-        const fire=!!power.chili,kind=fire?"flame":"thrust",[jx,jy,jz]=rdir(),sp=fire?3.2:2,keep=mode3d?1:0,life=mode3d?(fire?24:16):(fire?32:28); // in 3D exhaust keeps the ship's speed, so it trails behind instead of streaming into the camera
-        if(Math.random()<(fire?1:.7))parts.push({x:ship.x-F[0]*back,y:ship.y-F[1]*back,z:ship.z-F[2]*back,vx:ship.vx*keep-F[0]*sp+jx*.5,vy:ship.vy*keep-F[1]*sp+jy*.5,vz:ship.vz*keep-F[2]*sp+jz*.5,
-          r:(fire?5+Math.random()*4:3+Math.random()*3)*(mode3d?(fire?.75:.55):1),life,max:life,kind,c:pcol(kind)});
+        const [jx,jy,jz]=rdir(),sp=2,keep=mode3d?1:0,life=mode3d?16:28; // in 3D exhaust keeps the ship's speed, so it trails behind instead of streaming into the camera
+        if(Math.random()<.7)parts.push({x:ship.x-F[0]*back,y:ship.y-F[1]*back,z:ship.z-F[2]*back,vx:ship.vx*keep-F[0]*sp+jx*.5,vy:ship.vy*keep-F[1]*sp+jy*.5,vz:ship.vz*keep-F[2]*sp+jz*.5,
+          r:(3+Math.random()*3)*(mode3d?.55:1),life,max:life,kind:"thrust",c:pcol("thrust")});
       }
     }
-    if(power.sbd&&Math.random()<.6)parts.push({x:ship.x,y:ship.y,z:ship.z,vx:0,vy:0,vz:0,r:mode3d?9:7,life:100,max:100,kind:"toxic",c:pcol("toxic")});
     if(theme.trail)parts.push({x:ship.x-F[0]*8,y:ship.y-F[1]*8,z:ship.z-F[2]*8,vx:0,vy:0,vz:0,r:2.5,life:26,max:26,kind:"trail",c:`hsl(${hue|0},95%,62%)`});
     const tr=TRAILS[trailI];if(tr.c&&Math.random()<(touchUI?.45:.8)){const [jx,jy,jz]=rdir();parts.push({x:ship.x-F[0]*back,y:ship.y-F[1]*back,z:ship.z-F[2]*back,vx:jx*tr.j,vy:jy*tr.j,vz:jz*tr.j,r:tr.r*(mode3d?.8:1)*(.7+Math.random()*.6),life:tr.life,max:tr.life,kind:"trail",c:theme.mono||tr.c()})}
     const drag=(touchUI&&!mode3d&&!thr?.98:.99)**dt; // 2D on phones: coasting settles in about a second instead of drifting forever
@@ -828,23 +816,33 @@ function update(dt){
     cool-=dt;
     if((keys.fire||mouseFire||clickQ)&&cool<=0){
       clickQ=false;
-      cool=power.beans?4:10;muzzleAt=now;
+      cool=power.beans?[4,3,2][power.beans.n-1]:10;muzzleAt=now;
       const sp=mode3d?12:7,dir=aimDir(F,sp),life=mode3d?80:55;
-      for(const d of power.cabbage?spread(dir):[dir])shots.push({x:ship.x+F[0]*16,y:ship.y+F[1]*16,z:ship.z+F[2]*16,vx:d[0]*sp+ship.vx,vy:d[1]*sp+ship.vy,vz:d[2]*sp+ship.vz,life}),stats.shots++;
+      for(const d of power.cabbage?spread(dir,power.cabbage.n):[dir])shots.push({x:ship.x+F[0]*16,y:ship.y+F[1]*16,z:ship.z+F[2]*16,vx:d[0]*sp+ship.vx,vy:d[1]*sp+ship.vy,vz:d[2]*sp+ship.vz,life}),stats.shots++;
       sfx(power.beans?"beans":"shot");
+    }
+    if(power.missile&&(mslT-=dt)<=0&&(rocks.length||boss)){ // homing missiles: a volley every 2/3 s (twice as often with rapid fire), one per stack level, each after a random asteroid
+      mslT=power.beans?20:40;sfx("beans");
+      for(let i=0;i<power.missile.n;i++){const sp=Math.hypot(ship.vx,ship.vy,ship.vz)+(mode3d?7:5);shots.push({x:ship.x,y:ship.y,z:ship.z,vx:F[0]*sp,vy:F[1]*sp,vz:F[2]*sp,life:mode3d?150:120,sp,homing:pick(boss?[...rocks,boss]:rocks)});stats.shots++}
     }
   }
   running&&ship&&thrustKey()?jetOn():jetOff();
-  if(god)Object.assign(power,{beans:300,chili:300,cabbage:300,sbd:300,broccoli:400}); // god mode keeps every power-up topped up
-  for(const k in power)if((power[k]-=dt)<=0)delete power[k];
+  if(god)for(const k of["beans","cabbage","missile"])power[k]={t:900,n:3}; // god mode keeps every power-up topped up, fully stacked
+  for(const k in power)if((power[k].t-=dt)<=0)delete power[k];
   if((comboT-=dt)<=0)combo=0;
 
   const mv=o=>{o.x+=o.vx*dt;o.y+=o.vy*dt;o.z+=o.vz*dt};
   for(const o of rocks){mv(o);o.rot+=o.spin*dt;wrap(o)}
   if(mode3d&&ship&&ship.safe<=0){const k=(.001+Math.min(level,20)*.00045)*dt;for(const o of rocks){const d=delta(o,ship),l=Math.hypot(d[0],d[1],d[2]),s=Math.hypot(o.vx,o.vy,o.vz);if(l>1&&l<800){o.vx+=d[0]/l*s*k;o.vy+=d[1]/l*s*k;o.vz+=d[2]/l*s*k;const f=s/Math.hypot(o.vx,o.vy,o.vz);o.vx*=f;o.vy*=f;o.vz*=f}}} // 3D: rocks bend gently toward you (turning 5 degrees a second on wave 1 up to 35 by wave 20, same speed), never while you respawn
-  for(const o of shots){mv(o);o.life-=dt;wrap(o)}
+  for(const o of shots){
+    if(o.sp){ // a missile: steer after its asteroid (a new random one if that one's gone), leaving a smoke trail
+      if(o.homing&&!rocks.includes(o.homing)&&o.homing!==boss)o.homing=rocks.length?pick(rocks):null;
+      if(o.homing){const d=norm3(delta(o,o.homing)),k=o.sp*.25*dt,v=norm3([o.vx+d[0]*k,o.vy+d[1]*k,o.vz+d[2]*k]);o.vx=v[0]*o.sp;o.vy=v[1]*o.sp;o.vz=v[2]*o.sp}
+      if(Math.random()<.5)parts.push({x:o.x,y:o.y,z:o.z,vx:0,vy:0,vz:0,r:mode3d?2.5:2,life:16,max:16,kind:"trail",c:shotCol()});
+    }
+    mv(o);o.life-=dt;wrap(o)}
   for(const o of foods){mv(o);o.life-=dt;o.spin+=.03*dt;wrap(o)}
-  for(const o of parts){mv(o);o.life-=dt;o.r+=(o.kind==="toxic"?.02:.15)*dt}
+  for(const o of parts){mv(o);o.life-=dt;o.r+=.15*dt}
   for(const o of clouds){mv(o);o.life-=dt;o.r=Math.min(o.r+.03*dt,mode3d?26:20);if(mode3d)wrap(o)}
   const mr=mode3d?450:touchUI?170:0,ms=mode3d?7:3.5; // in 3D, power-ups within 450 fly to you, even while you move; on phones in 2D, a gentler pull from 170
   if(mr&&ship)for(const f of foods){const d=delta(f,ship),l=Math.hypot(d[0],d[1],d[2]);if(l<mr&&l>1){const k=Math.min(1,.06*dt);f.vx+=(ship.vx+d[0]/l*ms-f.vx)*k;f.vy+=(ship.vy+d[1]/l*ms-f.vy)*k;f.vz+=(ship.vz+d[2]/l*ms-f.vz)*k}}
@@ -886,20 +884,13 @@ function update(dt){
     }
     if(used){shots.splice(j,1);stats.hits++}
   }
-  for(const p of parts){ // the flaming exhaust and the stealth trail eat rocks
-    if(p.kind!=="flame"&&p.kind!=="toxic")continue;
-    const ri=rocks.findIndex(r=>dist(p,r)<r.r+p.r*.5);
-    if(ri>=0)popRock(ri,p.kind==="flame"?"flame":"toxic");
-    if(p.kind==="flame"&&boss&&dist(p,boss)<boss.r)bossHit(1,"flame");
-  }
   if(ship)for(let i=foods.length-1;i>=0;i--)if(dist(foods[i],ship)<(mode3d?48:24)*(touchUI?1.4:1)){const f=foods[i];foods.splice(i,1);eat(f)}
 
-  if(ship){
-    const shield=power.broccoli>0,vulnerable=!shield&&ship.safe<=0,sr=mode3d?32:24;
-    for(const r of rocks){const d=dist(ship,r),reach=r.r*.85+(shield?sr:9);if(d<reach){if(shield)bounce(r,d,reach);else if(vulnerable){die();break}}}
-    if(ship&&boss){const d=dist(ship,boss),reach=boss.r*.85+(shield?sr:9);if(d<reach){if(shield)pushOff(boss,d,reach);else if(vulnerable)die()}}
-    if(ship)for(const u of[...ufos])if(dist(ship,u)<(mode3d?34:24)){if(shield)killUfo(u);else if(vulnerable){killUfo(u);die();break}}
-    if(ship)for(let i=clouds.length-1;i>=0;i--){const o=clouds[i];if(dist(ship,o)<o.r+8){if(shield)popCloud(i);else if(vulnerable){popCloud(i);die();break}}}
+  if(ship&&!god&&ship.safe<=0){ // god mode can't be hit
+    for(const r of rocks)if(dist(ship,r)<r.r*.85+9){die();break}
+    if(ship&&boss&&dist(ship,boss)<boss.r*.85+9)die();
+    if(ship)for(const u of[...ufos])if(dist(ship,u)<(mode3d?34:24)){killUfo(u);die();break}
+    if(ship)for(let i=clouds.length-1;i>=0;i--)if(dist(ship,clouds[i])<clouds[i].r+8){popCloud(i);die();break}
   }
   for(const f of floaters){f.life-=dt;if(f.kind==="text")f.oy+=.5*dt}
   floaters=floaters.filter(f=>f.life>0);
@@ -1003,8 +994,8 @@ function drawRock(o,isBoss){ // one rock (or the boss) in the theme's style
 }
 function drawCracks(b){g.save();g.translate(b.x,b.y);g.rotate(b.rot);g.strokeStyle=dangerCol();g.lineWidth=2;for(const cr of b.cracks){g.beginPath();cr.forEach(([x,y],k)=>k?g.lineTo(x,y):g.moveTo(x,y));g.stroke()}g.restore()}
 
-// ---- power-up icons: six per theme, one for each power (rapid fire, flame, spread, shield, bomb, stealth trail)
-const FOOD_COL={beans:["#9b5a2e","#d9a16b"],chili:["#e5322d","#4f9e3a"],cabbage:["#9bd17a","#5f9a46"],broccoli:["#8cc46a","#2f8a3c"],prune:["#5b2a5e","#331435"],sbd:["#9fb08a","#26301f"]};
+// ---- power-up icons: four per theme, one for each power (rapid fire, spread, homing missiles, bomb)
+const FOOD_COL={beans:["#9b5a2e","#d9a16b"],cabbage:["#9bd17a","#5f9a46"],missile:["#e8c27a","#7a4a24"],prune:["#5b2a5e","#331435"]};
 function foodPal(type){
   if(theme.icons==="cosmic"){const h=(hue+FOOD_TYPES.indexOf(type)*60)%360|0;return[`hsl(${h},100%,62%)`,`hsl(${(h+150)%360},100%,40%)`]}
   return FOOD_COL[type];
@@ -1012,68 +1003,50 @@ function foodPal(type){
 const ICONS={
   fart:{
     beans:(h,s,c1,c2)=>{for(const [bx,by,a] of[[-.45,.2,.5],[.42,.25,-.4],[0,-.32,.1]]){h.oval(bx,by,.42,.27,a);h.paint(c1);h.oval(bx-.1,by-.08,.12,.06,a);h.paint(c2)}},
-    chili:(h,s,c1,c2)=>{const c=h.c;c.beginPath();c.moveTo(-s*.6,-s*.45);c.quadraticCurveTo(-s*.2,s*.95,s*.85,s*.6);c.quadraticCurveTo(s*.05,s*.25,-s*.25,-s*.65);c.closePath();h.paint(c1);h.seg(-.45,-.6,-.75,-.95);h.line(c2,3)},
     cabbage:(h,s,c1,c2)=>{h.circle(0,0,.8);h.paint(c1);h.c.beginPath();for(const a of[-.9,0,.9]){h.c.moveTo(0,s*.7);h.c.lineTo(Math.sin(a)*s*.65,-Math.cos(a)*s*.5)}h.line(c2)},
-    broccoli:(h,s,c1,c2)=>{h.rect(-.17,0,.34,.8);h.paint(c1);for(const [fx,fy] of[[-.42,-.08],[.42,-.08],[0,-.45]]){h.circle(fx,fy,.4);h.paint(c2)}},
     prune:(h,s,c1,c2)=>{h.oval(0,0,.72,.56);h.paint(c1);h.c.beginPath();h.c.arc(-s*.15,0,s*.35,-1,1);h.c.moveTo(s*.45,-s*.25);h.c.arc(s*.2,0,s*.3,-.9,.9);h.line(c2)},
-    sbd:(h,s,c1,c2)=>{for(const [fx,fy,fr] of[[-.4,.05,.42],[.35,0,.46],[0,-.3,.44]]){h.circle(fx,fy,fr);h.paint(c1)}h.c.beginPath();for(const ex of[-.25,.25]){h.c.moveTo((ex-.1)*s,-.1*s);h.c.lineTo((ex+.1)*s,.1*s);h.c.moveTo((ex+.1)*s,-.1*s);h.c.lineTo((ex-.1)*s,.1*s)}h.line(c2,2.2)}},
+    missile:(h,s,c1,c2)=>{h.oval(0,0,.9,.46,-.55);h.paint(c1);for(const x of[-.42,0]){h.seg(x-.18,.32+x*.3,x+.22,-.32+x*.3);h.line(c2,1.6)}h.circle(.52,-.33,.17);h.paint("#d9452b");h.circle(.64,-.08,.12);h.paint("#4f9e3a")}},
   candy:{
     beans:h=>{for(const [col,bx,by,a] of[["#ff5fa2",-.45,.2,.5],["#ffe14d",.42,.25,-.4],["#5fd0ff",0,-.32,.1]]){h.oval(bx,by,.42,.27,a);h.paint(col);h.oval(bx-.1,by-.08,.12,.06,a);h.paint("#fff")}},
-    chili:h=>{h.circle(0,0,.78);h.paint("#e8231f");h.c.beginPath();h.c.arc(0,0,h.s*.45,0,4.2);h.line("#ffb000",2.5);h.oval(-.3,-.35,.18,.1,-.6);h.paint("#fff")},
     cabbage:h=>{h.circle(0,0,.85);h.paint("#e0a96d");h.circle(0,0,.68);h.paint("#ff7bc4");h.circle(0,0,.24);h.paint("#2a1a33");
       for(let i=0;i<7;i++){const a=i*.9+.3,d=.47;h.c.save();h.c.translate(Math.cos(a)*d*h.s,Math.sin(a)*d*h.s);h.c.rotate(a*2);h.c.fillStyle=["#fff04d","#5fd0ff","#7dff8a","#fff"][i%4];h.c.fillRect(-h.s*.12,-h.s*.035,h.s*.24,h.s*.07);h.c.restore()}},
-    broccoli:h=>{h.circle(0,0,.86);h.paint("rgba(255,120,200,.9)");h.c.beginPath();h.c.arc(0,0,h.s*.62,3.6,4.6);h.line("#fff",2.5);h.circle(.35,-.35,.1);h.paint("#fff")},
     prune:h=>{h.poly(-.45,0,-.95,-.4,-.95,.4);h.paint("#ffd36a");h.poly(.45,0,.95,-.4,.95,.4);h.paint("#ffd36a");h.circle(0,0,.55);h.paint("#b04dff");h.seg(.2,-.5,.45,-.85);h.line("#fff",2);h.star(5,.22,.09,0,.5,-.92);h.paint("#ffe14d")},
-    sbd:h=>{h.star(4,.9,.22);h.paint("#ffffff");h.star(4,.32,.08,0,.62,.55);h.paint("#ff6ad5");h.star(4,.28,.07,0,-.6,.6);h.paint("#5fd0ff")}},
+    missile:h=>{h.rect(-.08,.45,.16,.5);h.paint("#e0a96d");h.rect(-.42,.1,.84,.38);h.paint("#5fd0ff");h.rect(-.42,-.27,.84,.38);h.paint("#ffffff");h.poly(-.42,-.27,.42,-.27,.22,-.85,-.22,-.85);h.paint("#ff5fa2")}},
   vector:{ // outline symbols in the CRT green
     beans:h=>{h.c.beginPath();for(let i=0;i<3;i++){h.c.moveTo((-.75+i*.5)*h.s,-.5*h.s);h.c.lineTo((-.35+i*.5)*h.s,0);h.c.lineTo((-.75+i*.5)*h.s,.5*h.s)}h.line(0,2)},
-    chili:h=>{h.poly(0,-.9,.45,-.1,.35,.5,0,.8,-.35,.5,-.45,-.1);h.line(0,2);h.poly(0,-.2,.18,.25,0,.5,-.18,.25);h.line(0,1.5)},
     cabbage:h=>{h.c.beginPath();for(const [x,y] of[[.75,-.75],[.85,-.05],[.75,.65]]){h.c.moveTo(-.7*h.s,0);h.c.lineTo(x*h.s,y*h.s)}h.line(0,2)},
-    broccoli:h=>{const c=h.c,s=h.s;c.beginPath();c.moveTo(0,-.85*s);c.lineTo(.7*s,-.6*s);c.lineTo(.6*s,.2*s);c.quadraticCurveTo(.4*s,.7*s,0,.9*s);c.quadraticCurveTo(-.4*s,.7*s,-.6*s,.2*s);c.lineTo(-.7*s,-.6*s);c.closePath();h.line(0,2)},
     prune:h=>{h.circle(0,.15,.58);h.line(0,2);h.seg(.35,-.3,.6,-.7);h.line(0,2);h.star(4,.22,.06,0,.68,-.8);h.line(0,1.5)},
-    sbd:h=>{h.c.setLineDash([3,3]);h.circle(0,0,.75);h.line(0,2);h.c.setLineDash([]);h.circle(0,0,.12);h.paint(0)}},
+    missile:h=>{h.poly(.9,0,.3,-.28,-.6,-.28,-.85,-.58,-.85,.58,-.6,.28,.3,.28);h.line(0,2)}},
   cosmic:{
     beans:(h,s,c1,c2)=>{h.poly(-.32,-.75,.32,-.75,.5,.45,-.5,.45);h.paint(c2);h.circle(0,-.3,.17);h.paint(c1);h.circle(.1,.12,.2);h.paint(c1);h.rect(-.55,.45,1.1,.35);h.paint("#3a2350");h.rect(-.2,-.95,.4,.2);h.paint("#3a2350")},
-    chili:(h,s,c1,c2)=>{h.poly(0,-.95,.5,-.1,.38,.55,0,.85,-.38,.55,-.5,-.1);h.paint(c1);h.poly(0,-.25,.2,.25,0,.6,-.2,.25);h.paint(c2)},
     cabbage:(h,s,c1,c2)=>{for(let i=0;i<6;i++){const a=i*Math.PI/3;h.oval(Math.cos(a)*.42,Math.sin(a)*.42,.36,.18,a);h.paint(i%2?c1:c2)}h.circle(0,0,.2);h.paint("#fff")},
-    broccoli:(h,s,c1,c2)=>{h.poly(0,-.85,.85,.65,-.85,.65);h.line(c1,2.2);h.oval(0,.15,.38,.22);h.paint(c2);h.circle(0,.15,.12);h.paint(c1)},
     prune:(h,s,c1,c2)=>{h.star(12,.92,.42);h.paint(c1);h.circle(0,0,.3);h.paint(c2)},
-    sbd:(h,s,c1,c2)=>{h.seg(-.15,.9,.15,-.1);h.line("#a0703c",2.5);const c=h.c;c.beginPath();c.moveTo(.15*s,-.1*s);c.bezierCurveTo(.6*s,-.4*s,-.3*s,-.6*s,.2*s,-.95*s);h.line(c1,2)}},
+    missile:(h,s,c1,c2)=>{h.seg(-.9,.65,.1,-.05);h.line(c2,3);h.star(5,.52,.22,-Math.PI/2,.35,-.25);h.paint(c1)}},
   olympus:{
     beans:h=>{h.poly(-.55,-.62,.55,-.62,.3,.05,-.3,.05);h.paint("#e8c45a");h.oval(0,-.62,.55,.13);h.paint("#fff1a8");h.rect(-.07,.05,.14,.45);h.paint("#c9a13e");h.oval(0,.55,.36,.1);h.paint("#c9a13e")},
-    chili:h=>{h.rect(-.13,0,.26,.9);h.paint("#a5793f");h.poly(-.42,0,.42,0,.22,.22,-.22,.22);h.paint("#d9b44a");const c=h.c,s=h.s;c.beginPath();c.moveTo(0,-.95*s);c.quadraticCurveTo(.55*s,-.35*s,.3*s,0);c.lineTo(-.3*s,0);c.quadraticCurveTo(-.55*s,-.35*s,0,-.95*s);h.paint("#ff9f2e");h.oval(0,-.2,.13,.22);h.paint("#fff1a8")},
     cabbage:h=>{for(const a of[-.5,0,.5]){const c=h.c;c.save();c.rotate(a);c.beginPath();c.moveTo(0,h.s*.85);c.lineTo(0,-h.s*.6);h.line("#e8c45a",2);h.poly(0,-.95,.17,-.6,-.17,-.6);h.paint("#fff1a8");c.restore()}},
-    broccoli:h=>{h.circle(0,0,.85);h.paint("#d9b44a");h.circle(0,0,.62);h.paint("#8a6420");h.c.beginPath();const s=h.s;h.c.moveTo(s*.12,-s*.45);h.c.lineTo(-s*.14,s*.02);h.c.lineTo(s*.1,s*.02);h.c.lineTo(-s*.12,s*.45);h.line("#fff3c4",2.4)},
     prune:h=>{h.poly(.25,-.95,-.35,.05,.05,.05,-.25,.95,.4,-.15,0,-.15);h.paint("#ffe066");h.line("#fff8d6",1.2)},
-    sbd:h=>{for(const [fx,fy,fr] of[[-.4,.05,.42],[.35,0,.46],[0,-.3,.44]]){h.circle(fx,fy,fr);h.paint("#4a3b5c")}h.c.beginPath();const s=h.s;for(const ex of[-.22,.22]){h.c.moveTo((ex-.08)*s,-.08*s);h.c.lineTo((ex+.08)*s,.08*s);h.c.moveTo((ex+.08)*s,-.08*s);h.c.lineTo((ex-.08)*s,.08*s)}h.line("#c9b6ff",2.2)}},
+    missile:h=>{h.seg(-.8,.8,.55,-.55);h.line("#e8c45a",2.5);h.poly(.9,-.9,.32,-.72,.72,-.32);h.paint("#fff1a8");h.poly(-.8,.8,-.98,.42,-.62,.62);h.paint("#e8c45a");h.poly(-.8,.8,-.42,.98,-.62,.62);h.paint("#e8c45a")}},
   abyss:{
     beans:h=>{h.poly(-.8,0,-1,-.42,-.6,-.12);h.paint("#6d8796");h.poly(-.8,0,-1,.42,-.6,.12);h.paint("#6d8796");h.oval(0,0,.8,.28);h.paint("#9fb8c8");h.oval(.55,0,.25,.24);h.paint("#ffcf5c")},
-    chili:h=>{const c=h.c,s=h.s;c.beginPath();c.moveTo(-.6*s,.8*s);c.quadraticCurveTo(-.5*s,-.5*s,.2*s,-.55*s);h.line("#7d8fa0",2.2);h.circle(.3,-.55,.45);h.paint("rgba(255,230,107,.3)");h.circle(.3,-.55,.24);h.paint("#ffe66b")},
     cabbage:h=>{h.c.beginPath();for(let i=0;i<4;i++){const x=(-.3+i*.2)*h.s;h.c.moveTo(x,.2*h.s);h.c.quadraticCurveTo(x+(i%2?.2:-.2)*h.s,.6*h.s,x,.95*h.s)}h.line("#ff7a8a",2);h.oval(0,-.25,.42,.52);h.paint("#ff7a8a");h.circle(-.15,-.15,.07);h.paint("#1a1a2e");h.circle(.15,-.15,.07);h.paint("#1a1a2e")},
-    broccoli:h=>{const c=h.c,s=h.s;c.beginPath();c.moveTo(-.85*s,.35*s);c.arc(0,.35*s,.85*s,Math.PI,0);c.closePath();h.paint("#ffb36b");c.beginPath();for(let i=1;i<6;i++){const a=Math.PI+i*Math.PI/6;c.moveTo(0,.35*s);c.lineTo(Math.cos(a)*.85*s,.35*s+Math.sin(a)*.85*s)}h.line("#c97a3c",1.4);h.rect(-.2,.35,.4,.25);h.paint("#ffb36b")},
     prune:h=>{const c=h.c,s=h.s;c.beginPath();for(let i=0;i<8;i++){const a=i*Math.PI/4;c.moveTo(Math.cos(a)*.55*s,Math.sin(a)*.55*s);c.lineTo(Math.cos(a)*.88*s,Math.sin(a)*.88*s)}h.line("#5d6d78",2.4);h.circle(0,0,.58);h.paint("#3d4a54");h.circle(-.18,-.18,.12);h.paint("#9fb8c8")},
-    sbd:h=>{const c=h.c,s=h.s;c.beginPath();for(let x=-.85;x<=.6;x+=.05)c.lineTo(x*s,Math.sin(x*7)*.22*s);h.line("#7df9ff",3);h.circle(.68,0,.18);h.paint("#7df9ff");h.circle(.72,-.05,.05);h.paint("#021421")}},
+    missile:h=>{h.poly(-.5,0,-.95,-.42,-.95,.42);h.paint("#c86b6b");h.oval(.1,0,.66,.42);h.paint("#ff8a6b");h.poly(.5,-.06,.76,.02,.5,.12);h.paint("#ffffff");h.circle(.36,-.16,.08);h.paint("#021421")}},
   haunted:{
     beans:h=>{h.c.save();h.poly(0,-.88,.62,.68,-.62,.68);h.c.clip();h.rect(-1,-1,2,2);h.paint("#ffe14d");h.rect(-1,-.32,2,.5);h.paint("#ff8a1f");h.rect(-1,-1,2,.68);h.paint("#fff7e6");h.c.restore()},
-    chili:h=>{h.poly(0,-.95,.42,-.15,.32,.5,0,.8,-.32,.5,-.42,-.15);h.paint("#7df9c8");h.poly(0,-.2,.16,.25,0,.55,-.16,.25);h.paint("#ffffff")},
     cabbage:h=>{const c=h.c,s=h.s;c.beginPath();c.moveTo(0,-.1*s);c.quadraticCurveTo(-.35*s,-.55*s,-.95*s,-.3*s);c.quadraticCurveTo(-.7*s,0,-.75*s,.25*s);c.quadraticCurveTo(-.45*s,.05*s,-.3*s,.3*s);c.quadraticCurveTo(-.15*s,.1*s,0,.3*s);c.quadraticCurveTo(.15*s,.1*s,.3*s,.3*s);c.quadraticCurveTo(.45*s,.05*s,.75*s,.25*s);c.quadraticCurveTo(.7*s,0,.95*s,-.3*s);c.quadraticCurveTo(.35*s,-.55*s,0,-.1*s);c.closePath();h.paint("#3a2550");h.line("#c9b6ff",1.4)},
-    broccoli:h=>{const c=h.c,s=h.s;c.beginPath();c.moveTo(0,-.9*s);c.quadraticCurveTo(.15*s,-.55*s,.6*s,-.2*s);c.quadraticCurveTo(.95*s,.3*s,.4*s,.75*s);c.lineTo(-.4*s,.75*s);c.quadraticCurveTo(-.95*s,.3*s,-.6*s,-.2*s);c.quadraticCurveTo(-.15*s,-.55*s,0,-.9*s);h.paint("#f4efe1");c.beginPath();c.moveTo(0,-.6*s);c.lineTo(0,.7*s);c.moveTo(-.3*s,-.3*s);c.quadraticCurveTo(-.45*s,.3*s,-.2*s,.72*s);c.moveTo(.3*s,-.3*s);c.quadraticCurveTo(.45*s,.3*s,.2*s,.72*s);h.line("#cfc6b0",1.2)},
     prune:h=>{h.circle(0,0,.82);h.paint("#f6f0d8");for(const [x,y,r] of[[-.3,-.2,.18],[.25,.25,.14],[.3,-.35,.1],[-.15,.4,.1]]){h.circle(x,y,r);h.paint("#ddd3b4")}},
-    sbd:h=>{const c=h.c,s=h.s;c.beginPath();c.arc(0,-.15*s,.6*s,Math.PI,0);c.lineTo(.6*s,.75*s);for(let i=0;i<4;i++)c.quadraticCurveTo((.45-i*.3)*s,(.55+(i%2)*.3)*s,(.3-i*.3)*s,.75*s);c.closePath();h.paint("#f2f2ff");h.oval(-.2,-.2,.1,.16);h.paint("#1a0f24");h.oval(.2,-.2,.1,.16);h.paint("#1a0f24")}},
+    missile:h=>{h.poly(-.95,.75,-.05,.02,.12,.38);h.paint("rgba(157,255,107,.45)");h.circle(.28,-.22,.5);h.paint("#9dff6b");h.circle(.28,-.22,.24);h.paint("#f6ffe8")}},
   outrun:{
     beans:h=>{const c=h.c,s=h.s;c.beginPath();c.arc(0,.3*s,.82*s,Math.PI,0);h.line("#3ff6ff",2.5);c.beginPath();for(let i=0;i<=4;i++){const a=Math.PI+i*Math.PI/4;c.moveTo(Math.cos(a)*.62*s,.3*s+Math.sin(a)*.62*s);c.lineTo(Math.cos(a)*.8*s,.3*s+Math.sin(a)*.8*s)}h.line("#3ff6ff",1.5);h.seg(0,.3,.5,-.3);h.line("#ff3fbf",2.5)},
-    chili:h=>{h.rect(-.3,-.32,.6,1.15);h.paint("#3f7bff");h.rect(-.13,-.68,.26,.38);h.paint("#3f7bff");h.rect(-.17,-.85,.34,.18);h.paint("#ff3fbf");h.c.beginPath();const s=h.s;h.c.moveTo(-.12*s,.5*s);h.c.lineTo(-.12*s,0);h.c.lineTo(.12*s,.5*s);h.c.lineTo(.12*s,0);h.line("#fff",1.6)},
     cabbage:h=>{for(const [x,y,col] of[[.8,-.75,"#ff3fbf"],[.9,0,"#3ff6ff"],[.8,.75,"#fff04d"]]){h.seg(-.75,0,x,y);h.line(col,2.5)}},
-    broccoli:h=>{h.star(3,.82,.82,Math.PI/6);h.line("#3ff6ff",2.2);h.star(3,.48,.48,Math.PI/6);h.line("rgba(63,246,255,.5)",1.4)},
     prune:h=>{h.circle(0,0,.82);h.line("#fff04d",2);h.poly(.18,-.62,-.3,.08,.02,.08,-.18,.62,.3,-.08,-.02,-.08);h.paint("#fff04d")},
-    sbd:h=>{h.c.setLineDash([3,2]);h.poly(.75,0,-.5,-.45,-.3,0,-.5,.45);h.line("#b46bff",2);h.c.setLineDash([]);h.c.beginPath();for(const y of[-.25,0,.25]){h.c.moveTo(-.65*h.s,y*h.s);h.c.lineTo(-.95*h.s,y*h.s)}h.line("#b46bff",1.4)}},
+    missile:h=>{h.circle(0,0,.82);h.line("#ff3fbf",2);h.poly(.58,0,-.36,-.44,-.14,0,-.36,.44);h.paint("#3ff6ff")}},
   ink:{
     beans:h=>{const c=h.c,s=h.s;c.beginPath();c.moveTo(-.14*s,-.88*s);c.lineTo(.14*s,-.88*s);c.lineTo(.14*s,-.45*s);c.quadraticCurveTo(.66*s,.05*s,.46*s,.8*s);c.lineTo(-.46*s,.8*s);c.quadraticCurveTo(-.66*s,.05*s,-.14*s,-.45*s);c.closePath();h.paint("#fbf7ee");h.line("#1b1b1b",2);h.rect(-.24,0,.48,.42);h.paint("#c0392b")},
-    chili:h=>{h.seg(-.8,.8,.45,-.45);h.line("#1b1b1b",2.2);h.poly(.75,-.75,.3,-.55,.55,-.3);h.paint("#1b1b1b");h.circle(.66,-.66,.26);h.paint("rgba(230,90,30,.7)")},
     cabbage:h=>{h.star(4,.92,.26,Math.PI/4);h.paint("#3a3a3a");h.circle(0,0,.14);h.paint("#efe6d2")},
-    broccoli:h=>{for(const x of[-.42,0,.42]){h.rect(x-.12,-.85,.24,1.7);h.paint("#3c6e47");h.c.beginPath();for(const y of[-.3,.3]){h.c.moveTo((x-.14)*h.s,y*h.s);h.c.lineTo((x+.14)*h.s,y*h.s)}h.line("#24452c",1.6)}},
     prune:h=>{const c=h.c,s=h.s;c.beginPath();for(let a=0;a<12;a+=.25)c.lineTo(Math.cos(a)*a*.075*s,Math.sin(a)*a*.075*s);h.line("#1b1b1b",2.6)},
-    sbd:h=>{for(const [x,y,r] of[[-.45,-.45,.3],[-.1,-.7,.25],[.2,-.5,.22]]){h.circle(x,y,r);h.paint("rgba(110,110,110,.55)")}h.circle(.1,.25,.58);h.paint("#1b1b1b");h.seg(.4,-.15,.6,-.4);h.line("#1b1b1b",2)}},
+    missile:h=>{h.poly(-.95,-.1,-.2,.05,.1,-.85,.25,.05,.95,-.35,.35,.35,-.15,.45);h.paint("#1b1b1b");h.seg(.1,-.85,.13,.1);h.line("#efe6d2",1.2)}},
 };
 function drawFood(c,type,x,y,s){
   const T=theme,tint=T.mono,[c1,c2]=foodPal(type);
@@ -1160,7 +1133,7 @@ function draw2d(){
     for(let k=-1;k<=1;k++){g.fillStyle=((now/8|0)+k+2)%2?C.accent:C.fg;g.beginPath();g.arc(k*10,1,1.8,0,6.28);g.fill()}
     g.restore();
   }
-  if(ship&&ship.safe<=0&&!power.broccoli){ // warning ring on anything about to hit you (same reach as the collision check)
+  if(ship&&ship.safe<=0&&!god){ // warning ring on anything about to hit you (same reach as the collision check)
     g.strokeStyle=dangerCol();g.lineWidth=2.5;g.globalAlpha=.7+.3*Math.sin(now*.6);const p=Math.sin(now*.6)*2;
     for(const r of rocks)if(onCourse(r,r.r*.85+9,true)){g.beginPath();g.arc(r.x,r.y,r.r+6+p,0,6.28);g.stroke()}
     for(const o of clouds)if(onCourse(o,o.r+8,false)){g.beginPath();g.arc(o.x,o.y,o.r+6+p,0,6.28);g.stroke()}
@@ -1168,8 +1141,8 @@ function draw2d(){
   }
   g.shadowBlur=0;
   for(const p of parts){
-    const a=Math.max(p.life/p.max,0)*(p.kind==="toxic"?.2:.6);g.globalAlpha=a;
-    if(T.particles==="bubble"&&p.kind!=="flame"){g.strokeStyle=p.c;g.lineWidth=1.2;g.beginPath();g.arc(p.x,p.y,p.r*.6,0,6.28);g.stroke()}
+    const a=Math.max(p.life/p.max,0)*.6;g.globalAlpha=a;
+    if(T.particles==="bubble"){g.strokeStyle=p.c;g.lineWidth=1.2;g.beginPath();g.arc(p.x,p.y,p.r*.6,0,6.28);g.stroke()}
     else{g.fillStyle=p.c;g.beginPath();g.arc(p.x,p.y,p.r,0,6.28);g.fill()}
   }
   g.globalAlpha=1;glow();
@@ -1177,7 +1150,7 @@ function draw2d(){
     g.strokeStyle="#bfe3ff";g.lineWidth=2;g.shadowBlur=8;g.shadowColor="#9fd0ff";
     for(const s of shots){const sp=Math.hypot(s.vx,s.vy)||1,ux=s.vx/sp,uy=s.vy/sp;g.beginPath();g.moveTo(s.x,s.y);for(let k=1;k<=3;k++){const j=(Math.random()-.5)*6;g.lineTo(s.x-ux*k*5-uy*j,s.y-uy*k*5+ux*j)}g.stroke()}
     glow();
-  }else{g.fillStyle=shotCol();for(const s of shots){g.beginPath();g.arc(s.x,s.y,2,0,6.28);g.fill()}}
+  }else{g.fillStyle=shotCol();for(const s of shots){g.beginPath();g.arc(s.x,s.y,s.sp?3.5:2,0,6.28);g.fill()}}
   if(ship&&!(ship.safe>0&&(ship.safe|0)%12<6)){
     const sk=skin();g.save();g.translate(ship.x,ship.y);g.rotate(ship.a);g.strokeStyle=T.mono||sk.accent||C.fg;g.lineWidth=2;g.beginPath();
     for(const [x,y] of SHIP_PTS[sk.shape|0])g.lineTo(x,y);
@@ -1185,7 +1158,6 @@ function draw2d(){
   }
   if(ship&&aimT){const t=aimT,s=(t.r||16)+7,k=s*.4;g.strokeStyle=t===boss?"#ff5a4f":T.mono||C.accent;g.lineWidth=2;g.globalAlpha=.8;g.beginPath(); // phones: lock-on brackets on the aim-assist target
     for(const [a,b] of[[-1,-1],[1,-1],[1,1],[-1,1]]){g.moveTo(t.x+a*s,t.y+b*(s-k));g.lineTo(t.x+a*s,t.y+b*s);g.lineTo(t.x+a*(s-k),t.y+b*s)}g.stroke();g.globalAlpha=1}
-  if(ship&&power.broccoli&&!(power.broccoli<120&&(now/6|0)%2)){g.strokeStyle=shieldCol();g.globalAlpha=.8;g.lineWidth=2;g.beginPath();g.arc(ship.x,ship.y,24,0,6.28);g.stroke();g.globalAlpha=1}
   g.shadowBlur=0;
   drawFloaters(g,o=>[o.x,o.y]);
   g.restore();
@@ -1195,7 +1167,7 @@ function draw2d(){
 // ---- 3D (Three.js): a chase camera behind your ship, flying through a cube of space that wraps around.
 // Everything is drawn relative to the ship, using the nearest wrapped copy, so the cube feels endless.
 const R3=(()=>{
-  let Cf,Cu,T,ren,scene,cam,fog,fadeScene,fadeCam,fadeMat,stars,dust,skyObj,shipM,shieldM,ufoBody,ufoDome,ufoMs=[],partsM,shotsM,hemi,M,Mx,Col,V,V2,Q,Fv,Uv,Lv,Sv,focal=500,camReady=false,orbit=0,bank=0;
+  let Cf,Cu,T,ren,scene,cam,fog,fadeScene,fadeCam,fadeMat,stars,dust,skyObj,shipM,ufoBody,ufoDome,ufoMs=[],partsM,shotsM,hemi,M,Mx,Col,V,V2,Q,Fv,Uv,Lv,Sv,focal=500,camReady=false,orbit=0,bank=0;
   const glowCol=()=>theme.mono||(theme.marble?"#ffd27a":theme.hue?"#ff6ad5":theme.rock==="neon"?"#3ff6ff":theme.light?"#c0392b":"#ffb347");
   const nearFade=p=>Math.min(1,Math.max(0,(p.distanceTo(cam.position)-25)/85)); // things right in front of the lens fade out instead of filling the screen
   const seamFade=o=>{const d=delta(anchor,o);return Math.min(1,Math.max(0,(A3/2-Math.max(Math.abs(d[0]),Math.abs(d[1]),Math.abs(d[2])))/110))}; // fade out at the far side of the wrap, so nothing visibly jumps
@@ -1227,10 +1199,10 @@ const R3=(()=>{
     shotsM=new T.InstancedMesh(new T.SphereGeometry(1,8,6),new T.MeshBasicMaterial({fog:false}),MAXS);
     for(const m of[partsM,shotsM]){m.setColorAt(0,Col);m.count=0;m.frustumCulled=false;scene.add(m)}
     shipM=buildShip();
-    shieldM=new T.Mesh(new T.SphereGeometry(32,20,14),new T.MeshBasicMaterial({transparent:true,opacity:.13,depthWrite:false}));
+    
     ufoBody=new T.Mesh(new T.SphereGeometry(1,24,12),new T.MeshStandardMaterial({roughness:.3,metalness:.5}));ufoBody.scale.set(26,8,26); // saucer parts, cloned per saucer (sharing materials)
     ufoDome=new T.Mesh(new T.SphereGeometry(11,16,8,0,Math.PI*2,0,Math.PI/2),new T.MeshStandardMaterial({transparent:true,opacity:.75,roughness:.1}));ufoDome.position.y=4;
-    scene.add(shipM,shieldM);
+    scene.add(shipM);
     fadeScene=new T.Scene();fadeCam=new T.OrthographicCamera(-1,1,1,-1,0,1);
     fadeMat=new T.MeshBasicMaterial({transparent:true,depthTest:false,depthWrite:false});
     const quad=new T.Mesh(new T.PlaneGeometry(2,2),fadeMat);quad.position.z=-.5;fadeScene.add(quad); // full-screen veil for the Cosmic Trip smear
@@ -1275,7 +1247,7 @@ const R3=(()=>{
     for(const m of[sm.hull,sm.accent,sm.dark,sm.glass])m.wireframe=wire;
     for(const g of S.glows){g.material.color.set(glowCol());g.material.blending=add}S.muzzle.material.color.set(mono||(theme.light?"#c0392b":"#fff2c4"));S.muzzle.material.blending=add;
     b.color.set(mono||C.accent);b.emissive.set(mono||"#000000");b.wireframe=wire;
-    ufoDome.material.color.set(mono||C.fg);shieldM.material.color.set(shieldCol());shieldM.material.wireframe=wire;
+    ufoDome.material.color.set(mono||C.fg);
   }
   function rockMesh(o,used,isBoss){
     let m=meshes.get(o);
@@ -1357,10 +1329,10 @@ const R3=(()=>{
       for(const l of S.lights)l.visible=(now/30|0)%2===0; // blinking wingtip lights
       if(theme.hue)S.mats.accent.color.setHSL(hue/360,.9,.6);
     }
-    shieldM.visible=!!ship&&!!power.broccoli&&!(power.broccoli<120&&(now/6|0)%2);shieldM.position.set(0,0,0);
+    
     for(let i=0;i<Math.max(ufos.length,ufoMs.length);i++){const u=ufos[i];let m=ufoMs[i];if(!m){m=ufoMs[i]=new T.Group().add(ufoBody.clone(),ufoDome.clone());scene.add(m)}m.visible=!!u;if(u){rel(u,m.position);m.rotation.y=now*.08+i}}
-    fill(partsM,parts,MAXP,p=>{rel(p,V);const fade=nearFade(V);M.compose(V,cam.quaternion,Sv.setScalar(p.r));Col.copy(p.c3||(p.c3=new T.Color(p.c))).multiplyScalar(theme.light?1:Math.max(p.life/p.max,0)*(p.kind==="toxic"?.35:p.kind==="thrust"?.45:.9)*fade)});
-    fill(shotsM,shots,MAXS,s=>{rel(s,V);M.makeScale(2.6,2.6,2.6).setPosition(V);Col.set(shotCol())});
+    fill(partsM,parts,MAXP,p=>{rel(p,V);const fade=nearFade(V);M.compose(V,cam.quaternion,Sv.setScalar(p.r));Col.copy(p.c3||(p.c3=new T.Color(p.c))).multiplyScalar(theme.light?1:Math.max(p.life/p.max,0)*(p.kind==="thrust"?.45:.9)*fade)});
+    fill(shotsM,shots,MAXS,s=>{rel(s,V);const k=s.sp?4.2:2.6;M.makeScale(k,k,k).setPosition(V);Col.set(shotCol())});
     const pos=dust.geometry.attributes.position,h=DBOX/2,md=v=>mod(v,DBOX)-h;
     for(let i=0;i<NDUST;i++)pos.setXYZ(i,md(dustPos[i*3]-anchor.x),-md(dustPos[i*3+1]-anchor.y),-md(dustPos[i*3+2]-anchor.z));
     pos.needsUpdate=true;
@@ -1478,7 +1450,7 @@ function frame(t){
   const btn=$("pauseBtn");if(btn.hidden===(running&&!paused))btn.hidden=!(running&&!paused);
   const showTouch=touchUI&&running&&!paused;if(showTouch!==touchShown){touchShown=showTouch;for(const id of["stickZone","stickBase","fireBtn"])$(id).hidden=!showTouch;if(!showTouch)releaseTouch()}
   if((invertFrames>0)!==filterOn){filterOn=invertFrames>0;cv.style.filter=cv3.style.filter=filterOn?"invert(1) hue-rotate(180deg)":""}
-  const html=Object.entries(power).map(([k,v])=>`<span>${foodName(k)} ${god?"∞":Math.ceil(v/60)}</span>`).join("");
+  const html=Object.entries(power).map(([k,v])=>`<span>${foodName(k)}${v.n>1?" x"+v.n:""} ${god?"∞":Math.ceil(v.t/60)}</span>`).join("");
   if(html!==powHtml)$("powers").innerHTML=powHtml=html;
   const nk=running&&ORDER.find(k=>!unlocked.has(k)),nc=running&&!nk&&COSM.find(c=>!got.has(c.title)),nu=nk?THEMES[nk]:nc,nt=$("nextTheme"),key=nu&&nu.title+themeKey; // progress to the next locked theme (in that theme's own colors and font), then the next ship or trail
   if(key!==nextShown){nextShown=key;nt.hidden=!nu;if(nu){const C=(nk?nu:theme).css;Object.assign(nt.style,{background:C.bg,color:C.accent,borderColor:C.accent,fontFamily:C.display});nt.querySelector("small").style.color=C.dim;nt.querySelector("small span").textContent=nk?"Next theme":nc.c?"Next trail":"Next ship";$("nextName").textContent=nu.title}}
