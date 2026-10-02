@@ -23,12 +23,6 @@ canvas{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:
 #nextTheme i{display:block;height:100%;width:0;background:currentColor;transition:width .25s}
 #powers{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase}
 #powers span{border:1px solid var(--accent);color:var(--accent);border-radius:999px;padding:2px 8px}
-/* AI edition: the boss's trash talk, under its health bar */
-#bossTalk{position:fixed;z-index:3;top:calc(env(safe-area-inset-top,0px) + 92px);left:50%;transform:translateX(-50%);width:min(560px,86vw);text-align:center;pointer-events:none}
-#bossTalk b{display:block;font:600 .68rem var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--danger)}
-#bossTalk span{font:400 clamp(1rem,2.6vw,1.35rem)/1.25 var(--display);color:var(--fg);text-shadow:0 0 6px var(--bg),0 0 12px var(--bg);text-wrap:balance}
-#bossTalk.show{animation:talkIn 4.2s both}
-@keyframes talkIn{0%{opacity:0;translate:0 -6px}8%,85%{opacity:1;translate:0 0}100%{opacity:0}}
 #bossbar{position:fixed;z-index:3;top:calc(env(safe-area-inset-top,0px) + 46px);left:50%;transform:translateX(-50%);width:min(360px,60vw);text-align:center;font:400 .95rem var(--display);color:var(--danger);pointer-events:none}
 #bossbar div{height:8px;margin-top:4px;border:1px solid;border-radius:4px;overflow:hidden}
 #bossbar i{display:block;height:100%;width:100%;background:currentColor}
@@ -128,7 +122,6 @@ body.touch #pauseBtn{width:44px;height:44px;font-size:1rem}
   <div class="row"><button class="play" id="again">Play again</button><button class="opt" id="overMenu">Menu</button></div>
   <p class="keys desktoponly">Enter or Space plays again · T changes the theme</p>
 </div>
-<div id="bossTalk" hidden><b></b><span></span></div>
 <div id="bossbar" hidden><span id="bossName"></span><div><i></i></div></div>
 <div id="rotate"><p>Turn your phone sideways for the best view.</p><button class="opt" id="portraitOK">Play anyway</button></div>
 <div id="menu">
@@ -137,7 +130,7 @@ body.touch #pauseBtn{width:44px;height:44px;font-size:1rem}
   <p class="keys desktoponly">2D: ← → turn · ↑ thrust · Space fire<br>3D: arrows or mouse steer · W thrust · S reverse · Q/E roll · Space or left click fire<br>Esc or P pauses · T changes the theme · M music</p>
   <p class="keys touchonly">Left thumb steers (2D: push further to thrust; 3D flies forward by itself) · Right thumb: FIRE · II pauses</p>
   <div class="row"><button class="play" id="play">Play 2D</button><button class="play" id="play3d">Play 3D</button></div>
-  <div class="row"><button class="opt" id="themeBtn">Theme</button><button class="opt" id="musicBtn">Music</button><button class="opt" id="skinBtn" hidden></button><button class="opt" id="trailBtn" hidden></button><button class="opt" id="talkBtn" hidden></button><button class="opt" id="bossTestBtn" hidden>Boss test (500 HP)</button></div>
+  <div class="row"><button class="opt" id="themeBtn">Theme</button><button class="opt" id="musicBtn">Music</button><button class="opt" id="skinBtn" hidden></button><button class="opt" id="trailBtn" hidden></button></div>
   <p id="note"></p>
   <details>
     <summary>Credits</summary>
@@ -654,10 +647,10 @@ function wave(){
   announce(kind===0?theme.boss.toUpperCase():"WAVE "+level);hud();
 }
 function spawnBoss(p){
-  const hp=testBoss||12+4*(Math.round(level/5)-1),r=90*(mode3d?RS3:1),[dx,dy,dz]=rdir(),sp=mode3d?.8:.7;
+  const hp=12+4*(Math.round(level/5)-1),r=90*(mode3d?RS3:1),[dx,dy,dz]=rdir(),sp=mode3d?.8:.7;
   boss={x:p.x,y:p.y,z:p.z,vx:dx*sp,vy:dy*sp,vz:dz*sp,r,hp,max:hp,rot:0,spin:.004,id:rockId++,seed:Math.random()*99,pts:Array.from({length:16},()=>.86+Math.random()*.14),cracks:[],hurt:0,iframes:0};
   if(!mode3d){boss.x=Math.min(Math.max(boss.x,r),W-r);boss.y=Math.min(Math.max(boss.y,r),H-r)}
-  testBoss=0;bossHud();if(running){sfx("bossSpawn");talk("intro",1)}
+  bossHud();if(running)sfx("bossSpawn");
 }
 function spawnUfo(k=0,n=0){ // n>0: saucer k of a squadron of n, which keeps coming back until shot or its time runs out
   if(running&&!k)sfx("ufo");
@@ -673,7 +666,7 @@ function start(want3d){ // 2D and 3D are separate modes, picked here
   ac.resume();if(endBus){endBus.gain.setTargetAtTime(0,ac.currentTime,.05);endBus=null} // cut off the game-over music
   score=0;lives=3;level=0;rocks=[];shots=[];parts=[];foods=[];clouds=[];floaters=[];bolts=[];ufos=[];shower=null;boss=null;power={};god=false;mouseAt=null;mouseFire=clickQ=false;combo=0;comboT=0;aimT=null;
   ufoTimer=900;waveDelay=0;respawn=0;stopFrames=slowFrames=flash=invertFrames=0;shake=0;stats=newStats();
-  talkFetch();running=true;newShip();wave();menu.hidden=$("over").hidden=true;hud();musicPlay();
+  running=true;newShip();wave();menu.hidden=$("over").hidden=true;hud();musicPlay();
 }
 function puff(o,n,spread,kind="puff"){if(touchUI)n=Math.ceil(n*.6);for(let i=0;i<n;i++){const [dx,dy,dz]=rdir(),v=Math.random()*spread;parts.push({x:o.x,y:o.y,z:o.z,vx:dx*v,vy:dy*v,vz:dz*v,r:3+Math.random()*5,life:45,max:45,kind,c:pcol(kind)})}}
 function pcol(kind){ // particle color for the current theme
@@ -709,10 +702,10 @@ function bossHit(d,how="shot"){
   let a=Math.random()*6.28,rr=boss.r*.15;const crack=[[Math.cos(a)*rr,Math.sin(a)*rr]];
   for(let k=0;k<4;k++){rr+=boss.r*.2;a+=(Math.random()-.5)*.6;crack.push([Math.cos(a)*rr,Math.sin(a)*rr])}
   boss.cracks.push(crack);bossHud();
-  if(boss.hp<=0)bossDie();else if(boss.hp<=boss.max*.25&&!boss.low){boss.low=1;talk("low",1)}else talk("hit");
+  if(boss.hp<=0)bossDie();
 }
 function bossDie(){
-  const b=boss;boss=null;bossHud();stats.bosses++;talk("defeat",1);
+  const b=boss;boss=null;bossHud();stats.bosses++;
   stopFrames=10;slowFrames=60;kick(35);addScore(1000);
   sfx("bossDie");puff(b,40,3.5);buzz([40,30,80]);
   const dirs=mode3d?[[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],[0,0,1],[0,0,-1]]:Array.from({length:6},(_,k)=>[Math.cos(k/6*6.28),Math.sin(k/6*6.28),0]);
@@ -741,7 +734,7 @@ function pruneBomb(){
   else{flash=8;flashColor=theme.light?"#ffffff":theme.css.accent;bolts=[]}
 }
 function die(){
-  puff(ship,24,2.5);kick(30);ship=null;sfx("death");buzz([60,40,120]);lives--;if(boss)talk("gloat",1);power={};combo=comboT=0;aimT=null;hud();
+  puff(ship,24,2.5);kick(30);ship=null;sfx("death");buzz([60,40,120]);lives--;power={};combo=comboT=0;aimT=null;hud();
   if(lives>0)respawn=72;
   else{
     running=false;bank();bossHud();hud();musicStop(1.5);sfx("gameOver",newEndBus());
@@ -904,7 +897,6 @@ function update(dt){
   floaters=floaters.filter(f=>f.life>0);
 }
 function tick(real){ // one frame of game time; real is how many 60fps frames have passed
-  if(boss&&running&&performance.now()-talkAt>9000)talk("taunt");
   now+=real;hue=(hue+.8*real)%360;if(running)stats.t+=real;
   let dt=real;
   if(stopFrames>0){stopFrames-=real;dt=0} // hit-stop: freeze for a few frames on big hits
@@ -1406,7 +1398,7 @@ function setTheme(k){
   document.documentElement.style.colorScheme=theme.light?"light":"dark";
   document.title=theme.title;$("title").textContent=theme.title;$("msg").textContent=theme.tagline;
   $("bossName").textContent=theme.boss;if(!$("over").hidden)overText();
-  $("scan").hidden=!theme.scan;route();$("themeBtn").textContent="Theme: "+theme.title;if(talkOK)talkFetch();if(!$("pause").hidden)renderPicker();
+  $("scan").hidden=!theme.scan;route();$("themeBtn").textContent="Theme: "+theme.title;if(!$("pause").hidden)renderPicker();
   if(song)musicPlay(); // crossfade to the new theme's track
   if(jet){jetOff()} // the thruster restarts in the new theme's sound
   R3.applyTheme();
@@ -1435,7 +1427,7 @@ function size(){const d=Math.min(devicePixelRatio||1,2);W=cv.clientWidth;H=cv.cl
 // ---- pausing: everything stops, sound included, until you resume or go back to the menu
 function pause(){
   if(!running||paused)return;
-  paused=true;mouseAt=null;mouseFire=clickQ=false;window.speechSynthesis?.cancel();for(const k in keys)keys[k]=false;releaseTouch();jetOff();ac.suspend();
+  paused=true;mouseAt=null;mouseFire=clickQ=false;for(const k in keys)keys[k]=false;releaseTouch();jetOff();ac.suspend();
   $("modeBtn").textContent=mode3d?"Switch to 2D":"Switch to 3D";$("modeBtn").hidden=!mode3d&&!window.THREE; // no 3D library (offline before it was ever loaded): no 3D
   renderPicker();$("pause").hidden=false;$("resume").focus();
 }
@@ -1448,7 +1440,7 @@ function resume(){
   if(!paused)return;paused=false;$("pause").hidden=true;ac.resume();
 }
 function quitToMenu(){
-  if(running)bank();window.speechSynthesis?.cancel();
+  if(running)bank();
   paused=false;$("pause").hidden=$("over").hidden=true;ac.resume();jetOff();releaseTouch();
   running=false;musicStop(.8);ship=null;boss=null;ufos=[];shower=null;shots=[];clouds=[];foods=[];power={};aimT=null;floaters=floaters.filter(f=>f.kind==="toast");
   bossHud();hud();menu.hidden=false;
@@ -1466,50 +1458,6 @@ function frame(t){
   if(nu){const need=nu.unlock,from=nk?THEMES[ORDER[ORDER.indexOf(nk)-1]].unlock:(COSM[COSM.indexOf(nc)-1]||THEMES[ORDER.at(-1)]).unlock,total=banked+score,w=Math.max(0,Math.min(100,(total-from)/(need-from)*100)).toFixed(1); // the bar runs from the last unlock to the next
     if(w!==nextW){nextW=w;nt.querySelector("i").style.width=w+"%";$("nextAt").textContent=Math.max(0,need-total).toLocaleString()+" to go"}}
   requestAnimationFrame(frame);
-}
-
-// ---- AI edition: boss trash talk, written by Claude through the claude.ai sample capability. Anywhere else (GitHub) none of it shows.
-// One quick call per theme per visit, made on a click (Play, the toggle) or on a theme change once Claude has been allowed, so no consent prompt pops up mid-fight.
-const TALK={},TALK_KINDS=["intro","hit","low","gloat","defeat","taunt"];
-const BOSS_VOICE={ // each boss's casting: voices it would like, best first (Edge's natural voices, Google's, then Windows' old built-in ones), then pitch and rate
-  classic:[["Guy","Davis","Christopher","Google UK English Male","David"],.85,.95],rainbow:[["Ana","Maisie","Jenny","Google US English","Zira"],1.15,1.1],
-  crt:[["Roger","Steffan","Andrew","Mark"],.8,1],psych:[["Aria","Sonia","Michelle","Google UK English Female","Linda"],1,.85],
-  zeus:[["Thomas","Ryan","Christopher","Google UK English Male","Richard"],.75,.9],abyss:[["Davis","Eric","Guy","David"],.6,.85],
-  haunted:[["Ryan","Brian","Thomas","Google UK English Male","Richard"],.8,.9],outrun:[["Jenny","Ava","Emma","Google US English","Zira"],1,1.15],ink:[["Christopher","Eric","Andrew","Mark"],.7,.95]};
-function voiceFor(k){ // the best-sounding English voice this browser has, and among those the one this boss prefers
-  const vs=speechSynthesis.getVoices().filter(v=>/^en/i.test(v.lang)),q=v=>/Natural|Neural/.test(v.name)?3:/Google|Online/.test(v.name)?2:1,top=vs.filter(v=>q(v)===Math.max(...vs.map(q)));
-  for(const n of BOSS_VOICE[k][0]){const v=top.find(v=>(" "+v.name+" ").includes(" "+n+" "));if(v)return v}
-  return top[0]||null;
-}
-let testBoss=0,talkOn=store.get("talk",true),talkOK=false,talkDead=false,talkAt=-1e9,talkTimer=0,sampleFn=null;
-window.claude?.use?.("sample").then(s=>{if(!s)return;sampleFn=s;$("talkBtn").hidden=$("bossTestBtn").hidden=false;talkBtn()}).catch(()=>{});
-function talkBtn(){const b=$("talkBtn");b.textContent=talkDead?"Boss trash talk: unavailable":"Boss trash talk: "+(talkOn?"on":"off");b.disabled=talkDead}
-function talkFetch(){
-  const k=themeKey,T=THEMES[k];if(!sampleFn||!talkOn||talkDead||TALK[k])return;TALK[k]={};
-  talkSay(`Asking Claude for ${T.boss}'s lines...`);const wait=setTimeout(()=>{if(TALK[k]&&!TALK[k].all)talkSay("Still waiting for Claude. Is there a permission prompt?")},15000);
-  const ask=p=>sampleFn.json?sampleFn.json(p,{modelTier:"quick"}):sampleFn(p,{modelTier:"quick"}).then(r=>JSON.parse(r.text.slice(r.text.indexOf("{"),r.text.lastIndexOf("}")+1)));
-  ask(`Write trash talk for "${T.boss}", the boss in the "${T.title}" theme of an arcade space shooter (${T.tagline}) The player pilots a small ship, shoots, and grabs power-ups (${Object.values(T.names).join(", ")}); combos are called "${T.combo}". `
-    +`Voice: cocky, funny, in character for the theme, written to be performed out loud by a voice actor: punchy, with attitude, the odd evil laugh (Ha! Heh heh) or dramatic pause (...). PG, no swearing, no emojis, no quotation marks, each line at most 60 characters. ${k==="classic"?"Fart jokes are welcome.":"Never mention farts, gas or smells."}\n`
-    +`Reply with only a JSON object of string arrays: {"intro":[5 lines as the boss arrives],"hit":[8 lines when the player hits the boss],"low":[4 lines when the boss is almost destroyed],"gloat":[5 lines when the player loses a life],"defeat":[4 last words as the boss is destroyed],"taunt":[6 taunts mid-fight]}`)
-    .then(r=>{const all={};for(const n of TALK_KINDS)all[n]=(Array.isArray(r?.[n])?r[n]:[]).map(x=>String(x).replace(/["\u201c\u201d]/g,"").trim().slice(0,90)).filter(Boolean);TALK[k]={all,q:{}};talkOK=true;const v=window.speechSynthesis&&voiceFor(k);talkSay(`${T.boss} is ready to talk`+(v&&!/Natural|Neural/.test(v.name)?". For a modern voice, open this page in Microsoft Edge":""));if(boss&&running&&k===themeKey)talk("intro",1)}) // lines that land mid-fight start with the arrival line
-    .catch(e=>{delete TALK[k];console.warn("boss trash talk:",e);const c=e?.code||String(e?.message||e);
-      if(["not_granted","sampling_disabled","not_declared","capability_disabled","capability_removed"].includes(c)){talkDead=true;talkBtn()} // anything else: try again on the next Play
-      talkSay(c==="sampling_disabled"?"Boss talk needs AI-powered artifacts turned on in your claude.ai settings":c==="not_granted"?"Boss talk is off: this page isn't allowed to use Claude"
-        :c==="rate_limited"?"Boss talk: Claude is busy or you're out of usage. Try later":`Boss talk failed (${c}). Press Play to try again`)})
-    .finally(()=>clearTimeout(wait));
-}
-const talkSay=m=>{toast(m);$("note").textContent=m}; // trash-talk status: a toast in game, and the note under the menu buttons
-function bossTest(){ // AI edition: straight into a boss with 500 HP (wave 5, after 2.5 s), so there's time to hear it talk
-  appMode();start(store.get("3d",false));rocks=[];floaters=floaters.filter(f=>f.kind==="toast");level=4;testBoss=500;waveDelay=150;hud();
-}
-function talk(kind,cut){ // the boss says a line from this theme's set, no repeats until they run out; it waits its turn unless it's an arrival, a kill or a death (cut)
-  const t=TALK[themeKey];if(!talkOn||!t?.all||!t.all[kind].length||(!cut&&performance.now()-talkAt<4500))return;
-  if(!t.q[kind]?.length)t.q[kind]=[...t.all[kind]];
-  const el=$("bossTalk"),q=t.q[kind];const who=el.querySelector("b");who.textContent=theme.boss;who.hidden=!!boss; // the health bar already names a living boss
-  const line=q.splice(Math.random()*q.length|0,1)[0];el.querySelector("span").textContent=line;
-  if(window.speechSynthesis){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(line),[,pi,ra]=BOSS_VOICE[themeKey];u.voice=voiceFor(themeKey);u.lang=u.voice?.lang||"en-US";u.pitch=pi;u.rate=ra;speechSynthesis.speak(u)} // and says it out loud
-  el.hidden=false;el.classList.remove("show");void el.offsetWidth;el.classList.add("show");talkAt=performance.now();
-  clearTimeout(talkTimer);talkTimer=setTimeout(()=>el.hidden=true,4200);
 }
 
 // ---- keyboard and mouse
@@ -1568,7 +1516,7 @@ $("pauseBtn").onclick=()=>pause();$("resume").onclick=()=>{appMode();resume()};$
 $("resetBtn").onclick=()=>{$("resetDlg").returnValue="";$("resetDlg").showModal()};
 $("resetDlg").onclose=()=>{if($("resetDlg").returnValue!=="reset")return;try{for(const k of Object.keys(localStorage))if(k.startsWith("fartsteroids:")&&!/:(music|3d)$/.test(k))localStorage.removeItem(k)}catch{}location.reload()}; // settings (music, last mode) stay
 $("modeBtn").onclick=switchMode;
-$("play").onclick=()=>{appMode();start(false)};$("again").onclick=()=>{appMode();start(mode3d)};$("overMenu").onclick=quitToMenu;$("play3d").onclick=()=>{appMode();start(true)};$("themeBtn").onclick=cycleTheme;$("bossTestBtn").onclick=bossTest;$("talkBtn").onclick=()=>{talkOn=!talkOn;store.set("talk",talkOn);talkBtn();talkFetch()};$("musicBtn").onclick=$("pauseMusic").onclick=toggleMusic;musLabel();
+$("play").onclick=()=>{appMode();start(false)};$("again").onclick=()=>{appMode();start(mode3d)};$("overMenu").onclick=quitToMenu;$("play3d").onclick=()=>{appMode();start(true)};$("themeBtn").onclick=cycleTheme;$("musicBtn").onclick=$("pauseMusic").onclick=toggleMusic;musLabel();
 $("skinBtn").onclick=()=>cycleCos(SKINS);$("trailBtn").onclick=()=>cycleCos(TRAILS);
 
 // ---- boot
