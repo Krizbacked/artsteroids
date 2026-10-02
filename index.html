@@ -1470,7 +1470,17 @@ function frame(t){
 
 // ---- AI edition: boss trash talk, written by Claude through the claude.ai sample capability. Anywhere else (GitHub) none of it shows.
 // One quick call per theme per visit, made on a click (Play, the toggle) or on a theme change once Claude has been allowed, so no consent prompt pops up mid-fight.
-const TALK={},TALK_KINDS=["intro","hit","low","gloat","defeat","taunt"],BOSS_VOICE={classic:[.4,.9],rainbow:[1.7,1.15],crt:[.1,1.05],psych:[.8,.75],zeus:[.2,.8],abyss:[.1,.7],haunted:[.5,.8],outrun:[.7,1.2],ink:[.3,.85]}; // [pitch, rate] of each boss's voice
+const TALK={},TALK_KINDS=["intro","hit","low","gloat","defeat","taunt"];
+const BOSS_VOICE={ // each boss's casting: voices it would like, best first (Edge's natural voices, Google's, then Windows' old built-in ones), then pitch and rate
+  classic:[["Guy","Davis","Christopher","Google UK English Male","David"],.85,.95],rainbow:[["Ana","Maisie","Jenny","Google US English","Zira"],1.15,1.1],
+  crt:[["Roger","Steffan","Andrew","Mark"],.8,1],psych:[["Aria","Sonia","Michelle","Google UK English Female","Linda"],1,.85],
+  zeus:[["Thomas","Ryan","Christopher","Google UK English Male","Richard"],.75,.9],abyss:[["Davis","Eric","Guy","David"],.6,.85],
+  haunted:[["Ryan","Brian","Thomas","Google UK English Male","Richard"],.8,.9],outrun:[["Jenny","Ava","Emma","Google US English","Zira"],1,1.15],ink:[["Christopher","Eric","Andrew","Mark"],.7,.95]};
+function voiceFor(k){ // the best-sounding English voice this browser has, and among those the one this boss prefers
+  const vs=speechSynthesis.getVoices().filter(v=>/^en/i.test(v.lang)),q=v=>/Natural|Neural/.test(v.name)?3:/Google|Online/.test(v.name)?2:1,top=vs.filter(v=>q(v)===Math.max(...vs.map(q)));
+  for(const n of BOSS_VOICE[k][0]){const v=top.find(v=>(" "+v.name+" ").includes(" "+n+" "));if(v)return v}
+  return top[0]||null;
+}
 let testBoss=0,talkOn=store.get("talk",true),talkOK=false,talkDead=false,talkAt=-1e9,talkTimer=0,sampleFn=null;
 window.claude?.use?.("sample").then(s=>{if(!s)return;sampleFn=s;$("talkBtn").hidden=$("bossTestBtn").hidden=false;talkBtn()}).catch(()=>{});
 function talkBtn(){const b=$("talkBtn");b.textContent=talkDead?"Boss trash talk: unavailable":"Boss trash talk: "+(talkOn?"on":"off");b.disabled=talkDead}
@@ -1479,9 +1489,9 @@ function talkFetch(){
   talkSay(`Asking Claude for ${T.boss}'s lines...`);const wait=setTimeout(()=>{if(TALK[k]&&!TALK[k].all)talkSay("Still waiting for Claude. Is there a permission prompt?")},15000);
   const ask=p=>sampleFn.json?sampleFn.json(p,{modelTier:"quick"}):sampleFn(p,{modelTier:"quick"}).then(r=>JSON.parse(r.text.slice(r.text.indexOf("{"),r.text.lastIndexOf("}")+1)));
   ask(`Write trash talk for "${T.boss}", the boss in the "${T.title}" theme of an arcade space shooter (${T.tagline}) The player pilots a small ship, shoots, and grabs power-ups (${Object.values(T.names).join(", ")}); combos are called "${T.combo}". `
-    +`Voice: cocky, funny, in character for the theme. PG, no swearing, no emojis, no quotation marks, each line at most 60 characters. ${k==="classic"?"Fart jokes are welcome.":"Never mention farts, gas or smells."}\n`
+    +`Voice: cocky, funny, in character for the theme, written to be performed out loud by a voice actor: punchy, with attitude, the odd evil laugh (Ha! Heh heh) or dramatic pause (...). PG, no swearing, no emojis, no quotation marks, each line at most 60 characters. ${k==="classic"?"Fart jokes are welcome.":"Never mention farts, gas or smells."}\n`
     +`Reply with only a JSON object of string arrays: {"intro":[5 lines as the boss arrives],"hit":[8 lines when the player hits the boss],"low":[4 lines when the boss is almost destroyed],"gloat":[5 lines when the player loses a life],"defeat":[4 last words as the boss is destroyed],"taunt":[6 taunts mid-fight]}`)
-    .then(r=>{const all={};for(const n of TALK_KINDS)all[n]=(Array.isArray(r?.[n])?r[n]:[]).map(x=>String(x).replace(/["\u201c\u201d]/g,"").trim().slice(0,90)).filter(Boolean);TALK[k]={all,q:{}};talkOK=true;talkSay(`${T.boss} is ready to talk`);if(boss&&running&&k===themeKey)talk("intro",1)}) // lines that land mid-fight start with the arrival line
+    .then(r=>{const all={};for(const n of TALK_KINDS)all[n]=(Array.isArray(r?.[n])?r[n]:[]).map(x=>String(x).replace(/["\u201c\u201d]/g,"").trim().slice(0,90)).filter(Boolean);TALK[k]={all,q:{}};talkOK=true;const v=window.speechSynthesis&&voiceFor(k);talkSay(`${T.boss} is ready to talk`+(v&&!/Natural|Neural/.test(v.name)?". For a modern voice, open this page in Microsoft Edge":""));if(boss&&running&&k===themeKey)talk("intro",1)}) // lines that land mid-fight start with the arrival line
     .catch(e=>{delete TALK[k];console.warn("boss trash talk:",e);const c=e?.code||String(e?.message||e);
       if(["not_granted","sampling_disabled","not_declared","capability_disabled","capability_removed"].includes(c)){talkDead=true;talkBtn()} // anything else: try again on the next Play
       talkSay(c==="sampling_disabled"?"Boss talk needs AI-powered artifacts turned on in your claude.ai settings":c==="not_granted"?"Boss talk is off: this page isn't allowed to use Claude"
@@ -1497,7 +1507,7 @@ function talk(kind,cut){ // the boss says a line from this theme's set, no repea
   if(!t.q[kind]?.length)t.q[kind]=[...t.all[kind]];
   const el=$("bossTalk"),q=t.q[kind];const who=el.querySelector("b");who.textContent=theme.boss;who.hidden=!!boss; // the health bar already names a living boss
   const line=q.splice(Math.random()*q.length|0,1)[0];el.querySelector("span").textContent=line;
-  if(window.speechSynthesis){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(line),[pi,ra]=BOSS_VOICE[themeKey]||[1,1];u.pitch=pi;u.rate=ra;u.lang="en-US";speechSynthesis.speak(u)} // and says it out loud
+  if(window.speechSynthesis){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(line),[,pi,ra]=BOSS_VOICE[themeKey];u.voice=voiceFor(themeKey);u.lang=u.voice?.lang||"en-US";u.pitch=pi;u.rate=ra;speechSynthesis.speak(u)} // and says it out loud
   el.hidden=false;el.classList.remove("show");void el.offsetWidth;el.classList.add("show");talkAt=performance.now();
   clearTimeout(talkTimer);talkTimer=setTimeout(()=>el.hidden=true,4200);
 }
