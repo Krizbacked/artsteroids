@@ -13,7 +13,7 @@
 html,body{height:100%}
 body{background:var(--bg);color:var(--fg);font-family:var(--body);overflow:hidden;margin:0;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 canvas{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none}
-#c{z-index:1;cursor:crosshair}
+#c{z-index:1}body.is3d #c{cursor:crosshair}
 #scan{position:fixed;inset:0;z-index:2;pointer-events:none;background:repeating-linear-gradient(to bottom,rgb(0 0 0 / .3) 0 1px,transparent 1px 3px)}
 .hud{position:fixed;z-index:3;top:calc(env(safe-area-inset-top,0px) + 12px);left:calc(env(safe-area-inset-left,0px) + 16px);right:calc(env(safe-area-inset-right,0px) + 16px);display:flex;justify-content:space-between;align-items:flex-start;gap:12px;font:600 1.1rem var(--body);font-variant-numeric:tabular-nums;pointer-events:none}
 #wave{display:block;font-size:.72rem;color:var(--dim);letter-spacing:.08em;text-transform:uppercase}
@@ -127,7 +127,7 @@ body.touch #pauseBtn{width:44px;height:44px;font-size:1rem}
 <div id="menu">
   <h1 id="title">Fartsteroids</h1>
   <p id="msg"></p>
-  <p class="keys desktoponly">2D: ← → turn · ↑ thrust · Space fire<br>3D: arrows steer · W thrust · S brake · Q/E roll · Space fire<br>Mouse: move to aim, left click fires · Esc or P pauses · T changes the theme · M music</p>
+  <p class="keys desktoponly">2D: ← → turn · ↑ thrust · Space fire<br>3D: arrows or mouse steer · W thrust · S brake · Q/E roll · Space or left click fire<br>Esc or P pauses · T changes the theme · M music</p>
   <p class="keys touchonly">Left thumb steers (2D: push further to thrust; 3D flies forward by itself) · Right thumb: FIRE · II pauses</p>
   <div class="row"><button class="play" id="play">Play 2D</button><button class="play" id="play3d">Play 3D</button></div>
   <div class="row"><button class="opt" id="themeBtn">Theme</button><button class="opt" id="musicBtn">Music</button><button class="opt" id="skinBtn" hidden></button><button class="opt" id="trailBtn" hidden></button></div>
@@ -574,7 +574,7 @@ function jetOff(){
 
 // ---- game state. Positions are x,y,z: in 2D z stays 0 and the arena is the screen; in 3D the arena is a cube that wraps around.
 const cv=$("c"),g=cv.getContext("2d"),cv3=$("c3"),menu=$("menu"),bossEl=$("bossbar");
-let W=0,H=0,mode3d=false,mouseAt=null; // mouseAt: the cursor, once the mouse moves during play; it steers until a steering key takes over
+let W=0,H=0,mode3d=false,mouseAt=null,mouseFire=false,clickQ=false; // 3D mouse: the cursor once it moves (it steers until a steering key takes over), the left button held, a click still owed a shot
 const A3=1200,RS3=1.6; // 3D arena size, and how much bigger rocks are in 3D so they're easier to see and hit
 const R=[42,24,13],KIND=["big","mid","small"],MOOD=["smug","meh","scared"],POINTS=[20,50,100],keys={};
 const FOOD_TYPES=["beans","chili","cabbage","broccoli","prune","sbd"],FOODS=["beans","beans","chili","chili","cabbage","cabbage","broccoli","broccoli","sbd","sbd","prune"]; // the bomb is the rare one
@@ -628,7 +628,7 @@ const cycleCos=L=>{const o=owned(L);equip(o[(o.indexOf(L===TRAILS?TRAILS[trailI]
 function cosBtns(){for(const [id,L,c,w] of[["skin",SKINS,skin(),"Ship"],["trail",TRAILS,TRAILS[trailI],"Trail"]]){const b=$(id+"Btn");b.textContent=`${w}: ${c.title}`;b.hidden=owned(L).length<2}}
 function bossHud(){bossEl.hidden=!(boss&&running);$("bossName").textContent=theme.boss;if(boss)bossEl.querySelector("i").style.width=Math.max(0,boss.hp/boss.max*100)+"%"}
 
-// waves: four kinds of rock wave, then a boss every 5th; each is announced as WAVE N. From wave 6 three more kinds rotate in: 5 a closing ring, 6 a saucer squadron, 7 a meteor shower
+// waves: four kinds of rock wave, then a boss every 5th. Boss waves are announced by the boss's name, the rest as WAVE N. From wave 6 three more kinds rotate in: 5 a closing ring, 6 a saucer squadron, 7 a meteor shower
 function wave(){
   level++;foodChance=mode3d?.06:.1; // rare enough that each power-up is an event; 3D is lower because power-ups fly to you there
   const min=mode3d?380:180,kind=level<6||level%5===0?level%5:[5,2,6,7,3,4,1][(level-(level/5|0)-5)%7],add=(n,s,o)=>{for(let i=0;i<n;i++){const p=spot(min);rocks.push(rock(p.x,p.y,p.z,s,o))}};
@@ -644,7 +644,7 @@ function wave(){
   }
   if(kind===6){add(Math.min(2+(level>>3),4),0);const n=level<13?2:3;for(let k=0;k<n;k++)spawnUfo(k,n)}
   if(kind===7){add(2,1);shower={n:mode3d?Math.min(12+level,26):Math.min(16+level,32),t:0,d:rdir()}} // the meteors stream in from update()
-  announce("WAVE "+level);hud();
+  announce(kind===0?theme.boss.toUpperCase():"WAVE "+level);hud();
 }
 function spawnBoss(p){
   const hp=12+4*(Math.round(level/5)-1),r=90*(mode3d?RS3:1),[dx,dy,dz]=rdir(),sp=mode3d?.8:.7;
@@ -664,7 +664,7 @@ function start(want3d){ // 2D and 3D are separate modes, picked here
   if(want3d&&!R3.init()){$("note").textContent="3D needs an internet connection and WebGL, so this game is in 2D.";want3d=false}
   mode3d=want3d;cv3.hidden=!want3d;document.body.classList.toggle("is3d",want3d);store.set("3d",want3d);R3.reset();paused=false;$("pause").hidden=true;
   ac.resume();if(endBus){endBus.gain.setTargetAtTime(0,ac.currentTime,.05);endBus=null} // cut off the game-over music
-  score=0;lives=3;level=0;rocks=[];shots=[];parts=[];foods=[];clouds=[];floaters=[];bolts=[];ufos=[];shower=null;boss=null;power={};god=false;mouseAt=null;combo=0;comboT=0;aimT=null;
+  score=0;lives=3;level=0;rocks=[];shots=[];parts=[];foods=[];clouds=[];floaters=[];bolts=[];ufos=[];shower=null;boss=null;power={};god=false;mouseAt=null;mouseFire=clickQ=false;combo=0;comboT=0;aimT=null;
   ufoTimer=900;waveDelay=0;respawn=0;stopFrames=slowFrames=flash=invertFrames=0;shake=0;stats=newStats();
   running=true;newShip();wave();menu.hidden=$("over").hidden=true;hud();musicPlay();
 }
@@ -772,10 +772,10 @@ function gameOver(){ // final score, the saved best for this mode (2D and 3D apa
 // ---- flying
 const dead=v=>Math.abs(v)<.12?0:v; // joystick dead zone
 function steer(dt){
-  if(!mode3d){ // touch stick or mouse: the ship turns to face where you point, fast but easing in so it never overshoots
-    const m=mouseAt&&[mouseAt[0]-ship.x,mouseAt[1]-ship.y],to=stick.on&&Math.hypot(stick.x,stick.y)>.2?[stick.x,stick.y]:m&&Math.hypot(m[0],m[1])>20?m:null;
-    if(to){const d=Math.atan2(to[1],to[0])-ship.a;ship.a+=Math.max(-.2*dt,Math.min(.2*dt,Math.atan2(Math.sin(d),Math.cos(d))*Math.min(1,.3*dt)))}
-    else{if(keys.left)ship.a-=.08*dt;if(keys.right)ship.a+=.08*dt}
+  if(!mode3d){
+    if(stick.on&&Math.hypot(stick.x,stick.y)>.2){ // touch: the ship turns to face where the stick points, fast but easing in so it never overshoots
+      ship.a+=Math.max(-.2*dt,Math.min(.2*dt,stickOff()*Math.min(1,.3*dt)));
+    }else{if(keys.left)ship.a-=.08*dt;if(keys.right)ship.a+=.08*dt}
     return;
   }
   const f=ship.f,u=ship.u,r=cross3(f,u),[sx,sy]=(mouseAt?[mouseAt[0]/W*2-1,mouseAt[1]/H*2-1]:[stick.x,stick.y]).map(dead); // the mouse works like the touch stick: the further the cursor is from the middle, the faster you turn
@@ -825,7 +825,8 @@ function update(dt){
     ship.vx*=drag;ship.vy*=drag;ship.vz*=drag;ship.x+=ship.vx*dt;ship.y+=ship.vy*dt;ship.z+=ship.vz*dt;wrap(ship);ship.safe-=dt;
     aimT=mode3d?findAim(F):touchUI?findAim(F,.966,450):null; // phones get 2D aim assist within 15 degrees
     cool-=dt;
-    if(keys.fire&&cool<=0){
+    if((keys.fire||mouseFire||clickQ)&&cool<=0){
+      clickQ=false;
       cool=power.beans?4:10;muzzleAt=now;
       const sp=mode3d?12:7,dir=aimDir(F,sp),life=mode3d?80:55;
       for(const d of power.cabbage?spread(dir):[dir])shots.push({x:ship.x+F[0]*16,y:ship.y+F[1]*16,z:ship.z+F[2]*16,vx:d[0]*sp+ship.vx,vy:d[1]*sp+ship.vy,vz:d[2]*sp+ship.vz,life}),stats.shots++;
@@ -1446,7 +1447,7 @@ function size(){const d=Math.min(devicePixelRatio||1,2);W=cv.clientWidth;H=cv.cl
 // ---- pausing: everything stops, sound included, until you resume or go back to the menu
 function pause(){
   if(!running||paused)return;
-  paused=true;mouseAt=null;for(const k in keys)keys[k]=false;releaseTouch();jetOff();ac.suspend();
+  paused=true;mouseAt=null;mouseFire=clickQ=false;for(const k in keys)keys[k]=false;releaseTouch();jetOff();ac.suspend();
   $("modeBtn").textContent=mode3d?"Switch to 2D":"Switch to 3D";$("modeBtn").hidden=!mode3d&&!window.THREE; // no 3D library (offline before it was ever loaded): no 3D
   renderPicker();$("pause").hidden=false;$("resume").focus();
 }
@@ -1489,16 +1490,17 @@ addEventListener("keydown",e=>{
   if(paused)return;
   if(e.code==="KeyG"){if(!e.repeat&&running){god=!god;toast(god?"God mode on":"God mode off");if(god)pruneBomb()}return} // cheat: every power-up at once, for this game
   if(!running&&(e.code==="Enter"||e.code==="Space")){e.preventDefault();if(!e.repeat&&performance.now()-overAt>700)start(store.get("3d",false));return} // replays the last mode; not in the first moment of game over, so a fire key still held from playing can't skip the stats
-  if(MAP[e.code]){e.preventDefault();keys[MAP[e.code]]=true;if(["left","right",...mode3d?["up","down"]:[]].includes(MAP[e.code]))mouseAt=null} // a steering key takes over from the mouse
+  if(MAP[e.code]){e.preventDefault();keys[MAP[e.code]]=true;if(mode3d&&["left","right","up","down"].includes(MAP[e.code]))mouseAt=null} // a steering key takes over from the mouse
 });
 addEventListener("keyup",e=>{if(MAP[e.code])keys[MAP[e.code]]=false});
 addEventListener("blur",()=>{for(const k in keys)keys[k]=false;pause()}); // switching away pauses the game
 document.addEventListener("visibilitychange",()=>{if(document.hidden)pause()}); // phones: switching apps pauses too
-// mouse, both modes: left click fires, and moving the mouse steers (2D: the ship faces the cursor; 3D: like a joystick, the further the cursor is
-// from the middle, the faster you turn) until a steering key is pressed or the cursor leaves the window. No pointer lock, so it works in any browser.
-cv.addEventListener("mousedown",e=>{if(e.button===0&&running&&!paused&&!touchUI)keys.fire=true});
-addEventListener("mouseup",e=>{if(e.button===0&&!touchUI)keys.fire=false});
-addEventListener("mousemove",e=>{if(running&&!paused&&!touchUI&&(e.movementX||e.movementY))mouseAt=[Math.max(0,Math.min(W,e.clientX)),Math.max(0,Math.min(H,e.clientY))]}); // a still mouse doesn't count: browsers send zero-distance moves when the page changes under it
+// 3D mouse, used with the keyboard: left click fires, and moving the mouse steers like a joystick (the further the cursor is from the middle, the faster
+// you turn) until a steering key is pressed or the cursor leaves the window. The button is tracked apart from Space, so letting go of one never stops the other.
+addEventListener("pointerdown",e=>{if(e.pointerType==="mouse"&&e.button===0&&mode3d&&running&&!paused&&!e.target.closest?.("button"))mouseFire=clickQ=true});
+addEventListener("pointerup",e=>{if(e.pointerType==="mouse"&&e.button===0)mouseFire=false});
+addEventListener("pointermove",e=>{if(e.pointerType!=="mouse")return;if(!(e.buttons&1))mouseFire=false; // a release the page never heard about
+  if(mode3d&&running&&!paused&&(e.movementX||e.movementY))mouseAt=[Math.max(0,Math.min(W,e.clientX)),Math.max(0,Math.min(H,e.clientY))]}); // a still mouse doesn't count: browsers send zero-distance moves when the page changes under it
 document.documentElement.addEventListener("mouseleave",()=>mouseAt=null);
 
 // ---- touch: a joystick that appears wherever your left thumb lands, plus a hold-to-fire button
