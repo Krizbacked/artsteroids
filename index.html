@@ -29,7 +29,26 @@ canvas{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:
 #menu{position:fixed;inset:0;z-index:5;display:flex;flex-direction:column;align-items:center;gap:14px;overflow:auto;text-align:center;padding:24px 16px;background:var(--veil);touch-action:pan-y}
 #menu>:first-child{margin-top:auto}
 #menu>:last-child{margin-bottom:auto}
-#pause{position:fixed;inset:0;z-index:6;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;padding:24px 16px;background:var(--veil)}
+#pause{position:fixed;inset:0;z-index:6;display:flex;flex-direction:column;align-items:center;gap:14px;overflow:auto;text-align:center;padding:24px 16px;background:var(--veil)}
+#pause>:first-child{margin-top:auto}#pause>:last-child{margin-bottom:auto}#pauseBtns{align-items:center}
+/* pause menu picker: a strip of tiles each for themes, ships and trails; the picked one is outlined, locked ones are faded with the points they need */
+#picker{display:flex;flex-direction:column;gap:10px;width:100%;max-width:1000px}
+#picker h3{margin:0 0 4px;font:600 .68rem var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+.strip{display:flex;gap:8px;overflow-x:auto;padding:4px}.strip>:first-child{margin-left:auto}.strip>:last-child{margin-right:auto}
+.tile{flex:none;display:flex;flex-direction:column;align-items:center;gap:4px;width:100px;padding:0;border:0;background:none;color:var(--dim);font:600 .72rem var(--body);cursor:pointer}
+.tile .pv{display:grid;place-items:center;width:100%;height:52px;border-radius:10px;border:1px solid var(--dim);background:var(--bg);overflow:hidden}
+.tile .pv b{font-weight:400;font-size:.8rem;line-height:1.1;padding:0 6px}
+.tile svg{width:100%;height:100%}
+.tile small{font:inherit;min-height:1.2em;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tile[aria-pressed=true] .pv{outline:2px solid var(--accent);outline-offset:2px}.tile[aria-pressed=true]{color:var(--accent)}
+.tile:disabled{cursor:default}.tile:disabled .pv{opacity:.35}
+/* reset progress: a quiet button at the bottom of the menu, and a confirm box */
+#resetBtn{color:var(--dim);border-color:transparent;font-size:.8rem}
+dialog{max-width:min(420px,calc(100vw - 32px));border:1px solid var(--dim);border-radius:16px;padding:20px 22px;background:var(--bg);color:var(--fg);text-align:center}
+dialog::backdrop{background:var(--veil)}
+dialog h2{margin:0 0 8px;font:400 1.6rem var(--display);color:var(--accent)}
+dialog p{margin:0 0 16px;line-height:1.5;color:var(--dim)}
+.danger{border-color:var(--danger);color:var(--danger)}
 #pause h2{font:400 clamp(2rem,8vw,3.4rem) var(--display);margin:0;color:var(--accent)}
 /* game over: final score, saved best, this game's stats and theme progress */
 #over{position:fixed;inset:0;z-index:6;display:flex;flex-direction:column;align-items:center;gap:12px;overflow:auto;text-align:center;background:var(--veil);
@@ -75,7 +94,7 @@ body.touch #nextTheme{width:min(160px,30vw);padding:4px 8px 6px;font-size:.85rem
 body.touch #pauseBtn{width:44px;height:44px;font-size:1rem}
 #rotate{position:fixed;inset:0;z-index:9;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;padding:24px;background:var(--bg);color:var(--fg);font:400 1.2rem var(--display)}
 @media (orientation:portrait) and (max-width:700px){body.touch:not(.portraitOK) #rotate{display:flex}} /* phones only; tablets play fine upright */
-@media (max-height:500px){h1{font-size:clamp(1.8rem,7vw,3rem)}#menu{gap:8px;padding:12px 16px}.play{font-size:1.15rem;padding:10px 24px}#menu p{font-size:.85rem}
+@media (max-height:500px){h1{font-size:clamp(1.8rem,7vw,3rem)}#pause{gap:8px;padding:10px 16px}#pause h2{display:none}#picker{gap:4px}.tile{width:84px}.tile .pv{height:40px}#menu{gap:8px;padding:12px 16px}.play{font-size:1.15rem;padding:10px 24px}#menu p{font-size:.85rem}
   #over{gap:7px;padding-top:max(10px,env(safe-area-inset-top));padding-bottom:max(10px,env(safe-area-inset-bottom))}#over h2{font-size:1.3rem}#overScore{font-size:2.6rem}
   #overBest,#overProg{font-size:.78rem}#overStats{gap:6px 18px;padding:8px 18px}#overStats dd{font-size:1.15rem}#overStats dt{font-size:.58rem}}
 @media (max-width:560px){#overStats{grid-template-columns:repeat(2,minmax(96px,1fr))}}
@@ -90,9 +109,8 @@ body.touch #pauseBtn{width:44px;height:44px;font-size:1rem}
 <button id="fireBtn" class="tbtn touchonly" aria-label="Fire" hidden>FIRE</button>
 <div id="pause" hidden>
   <h2>Paused</h2>
-  <div class="row"><button class="play" id="resume">Resume</button><button class="opt" id="quit">Back to menu</button></div>
-  <div class="row"><button class="opt" id="modeBtn">Switch to 3D</button><button class="opt" id="pauseTheme">Theme</button><button class="opt" id="pauseMusic">Music</button></div>
-  <div class="row"><button class="opt" id="pskinBtn" hidden></button><button class="opt" id="ptrailBtn" hidden></button></div>
+  <div class="row" id="pauseBtns"><button class="play" id="resume">Resume</button><button class="opt" id="modeBtn">Switch to 3D</button><button class="opt" id="pauseMusic">Music</button><button class="opt" id="quit">Back to menu</button></div>
+  <div id="picker"></div>
   <p class="keys desktoponly">Esc or P to resume · T changes the theme · M music</p>
 </div>
 <div id="over" hidden>
@@ -132,7 +150,13 @@ body.touch #pauseBtn{width:44px;height:44px;font-size:1rem}
       <li>3D mode uses <a href="https://threejs.org/">Three.js</a>, MIT license.</li>
     </ul>
   </details>
+  <button class="opt" id="resetBtn">Reset progress</button>
 </div>
+<dialog id="resetDlg"><form method="dialog">
+  <h2>Reset progress?</h2>
+  <p>This clears your unlocked themes, ships and trails, your banked points and your best scores. It can't be undone.</p>
+  <div class="row"><button class="opt" value="cancel" autofocus>Cancel</button><button class="opt danger" value="reset">Reset everything</button></div>
+</form></dialog>
 <script src="sounds.js"></script><!-- LIB (clip pools) and CLIPS (base64 MP3s), made by build_sounds.py -->
 <script async src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.152.2/three.min.js"></script><!-- only used by 3D mode -->
 <script>
@@ -151,52 +175,52 @@ const MAJOR=[0,2,4,5,7,9,11,12];
 const THEMES={
   classic:{title:"Fartsteroids",unlock:0,tagline:"Shoot the rocks. Big rocks let out long, deep farts and small ones squeak. Pop them fast to play a tune.",
     css:{bg:"#14150c",fg:"#ecebd4",dim:"#8d8f6a",accent:"#b9cc3a",rock:"#c9b98a",veil:"rgb(0 0 0 / .62)",display:'"Bagel Fat One","Arial Black",sans-serif'},
-    faces:true,rock:"plain",icons:"fart",pickup:"#8dff6a",combo:"FART",boss:"Mega-Roid",bossDown:"MEGA-ROID DOWN!",ufo:"UFO!",over:["Out of gas","Farts ripped","Best fart chain","Mega-Roids down","UFOs downed","Snacks eaten"],waves:["Pebble Storm","Bean Night","The Big One","The Dutch Oven","Toot Squadron","Gale Force Toots"],
+    faces:true,rock:"plain",icons:"fart",pickup:"#8dff6a",combo:"FART",boss:"Mega-Roid",bossDown:"MEGA-ROID DOWN!",ufo:"UFO!",over:["Out of gas","Farts ripped","Best fart chain","Mega-Roids down","UFOs downed","Snacks eaten"],
     names:{beans:"Beans",chili:"Chili",cabbage:"Cabbage",broccoli:"Broccoli",prune:"Prune",sbd:"Silent But Deadly"}},
   rainbow:{title:"Sugar Rush",unlock:2500,tagline:"Smash the candy rocks before the sugar crash. Quick smashes ring out a tune.",
     css:{bg:"#1a0f24",fg:"#fff4fb",dim:"#b49acb",accent:"#ff6ad5",rock:"#ffd36a",veil:"rgb(26 15 36 / .72)",display:'"Chewy","Bagel Fat One",cursive'},
     hue:true,trail:true,faces:true,rock:"candy",icons:"candy",backdrop:"candy",pickup:"#7df3ff",shield:"#ff6ad5",cloud:"#b6ff5c",toxic:"#ffffff",
-    combo:"SWEET",boss:"King Gumball",bossDown:"GUMBALL CRUSHED!",ufo:"SOUR!",over:["Sugar crash","Candies smashed","Sweetest streak","Gumballs crushed","Sours squashed","Treats grabbed"],waves:["Sprinkle Shower","Candy Rain","Jawbreakers","Ring Pop","Sour Patrol","Pop Rocks"],
+    combo:"SWEET",boss:"King Gumball",bossDown:"GUMBALL CRUSHED!",ufo:"SOUR!",over:["Sugar crash","Candies smashed","Sweetest streak","Gumballs crushed","Sours squashed","Treats grabbed"],
     names:{beans:"Jelly Beans",chili:"Fireball Candy",cabbage:"Sprinkles",broccoli:"Bubblegum Shield",prune:"Sugar Bomb",sbd:"Glitter Trail"}},
   crt:{title:"Vector Blaster '81",unlock:7500,tagline:"INSERT COIN. Blast the vector rocks. Fast hits chain into a combo.",
     css:{bg:"#020b05",fg:"#4dff88",dim:"#1f8f47",accent:"#4dff88",rock:"#4dff88",veil:"rgb(2 11 5 / .75)",display:'"VT323",ui-monospace,monospace'},
     mono:"#4dff88",glow:10,scan:true,flicker:true,wire:true,crush:true,rock:"plain",icons:"vector",
-    combo:"COMBO",boss:"MOTHERSHIP",bossDown:"MOTHERSHIP DESTROYED",ufo:"SAUCER!",over:["GAME OVER","ROCKS BLASTED","MAX COMBO","MOTHERSHIPS DOWN","SAUCERS SHOT","POWER-UPS"],waves:["ASTEROID FIELD","BONUS ROUND","HEAVY METAL","PINCER ATTACK","SAUCER SQUADRON","METEOR STORM"],
+    combo:"COMBO",boss:"MOTHERSHIP",bossDown:"MOTHERSHIP DESTROYED",ufo:"SAUCER!",over:["GAME OVER","ROCKS BLASTED","MAX COMBO","MOTHERSHIPS DOWN","SAUCERS SHOT","POWER-UPS"],
     names:{beans:"RAPID",chili:"FLAME",cabbage:"SPREAD",broccoli:"SHIELD",prune:"SMART BOMB",sbd:"CLOAK"}},
   psych:{title:"Cosmic Trip",unlock:12500,tagline:"Far out. Zap the wobbling rocks and ride the vibes. Fast zaps play a groove.",
     css:{bg:"#0d0217",fg:"#fdf3ff",dim:"#b48ad8",accent:"#3cf2c4",rock:"#ff4fd8",veil:"rgb(13 2 23 / .7)",display:'"Monoton","Arial Black",sans-serif'},
     hue:true,smear:.14,wobble:.14,invert:true,rock:"plain",icons:"cosmic",pickup:"#ffe14d",shield:"#3cf2c4",cloud:"#ff4fd8",toxic:"#b48ad8",
-    combo:"GROOVY",boss:"The Third Eye",bossDown:"THE EYE IS CLOSED",ufo:"FAR OUT!",over:["Trip's over","Rocks zapped","Grooviest run","Third Eyes closed","Saucers zapped","Vibes caught"],waves:["Stardust","Magic Hour","Heavy Vibes","Mandala","Close Encounters","Shooting Stars"],
+    combo:"GROOVY",boss:"The Third Eye",bossDown:"THE EYE IS CLOSED",ufo:"FAR OUT!",over:["Trip's over","Rocks zapped","Grooviest run","Third Eyes closed","Saucers zapped","Vibes caught"],
     names:{beans:"Lava Lamp",chili:"Sitar Fire",cabbage:"Kaleidoscope",broccoli:"Mind Shield",prune:"Big Bang",sbd:"Incense Trail"}},
   zeus:{title:"Wrath of Olympus",unlock:17500,tagline:"The Titans hurl boulders at Olympus. Smite them with lightning. Swift smiting sings on the lyre.",
     css:{bg:"#0f1726",fg:"#f5efe0",dim:"#9aa6b8",accent:"#e8c45a",rock:"#d9d3c4",veil:"rgb(15 23 38 / .7)",display:'"Cinzel",Georgia,serif'},
     marble:true,bolts:true,echo:true,thunder:true,rock:"marble",icons:"olympus",backdrop:"storm",pickup:"#ffd34d",shield:"#e8c45a",cloud:"#6b5a8a",toxic:"#8a6fb3",
     flame:()=>`hsl(${38+Math.random()*16|0},100%,60%)`,spark:["#e8c45a","#fff1a8","#f5efe0"],
-    combo:"SMITE",boss:"Kronos the Titan",bossDown:"KRONOS FALLS!",ufo:"SMITTEN!",over:["Fallen from Olympus","Boulders smitten","Mightiest smiting","Titans felled","Harpies slain","Gifts of the gods"],waves:["Hail of Stones","Feast of the Gods","Titans' Fall","Phalanx","The Harpies","Rain of Fire"],
+    combo:"SMITE",boss:"Kronos the Titan",bossDown:"KRONOS FALLS!",ufo:"SMITTEN!",over:["Fallen from Olympus","Boulders smitten","Mightiest smiting","Titans felled","Harpies slain","Gifts of the gods"],
     names:{beans:"Ambrosia",chili:"Prometheus' Fire",cabbage:"Golden Arrows",broccoli:"Aegis",prune:"Thunderbolt",sbd:"Hades' Mist"}},
   abyss:{title:"Abyss",unlock:22500,tagline:"Deep down, glowing jellies drift in the dark. Pop them before they sting. Quick pops ping like sonar.",
     css:{bg:"#021421",fg:"#d8f6ff",dim:"#4f8aa3",accent:"#3fe0d0",rock:"#5ff3ff",veil:"rgb(2 20 33 / .72)",display:'"Comfortaa","Rubik",sans-serif'},
     rock:"jelly",particles:"bubble",backdrop:"rays",echo:true,muffle:true,icons:"abyss",pickup:"#ffe66b",shield:"#ffb36b",cloud:"#c86bff",toxic:"#7df9ff",shot:"#d8f6ff",
     flame:()=>`hsl(${45+Math.random()*20|0},100%,65%)`,spark:["#7df9ff","#d8f6ff","#3fe0d0"],scale:[0,2,4,7,9,12,14,16],sky:{stars:false,fog:[150,780],dust:"#9fdcff",dustSize:2.4},
-    combo:"DEPTH",boss:"The Kraken",bossDown:"KRAKEN SLAIN!",ufo:"SUNK!",over:["Lost to the deep","Jellies popped","Deepest dive","Krakens slain","Subs sunk","Treasures found"],waves:["Bubble Swarm","Feeding Frenzy","The Deep","The Whirlpool","Wolf Pack","Riptide"],
+    combo:"DEPTH",boss:"The Kraken",bossDown:"KRAKEN SLAIN!",ufo:"SUNK!",over:["Lost to the deep","Jellies popped","Deepest dive","Krakens slain","Subs sunk","Treasures found"],
     names:{beans:"Torpedoes",chili:"Anglerfish Flame",cabbage:"Squid Ink",broccoli:"Shell Shield",prune:"Depth Charge",sbd:"Eel Trail"}},
   haunted:{title:"Haunted Hollow",unlock:27500,tagline:"Pumpkins, tombstones and skulls rise from the fog. Smash them all. Fast smashes play the organ.",
     css:{bg:"#140b1f",fg:"#f2e7ff",dim:"#8e78a8",accent:"#ff8a1f",rock:"#ff8a1f",veil:"rgb(20 11 31 / .72)",display:'"Creepster","Bagel Fat One",cursive'},
     faces:true,rock:"spooky",backdrop:"moon",icons:"haunted",pickup:"#ffb347",shield:"#fffbe0",cloud:"#9dff6b",toxic:"#e8f0ff",shot:"#ffb347",
     flame:()=>`hsl(${150+Math.random()*30|0},90%,65%)`,spark:["#ff8a1f","#c9b6ff","#9dff6b"],scale:[0,2,3,5,7,8,11,12],sky:{obj:"moon",fog:[250,950]},
-    combo:"SPOOKY",boss:"Headless Horseman",bossDown:"THE HORSEMAN RIDES NO MORE",ufo:"BOO!",over:["Rest in peace","Spooks smashed","Spookiest chain","Horsemen felled","Banshees banished","Treats taken"],waves:["Graveyard Shift","Trick or Treat","The Witching Hour","The Coven","Banshee Flight","Grave Rain"],
+    combo:"SPOOKY",boss:"Headless Horseman",bossDown:"THE HORSEMAN RIDES NO MORE",ufo:"BOO!",over:["Rest in peace","Spooks smashed","Spookiest chain","Horsemen felled","Banshees banished","Treats taken"],
     names:{beans:"Candy Corn",chili:"Will-o'-Wisp",cabbage:"Bat Swarm",broccoli:"Garlic Shield",prune:"Full Moon",sbd:"Ghost Trail"}},
   outrun:{title:"Neon Outrun",unlock:32500,tagline:"Midnight on the neon grid. Blast the polygons and keep the streak alive.",
     css:{bg:"#120626",fg:"#ffe9ff",dim:"#9b6bc4",accent:"#ff3fbf",rock:"#3ff6ff",veil:"rgb(18 6 38 / .72)",display:'"Audiowide","Rubik",sans-serif'},
     rock:"neon",glow:12,backdrop:"sunset",icons:"outrun",pickup:"#fff04d",shield:"#3ff6ff",cloud:"#ff3fbf",toxic:"#b46bff",shot:"#ff3fbf",
     flame:()=>pick(["#ff3fbf","#3ff6ff","#fff04d"]),spark:["#ff3fbf","#3ff6ff","#fff04d"],scale:[0,3,5,7,10,12,15,17],sky:{obj:"sun",fog:[300,1000]},
-    combo:"STREAK",boss:"The Mainframe",bossDown:"MAINFRAME OFFLINE",ufo:"HACKED!",over:["Signal lost","Polygons blasted","Longest streak","Mainframes crashed","Chasers hacked","Boosts grabbed"],waves:["Night Drive","Synth Storm","Heavy Traffic","Gridlock","Police Chase","Data Stream"],
+    combo:"STREAK",boss:"The Mainframe",bossDown:"MAINFRAME OFFLINE",ufo:"HACKED!",over:["Signal lost","Polygons blasted","Longest streak","Mainframes crashed","Chasers hacked","Boosts grabbed"],
     names:{beans:"Overdrive",chili:"Nitro",cabbage:"Laser Fan",broccoli:"Holo Shield",prune:"EMP",sbd:"Ghost Mode"}},
   ink:{title:"Ink & Steel",unlock:37500,tagline:"Brush and blade. Cut down the ink stones. Swift strikes ring the shamisen.",
     css:{bg:"#efe6d2",fg:"#1b1b1b",dim:"#7d7468",accent:"#c0392b",rock:"#1b1b1b",veil:"rgb(239 230 210 / .82)",display:'"Shojumaru","Cinzel",serif'},
     light:true,rock:"ink",backdrop:"paper",icons:"ink",pickup:"#c0392b",shield:"#3c6e47",cloud:"#1b1b1b",toxic:"#8a8a8a",shot:"#1b1b1b",
     flame:()=>`hsl(${5+Math.random()*20|0},85%,50%)`,spark:["#1b1b1b","#3a3a3a","#c0392b"],scale:[0,1,5,7,8,12,13,17],sky:{stars:false,fog:[300,1100],dust:"#5a5248"},
-    combo:"STRIKE",boss:"Oni Demon",bossDown:"THE ONI IS VANQUISHED",ufo:"SLAIN!",over:["The ink dries","Stones cut","Longest strike","Oni vanquished","Ninjas slain","Gear gathered"],waves:["Falling Leaves","Festival Night","Mountain Pass","Ambush","Shadow Clan","Arrow Storm"],
+    combo:"STRIKE",boss:"Oni Demon",bossDown:"THE ONI IS VANQUISHED",ufo:"SLAIN!",over:["The ink dries","Stones cut","Longest strike","Oni vanquished","Ninjas slain","Gear gathered"],
     names:{beans:"Sake",chili:"Fire Arrows",cabbage:"Shuriken Spread",broccoli:"Bamboo Shield",prune:"Divine Wind",sbd:"Smoke Bomb"}},
 };
 const ORDER=["classic","rainbow","crt","psych","zeus","abyss","haunted","outrun","ink"];
@@ -211,11 +235,12 @@ const SKINS=[{title:"Standard",unlock:0},{title:"Gold Leaf",unlock:45000,hull:"#
   {title:"Lava Forge",unlock:90000,hull:"#4a1c10",accent:"#ff6a1a",dark:"#1a0a05",glass:"#ffb347",shape:2},{title:"Royal Violet",unlock:105000,hull:"#7b3fe4",accent:"#ffd34d",dark:"#2a1450",glass:"#d9c2ff",shape:1}];
 const TRAILS=[{title:"None",unlock:0},{title:"Sparkles",unlock:52500,c:()=>pick(["#ffffff","#ffe9a0","#bfe9ff"]),r:1.8,life:30,j:1.2},
   {title:"Smoke",unlock:67500,c:()=>"#8f8f9c",r:4.5,life:50,j:.25},{title:"Comet",unlock:82500,c:()=>`hsl(${20+Math.random()*30|0},100%,60%)`,r:4,life:24,j:.2},
-  {title:"Plasma",unlock:97500,c:()=>`hsl(${180+Math.random()*50|0},100%,65%)`,r:2.5,life:20,j:2},{title:"Prism",unlock:112500,c:()=>`hsl(${now*4%360|0},95%,62%)`,r:2.8,life:34,j:.4}];
+  {title:"Plasma",unlock:97500,c:()=>`hsl(${180+Math.random()*50|0},100%,65%)`,r:2.5,life:20,j:2},{title:"Prism",unlock:112500,c:(t=now)=>`hsl(${t*4%360|0},95%,62%)`,r:2.8,life:34,j:.4}];
 const COSM=[...SKINS.slice(1),...TRAILS.slice(1)].sort((a,b)=>a.unlock-b.unlock),got=new Set([...store.get("cosm",[]),...COSM.filter(c=>c.unlock<=banked).map(c=>c.title)]);
 const owned=L=>L.filter(c=>!c.unlock||got.has(c.title)),pickOwned=(L,k)=>Math.max(0,L.indexOf(owned(L).find(c=>c.title===store.get(k))));
 let skinI=pickOwned(SKINS,"skin"),trailI=pickOwned(TRAILS,"trail");
 const skin=()=>SKINS[skinI];
+const SHIP_PTS=[[[15,0],[-10,-9],[-6,0],[-10,9]],[[19,0],[-10,-7],[-4,0],[-10,7]],[[13,0],[-5,-5],[-11,-12],[-7,0],[-11,12],[-5,5]]]; // 2D ship outlines: classic, dart, wide wing
 const foodName=t=>theme.names[t],pickupText=t=>`${foodName(t)}: ${POWER_WHAT[t]}`; // worked out when drawn, so a theme swap renames messages already on screen
 
 // ---- sound
@@ -597,17 +622,17 @@ const announce=text=>{floaters=floaters.filter(f=>f.kind!=="announce");floaters.
 const toast=text=>floaters.push({kind:"toast",text,life:180,max:180});
 function hud(){$("score").textContent=score.toLocaleString();$("wave").textContent=running?"Wave "+level:"";$("lives").textContent="▲".repeat(Math.max(lives,0))}
 function addScore(p){score+=p;hud();for(const k of ORDER){const t=THEMES[k];if(!unlocked.has(k)&&banked+score>=t.unlock){unlocked.add(k);store.set("unlocks",[...unlocked]);stats.unl.push(t.title);setTheme(k);announce(t.title);sfx("waveClear");buzz([20,40,20,40,50]);toast(`New theme unlocked! ${touchUI?"Switch back from the pause menu":"Press T to switch back"}`)}}
-  for(const c of COSM)if(!got.has(c.title)&&banked+score>=c.unlock){got.add(c.title);store.set("cosm",[...got]);stats.unl.push(c.title);equip(c);announce(c.title);sfx("waveClear");buzz([20,40,20,40,50]);toast(`New ${c.c?"trail":"ship"} unlocked! Change it from the ${touchUI?"pause ":""}menu`)}}
+  for(const c of COSM)if(!got.has(c.title)&&banked+score>=c.unlock){got.add(c.title);store.set("cosm",[...got]);stats.unl.push(c.title);equip(c);announce(c.title);sfx("waveClear");buzz([20,40,20,40,50]);toast(`New ${c.c?"trail":"ship"} unlocked! Change it in the pause menu`)}}
 function equip(c){if(c.c||c===TRAILS[0]){trailI=TRAILS.indexOf(c);store.set("trail",c.title)}else{skinI=SKINS.indexOf(c);store.set("skin",c.title);R3.applyTheme()}cosBtns()}
 const cycleCos=L=>{const o=owned(L);equip(o[(o.indexOf(L===TRAILS?TRAILS[trailI]:skin())+1)%o.length])};
-function cosBtns(){for(const [id,L,c,w] of[["skin",SKINS,skin(),"Ship"],["trail",TRAILS,TRAILS[trailI],"Trail"]])for(const b of[$(id+"Btn"),$("p"+id+"Btn")]){b.textContent=`${w}: ${c.title}`;b.hidden=owned(L).length<2}}
+function cosBtns(){for(const [id,L,c,w] of[["skin",SKINS,skin(),"Ship"],["trail",TRAILS,TRAILS[trailI],"Trail"]]){const b=$(id+"Btn");b.textContent=`${w}: ${c.title}`;b.hidden=owned(L).length<2}}
 function bossHud(){bossEl.hidden=!(boss&&running);$("bossName").textContent=theme.boss;if(boss)bossEl.querySelector("i").style.width=Math.max(0,boss.hp/boss.max*100)+"%"}
 
-// waves: four named rock waves, then a boss every 5th. From wave 6 three more kinds rotate in: 5 a closing ring, 6 a saucer squadron, 7 a meteor shower
+// waves: four kinds of rock wave, then a boss every 5th; each is announced as WAVE N. From wave 6 three more kinds rotate in: 5 a closing ring, 6 a saucer squadron, 7 a meteor shower
 function wave(){
   level++;foodChance=mode3d?.06:.1; // rare enough that each power-up is an event; 3D is lower because power-ups fly to you there
   const min=mode3d?380:180,kind=level<6||level%5===0?level%5:[5,2,6,7,3,4,1][(level-(level/5|0)-5)%7],add=(n,s,o)=>{for(let i=0;i<n;i++){const p=spot(min);rocks.push(rock(p.x,p.y,p.z,s,o))}};
-  if(kind===0){spawnBoss(spot(min+150));announce(theme.boss.toUpperCase());return hud()}
+  if(kind===0)spawnBoss(spot(min+150));
   if(kind===1)add(Math.min(level+2,10),0);
   if(kind===2){add(Math.min(6+level,16),2);add(2,1)}
   if(kind===3){foodChance=mode3d?.18:.28;add(Math.min(level+1,9),0)}
@@ -619,7 +644,7 @@ function wave(){
   }
   if(kind===6){add(Math.min(2+(level>>3),4),0);const n=level<13?2:3;for(let k=0;k<n;k++)spawnUfo(k,n)}
   if(kind===7){add(2,1);shower={n:mode3d?Math.min(12+level,26):Math.min(16+level,32),t:0,d:rdir()}} // the meteors stream in from update()
-  announce(kind===1?"Wave "+level:theme.waves[kind-2]);hud();
+  announce("WAVE "+level);hud();
 }
 function spawnBoss(p){
   const hp=12+4*(Math.round(level/5)-1),r=90*(mode3d?RS3:1),[dx,dy,dz]=rdir(),sp=mode3d?.8:.7;
@@ -894,7 +919,7 @@ function tick(real){ // one frame of game time; real is how many 60fps frames ha
 
 // ---- 2D drawing (faces, lanterns and power-up icons are also used as 3D textures)
 const shakeXY=()=>shake<.3?[0,0]:[(Math.random()-.5)*2*shake,(Math.random()-.5)*2*shake];
-const rockColor=o=>theme.mono||(theme.hue?`hsl(${(hue+o.id*47)%360|0},90%,66%)`:theme.rock==="neon"?(o.id%2?"#ff3fbf":"#3ff6ff"):theme.css.rock);
+const rockColor=(o,T=theme)=>T.mono||(T.hue?`hsl(${(hue+o.id*47)%360|0},90%,66%)`:T.rock==="neon"?(o.id%2?"#ff3fbf":"#3ff6ff"):T.css.rock);
 const faceColor=()=>theme.mono||theme.css.fg;
 function rockPath(c,o,pts){
   c.beginPath();
@@ -1153,7 +1178,7 @@ function draw2d(){
   }else{g.fillStyle=shotCol();for(const s of shots){g.beginPath();g.arc(s.x,s.y,2,0,6.28);g.fill()}}
   if(ship&&!(ship.safe>0&&(ship.safe|0)%12<6)){
     const sk=skin();g.save();g.translate(ship.x,ship.y);g.rotate(ship.a);g.strokeStyle=T.mono||sk.accent||C.fg;g.lineWidth=2;g.beginPath();
-    for(const [x,y] of[[[15,0],[-10,-9],[-6,0],[-10,9]],[[19,0],[-10,-7],[-4,0],[-10,7]],[[13,0],[-5,-5],[-11,-12],[-7,0],[-11,12],[-5,5]]][sk.shape|0])g.lineTo(x,y); // classic, dart, wide wing
+    for(const [x,y] of SHIP_PTS[sk.shape|0])g.lineTo(x,y);
     g.closePath();if(sk.hull&&!T.mono){g.fillStyle=sk.hull;g.globalAlpha=.6;g.fill();g.globalAlpha=1}g.stroke();g.restore();
   }
   if(ship&&aimT){const t=aimT,s=(t.r||16)+7,k=s*.4;g.strokeStyle=t===boss?"#ff5a4f":T.mono||C.accent;g.lineWidth=2;g.globalAlpha=.8;g.beginPath(); // phones: lock-on brackets on the aim-assist target
@@ -1392,7 +1417,7 @@ function setTheme(k){
   document.documentElement.style.colorScheme=theme.light?"light":"dark";
   document.title=theme.title;$("title").textContent=theme.title;$("msg").textContent=theme.tagline;
   $("bossName").textContent=theme.boss;if(!$("over").hidden)overText();
-  $("scan").hidden=!theme.scan;route();$("themeBtn").textContent=$("pauseTheme").textContent="Theme: "+theme.title;
+  $("scan").hidden=!theme.scan;route();$("themeBtn").textContent="Theme: "+theme.title;if(!$("pause").hidden)renderPicker();
   if(song)musicPlay(); // crossfade to the new theme's track
   if(jet){jetOff()} // the thruster restarts in the new theme's sound
   R3.applyTheme();
@@ -1403,6 +1428,18 @@ function cycleTheme(){
   $("note").textContent=locked?`Next theme: ${THEMES[locked].title}, ${Math.max(0,THEMES[locked].unlock-banked-(running?score:0)).toLocaleString()} points to go.`:"All themes unlocked.";
   if(running)announce(theme.title);
 }
+function renderPicker(){ // the pause menu's tiles: every theme in its own colors and font, every ship and trail as it looks in this theme
+  const strip=(h,tiles)=>`<section><h3>${h}</h3><div class="strip">${tiles.join("")}</div></section>`,
+    tile=(k,on,item,pv,cap,style="")=>{const has=!item.unlock||(k[0]==="t"?unlocked.has(k.slice(2)):got.has(item.title));
+      return`<button class="tile" data-k="${k}" aria-pressed="${on}"${has?"":" disabled"}><span class="pv" style='${style}'>${pv}</span><small>${has?cap:"🔒 "+item.unlock.toLocaleString()}</small></button>`},
+    ship=(sk,tr)=>`<svg viewBox="${tr?"-60 -20 80 40":"-30 -15 60 30"}">${tr?.c?Array.from({length:7},(_,i)=>`<circle cx="${-16-i*6}" cy="${((i%2-.5)*tr.j*2).toFixed(1)}" r="${(tr.r*(1-i/10)).toFixed(1)}" fill="${tr.c(now+i*12)}" opacity="${(1-i/8).toFixed(2)}"/>`).join(""):""}`
+      +`<polygon points="${SHIP_PTS[sk.shape|0].join(" ")}" fill="${sk.hull&&!theme.mono?sk.hull:"none"}" fill-opacity=".6" stroke="${theme.mono||sk.accent||theme.css.fg}" stroke-width="2" stroke-linejoin="round"/></svg>`;
+  $("picker").innerHTML=strip("Theme",ORDER.map(k=>{const T=THEMES[k],c=T.css,r=i=>rockColor({id:i},T);
+      return tile("t:"+k,k===themeKey,T,`<b style='font-family:${c.display};color:${c.fg}'>${T.title}</b>`,k===themeKey?"✓":"",
+        `background:radial-gradient(circle at 12% 26%,${r(0)} 0 5px,transparent 6px),radial-gradient(circle at 90% 74%,${r(1)} 0 7px,transparent 8px),radial-gradient(circle at 86% 18%,${r(2)} 0 3px,transparent 4px),${c.bg};box-shadow:inset 0 -3px ${c.accent}`)}))
+    +strip("Ship",SKINS.map((sk,i)=>tile("s:"+i,i===skinI,sk,ship(sk),sk.title)))
+    +strip("Trail",TRAILS.map((tr,i)=>tile("r:"+i,i===trailI,tr,ship(skin(),tr),tr.title)));
+}
 
 // ---- main loop
 function size(){const d=Math.min(devicePixelRatio||1,2);W=cv.clientWidth;H=cv.clientHeight;cv.width=W*d;cv.height=H*d;g.setTransform(d,0,0,d,0,0);R3.resize()}
@@ -1411,7 +1448,7 @@ function pause(){
   if(!running||paused)return;
   paused=true;mouseAt=null;for(const k in keys)keys[k]=false;releaseTouch();jetOff();ac.suspend();
   $("modeBtn").textContent=mode3d?"Switch to 2D":"Switch to 3D";$("modeBtn").hidden=!mode3d&&!window.THREE; // no 3D library (offline before it was ever loaded): no 3D
-  $("pause").hidden=false;$("resume").focus();
+  renderPicker();$("pause").hidden=false;$("resume").focus();
 }
 function switchMode(){ // same game in the other view: score, lives, wave and power-ups carry over, and the current wave starts over
   const keep={score,lives,level,power,stats,god};
@@ -1445,6 +1482,7 @@ function frame(t){
 // ---- keyboard and mouse
 const MAP={ArrowLeft:"left",KeyA:"left",ArrowRight:"right",KeyD:"right",ArrowUp:"up",ArrowDown:"down",KeyW:"w",KeyS:"s",ShiftLeft:"boost",ShiftRight:"boost",KeyQ:"rollL",KeyE:"rollR",Space:"fire"};
 addEventListener("keydown",e=>{
+  if($("resetDlg").open)return; // the confirm box keeps its keys to itself
   if(e.code==="KeyT"){if(!e.repeat)cycleTheme();return}
   if(e.code==="KeyM"){if(!e.repeat)toggleMusic();return}
   if(e.code==="Escape"||e.code==="KeyP"){if(!e.repeat)paused?resume():pause();return}
@@ -1492,9 +1530,12 @@ function appMode(){ // phones: tapping Play or Resume goes full screen and holds
 const iOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1;
 if(touchUI&&iOS)$("note").textContent="No sound? Turn off silent mode on your phone.";
 
-$("pauseBtn").onclick=()=>pause();$("resume").onclick=()=>{appMode();resume()};$("quit").onclick=quitToMenu;$("pauseTheme").onclick=cycleTheme;$("modeBtn").onclick=switchMode;
+$("pauseBtn").onclick=()=>pause();$("resume").onclick=()=>{appMode();resume()};$("quit").onclick=quitToMenu;$("picker").onclick=e=>{const b=e.target.closest(".tile");if(!b||b.disabled)return;const [t,k]=b.dataset.k.split(":");t==="t"?setTheme(k):equip((t==="s"?SKINS:TRAILS)[k]);renderPicker()};
+$("resetBtn").onclick=()=>{$("resetDlg").returnValue="";$("resetDlg").showModal()};
+$("resetDlg").onclose=()=>{if($("resetDlg").returnValue!=="reset")return;try{for(const k of Object.keys(localStorage))if(k.startsWith("fartsteroids:")&&!/:(music|3d)$/.test(k))localStorage.removeItem(k)}catch{}location.reload()}; // settings (music, last mode) stay
+$("modeBtn").onclick=switchMode;
 $("play").onclick=()=>{appMode();start(false)};$("again").onclick=()=>{appMode();start(mode3d)};$("overMenu").onclick=quitToMenu;$("play3d").onclick=()=>{appMode();start(true)};$("themeBtn").onclick=cycleTheme;$("musicBtn").onclick=$("pauseMusic").onclick=toggleMusic;musLabel();
-for(const id of["skinBtn","pskinBtn"])$(id).onclick=()=>cycleCos(SKINS);for(const id of["trailBtn","ptrailBtn"])$(id).onclick=()=>cycleCos(TRAILS);
+$("skinBtn").onclick=()=>cycleCos(SKINS);$("trailBtn").onclick=()=>cycleCos(TRAILS);
 
 // ---- boot
 if(top===self&&location.protocol.startsWith("http")&&isSecureContext){ // on its own website (not inside claude.ai): installable as an app that also works offline
