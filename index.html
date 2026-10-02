@@ -1476,14 +1476,21 @@ window.claude?.use?.("sample").then(s=>{if(!s)return;sampleFn=s;$("talkBtn").hid
 function talkBtn(){const b=$("talkBtn");b.textContent=talkDead?"Boss trash talk: unavailable":"Boss trash talk: "+(talkOn?"on":"off");b.disabled=talkDead}
 function talkFetch(){
   const k=themeKey,T=THEMES[k];if(!sampleFn||!talkOn||talkDead||TALK[k])return;TALK[k]={};
-  sampleFn.json(`Write trash talk for "${T.boss}", the boss in the "${T.title}" theme of an arcade space shooter (${T.tagline}) The player pilots a small ship, shoots, and grabs power-ups (${Object.values(T.names).join(", ")}); combos are called "${T.combo}". `
+  talkSay(`Asking Claude for ${T.boss}'s lines...`);const wait=setTimeout(()=>{if(TALK[k]&&!TALK[k].all)talkSay("Still waiting for Claude. Is there a permission prompt?")},15000);
+  const ask=p=>sampleFn.json?sampleFn.json(p,{modelTier:"quick"}):sampleFn(p,{modelTier:"quick"}).then(r=>JSON.parse(r.text.slice(r.text.indexOf("{"),r.text.lastIndexOf("}")+1)));
+  ask(`Write trash talk for "${T.boss}", the boss in the "${T.title}" theme of an arcade space shooter (${T.tagline}) The player pilots a small ship, shoots, and grabs power-ups (${Object.values(T.names).join(", ")}); combos are called "${T.combo}". `
     +`Voice: cocky, funny, in character for the theme. PG, no swearing, no emojis, no quotation marks, each line at most 60 characters. ${k==="classic"?"Fart jokes are welcome.":"Never mention farts, gas or smells."}\n`
-    +`Reply with only a JSON object of string arrays: {"intro":[5 lines as the boss arrives],"hit":[8 lines when the player hits the boss],"low":[4 lines when the boss is almost destroyed],"gloat":[5 lines when the player loses a life],"defeat":[4 last words as the boss is destroyed],"taunt":[6 taunts mid-fight]}`,{modelTier:"quick"})
-    .then(r=>{const all={};for(const n of TALK_KINDS)all[n]=(Array.isArray(r?.[n])?r[n]:[]).map(x=>String(x).replace(/["\u201c\u201d]/g,"").trim().slice(0,90)).filter(Boolean);TALK[k]={all,q:{}};talkOK=true;if(boss&&running&&k===themeKey)talk("intro",1)}) // lines that land mid-fight start with the arrival line
-    .catch(e=>{delete TALK[k];if(["not_granted","sampling_disabled","not_declared","capability_disabled","capability_removed"].includes(e?.code)){talkDead=true;talkBtn()}}); // anything else: try again on the next Play
+    +`Reply with only a JSON object of string arrays: {"intro":[5 lines as the boss arrives],"hit":[8 lines when the player hits the boss],"low":[4 lines when the boss is almost destroyed],"gloat":[5 lines when the player loses a life],"defeat":[4 last words as the boss is destroyed],"taunt":[6 taunts mid-fight]}`)
+    .then(r=>{const all={};for(const n of TALK_KINDS)all[n]=(Array.isArray(r?.[n])?r[n]:[]).map(x=>String(x).replace(/["\u201c\u201d]/g,"").trim().slice(0,90)).filter(Boolean);TALK[k]={all,q:{}};talkOK=true;talkSay(`${T.boss} is ready to talk`);if(boss&&running&&k===themeKey)talk("intro",1)}) // lines that land mid-fight start with the arrival line
+    .catch(e=>{delete TALK[k];console.warn("boss trash talk:",e);const c=e?.code||String(e?.message||e);
+      if(["not_granted","sampling_disabled","not_declared","capability_disabled","capability_removed"].includes(c)){talkDead=true;talkBtn()} // anything else: try again on the next Play
+      talkSay(c==="sampling_disabled"?"Boss talk needs AI-powered artifacts turned on in your claude.ai settings":c==="not_granted"?"Boss talk is off: this page isn't allowed to use Claude"
+        :c==="rate_limited"?"Boss talk: Claude is busy or you're out of usage. Try later":`Boss talk failed (${c}). Press Play to try again`)})
+    .finally(()=>clearTimeout(wait));
 }
+const talkSay=m=>{toast(m);$("note").textContent=m}; // trash-talk status: a toast in game, and the note under the menu buttons
 function bossTest(){ // AI edition: straight into a boss with 500 HP (wave 5, after 2.5 s), so there's time to hear it talk
-  appMode();start(store.get("3d",false));rocks=[];floaters=[];level=4;testBoss=500;waveDelay=150;hud();
+  appMode();start(store.get("3d",false));rocks=[];floaters=floaters.filter(f=>f.kind==="toast");level=4;testBoss=500;waveDelay=150;hud();
 }
 function talk(kind,cut){ // the boss says a line from this theme's set, no repeats until they run out; it waits its turn unless it's an arrival, a kill or a death (cut)
   const t=TALK[themeKey];if(!talkOn||!t?.all||!t.all[kind].length||(!cut&&performance.now()-talkAt<4500))return;
