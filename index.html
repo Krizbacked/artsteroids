@@ -771,7 +771,6 @@ function gameOver(){ // final score, the saved best for this mode (2D and 3D apa
 
 // ---- flying
 const dead=v=>Math.abs(v)<.12?0:v; // joystick dead zone
-const edgeTurn=(x,y)=>{const r=Math.hypot(x,y),k=r<.4?0:Math.min(1,(r-.4)/.6)**2/r;return[x*k,y*k]}; // 3D mouse: no turning in the middle 40%, then harder toward the edge
 function steer(dt){
   if(!mode3d){
     if(stick.on&&Math.hypot(stick.x,stick.y)>.2){ // touch: the ship turns to face where the stick points, fast but easing in so it never overshoots
@@ -779,9 +778,10 @@ function steer(dt){
     }else{if(keys.left)ship.a-=.08*dt;if(keys.right)ship.a+=.08*dt}
     return;
   }
-  const f=ship.f,u=ship.u,r=cross3(f,u),[sx,sy]=mouseAt?edgeTurn(mouseAt[0]/W*2-1,mouseAt[1]/H*2-1):[dead(stick.x),dead(stick.y)];
+  const f=ship.f,u=ship.u,r=cross3(f,u),T=mouseAt&&R3.ready?R3.ray(...mouseAt):null,sx=T?0:dead(stick.x),sy=T?0:dead(stick.y); // T: where the cursor points (3D mouse)
   const yaw=((keys.right?1:0)-(keys.left?1:0))*.045*dt+sx*.05*dt,pitch=((keys.up?1:0)-(keys.down?1:0))*.04*dt-sy*.045*dt,roll=((keys.rollR?1:0)-(keys.rollL?1:0))*.05*dt;
-  ship.yawIn=Math.max(-1.5,Math.min(1.5,(keys.right?1:0)-(keys.left?1:0)+sx)); // how hard you're turning, so the model can lean
+  ship.yawIn=Math.max(-1.5,Math.min(1.5,(keys.right?1:0)-(keys.left?1:0)+(T?dot3(T,r)*4:sx))); // how hard you're turning, so the model can lean
+  if(T){const k=1-.2**dt;for(let i=0;i<3;i++)f[i]+=(T[i]-f[i])*k} // 3D mouse: the nose swings onto the cursor within a few frames
   if(yaw){const c=Math.cos(yaw),s=Math.sin(yaw);for(let i=0;i<3;i++)f[i]=f[i]*c+r[i]*s}
   if(pitch){const c=Math.cos(pitch),s=Math.sin(pitch);for(let i=0;i<3;i++){const a=f[i],b=u[i];f[i]=a*c+b*s;u[i]=b*c-a*s}}
   if(roll){const r2=cross3(f,u),c=Math.cos(roll),s=Math.sin(roll);for(let i=0;i<3;i++)u[i]=u[i]*c+r2[i]*s}
@@ -824,13 +824,12 @@ function update(dt){
     const tr=TRAILS[trailI];if(tr.c&&Math.random()<(touchUI?.45:.8)){const [jx,jy,jz]=rdir();parts.push({x:ship.x-F[0]*back,y:ship.y-F[1]*back,z:ship.z-F[2]*back,vx:jx*tr.j,vy:jy*tr.j,vz:jz*tr.j,r:tr.r*(mode3d?.8:1)*(.7+Math.random()*.6),life:tr.life,max:tr.life,kind:"trail",c:theme.mono||tr.c()})}
     const drag=(touchUI&&!mode3d&&!thr?.98:.99)**dt; // 2D on phones: coasting settles in about a second instead of drifting forever
     ship.vx*=drag;ship.vy*=drag;ship.vz*=drag;ship.x+=ship.vx*dt;ship.y+=ship.vy*dt;ship.z+=ship.vz*dt;wrap(ship);ship.safe-=dt;
-    const A=mode3d&&mouseAt?R3.ray(...mouseAt):F; // 3D mouse: aim where the cursor points, not where the nose points
-    aimT=mode3d?(mouseAt?R3.pick(...mouseAt):findAim(F)):touchUI?findAim(F,.966,450):null; // phones get 2D aim assist within 15 degrees
+    aimT=mode3d?findAim(F):touchUI?findAim(F,.966,450):null; // phones get 2D aim assist within 15 degrees
     cool-=dt;
     if((keys.fire||mouseFire||clickQ)&&cool<=0){
       clickQ=false;
       cool=power.beans?4:10;muzzleAt=now;
-      const sp=mode3d?12:7,dir=aimDir(A,sp),life=mode3d?80:55;
+      const sp=mode3d?12:7,dir=aimDir(F,sp),life=mode3d?80:55;
       for(const d of power.cabbage?spread(dir):[dir])shots.push({x:ship.x+F[0]*16,y:ship.y+F[1]*16,z:ship.z+F[2]*16,vx:d[0]*sp+ship.vx,vy:d[1]*sp+ship.vy,vz:d[2]*sp+ship.vz,life}),stats.shots++;
       sfx(power.beans?"beans":"shot");
     }
@@ -1196,7 +1195,7 @@ function draw2d(){
 // ---- 3D (Three.js): a chase camera behind your ship, flying through a cube of space that wraps around.
 // Everything is drawn relative to the ship, using the nearest wrapped copy, so the cube feels endless.
 const R3=(()=>{
-  let T,ren,scene,cam,fog,fadeScene,fadeCam,fadeMat,stars,dust,skyObj,shipM,shieldM,ufoBody,ufoDome,ufoMs=[],partsM,shotsM,hemi,M,Mx,Col,V,V2,Q,Fv,Uv,Lv,Sv,focal=500,camReady=false,orbit=0,bank=0;
+  let Cf,Cu,T,ren,scene,cam,fog,fadeScene,fadeCam,fadeMat,stars,dust,skyObj,shipM,shieldM,ufoBody,ufoDome,ufoMs=[],partsM,shotsM,hemi,M,Mx,Col,V,V2,Q,Fv,Uv,Lv,Sv,focal=500,camReady=false,orbit=0,bank=0;
   const glowCol=()=>theme.mono||(theme.marble?"#ffd27a":theme.hue?"#ff6ad5":theme.rock==="neon"?"#3ff6ff":theme.light?"#c0392b":"#ffb347");
   const nearFade=p=>Math.min(1,Math.max(0,(p.distanceTo(cam.position)-25)/85)); // things right in front of the lens fade out instead of filling the screen
   const seamFade=o=>{const d=delta(anchor,o);return Math.min(1,Math.max(0,(A3/2-Math.max(Math.abs(d[0]),Math.abs(d[1]),Math.abs(d[2])))/110))}; // fade out at the far side of the wrap, so nothing visibly jumps
@@ -1209,7 +1208,7 @@ const R3=(()=>{
     if(ren)return true;
     T=window.THREE;if(!T)return false;
     try{ren=new T.WebGLRenderer({canvas:cv3,antialias:!touchUI,preserveDrawingBuffer:true})}catch(e){ren=null;return false}
-    M=new T.Matrix4();Mx=new T.Matrix4();Col=new T.Color();V=new T.Vector3();V2=new T.Vector3();Q=new T.Quaternion();Fv=new T.Vector3();Uv=new T.Vector3();Lv=new T.Vector3();Sv=new T.Vector3();
+    M=new T.Matrix4();Mx=new T.Matrix4();Col=new T.Color();V=new T.Vector3();V2=new T.Vector3();Cf=new T.Vector3();Cu=new T.Vector3();Q=new T.Quaternion();Fv=new T.Vector3();Uv=new T.Vector3();Lv=new T.Vector3();Sv=new T.Vector3();
     scene=new T.Scene();fog=new T.Fog(0x000000,300,1000);scene.fog=fog;cam=new T.PerspectiveCamera(70,1,1,9000);
     hemi=new T.HemisphereLight(0xffffff,0x222222,.85);const sun=new T.DirectionalLight(0xffffff,.9);sun.position.set(-.5,.9,.6);scene.add(hemi,sun);
     for(const m of["smug","meh","scared","angry"])tex[m]=canvasTex(128,c=>drawFace(c,64,64,56,m,"#fff"));
@@ -1321,10 +1320,12 @@ const R3=(()=>{
   function placeCamera(){
     if(ship){
       gv(ship.f,Fv);gv(ship.u,Uv);
-      V.set(0,0,0).addScaledVector(Fv,-95).addScaledVector(Uv,30); // behind and a little above the ship
-      V2.set(0,0,0).addScaledVector(Fv,80);
+      if(!camReady||!mouseAt){Cf.copy(Fv);Cu.copy(Uv)}else{Cf.lerp(Fv,.05).normalize();Cu.lerp(Uv,.05).normalize()} // 3D mouse: the view trails the nose, so the nose can point at the cursor while the view turns after it
+      V.set(0,0,0).addScaledVector(Cf,-95).addScaledVector(Cu,mouseAt?13:30); // behind and a little above the ship (lower with the mouse, whose straight-ahead view would otherwise put the ship low on screen)
+      V2.set(0,0,0).addScaledVector(Cf,80);
       if(!camReady){cam.position.copy(V);camReady=true}else cam.position.lerp(V,.2);
-      Mx.lookAt(cam.position,V2,Uv);Q.setFromRotationMatrix(Mx);cam.quaternion.slerp(Q,.25);
+      if(mouseAt)V2.copy(cam.position).add(Cf); // 3D mouse: look straight down the view direction, so the middle of the screen is straight ahead
+      Mx.lookAt(cam.position,V2,Cu);Q.setFromRotationMatrix(Mx);cam.quaternion.slerp(Q,.25);
     }else{ // no ship (menu, or between lives): drift around the action
       orbit+=.004;V.set(Math.cos(orbit)*520,170,Math.sin(orbit)*520);cam.position.lerp(V,.04);
       Mx.lookAt(cam.position,V2.set(0,0,0),Uv.set(0,1,0));Q.setFromRotationMatrix(Mx);cam.quaternion.slerp(Q,.08);camReady=false;
@@ -1371,20 +1372,16 @@ const R3=(()=>{
     rel(o,V);V2.copy(V).applyMatrix4(cam.matrixWorldInverse);const depth=-V2.z;if(depth<2)return null;
     V.project(cam);return[(V.x+1)/2*W,(1-V.y)/2*H,focal/depth];
   }
-  function ray(x,y){ // game direction from the ship to the spot 500 units out along the camera ray through screen point (x,y)
-    V.set(x/W*2-1,1-y/H*2,.5).unproject(cam).sub(cam.position).setLength(500).add(cam.position);return norm3([V.x,-V.y,-V.z]);
+  function ray(x,y){ // game direction of the line of sight through screen point (x,y)
+    V.set(x/W*2-1,1-y/H*2,.5).unproject(cam).sub(cam.position).normalize();return[V.x,-V.y,-V.z];
   }
-  function pick(x,y){ // the rock, boss or saucer under screen point (x,y): within its drawn size plus 16px, nearest wins
-    let best=null,bd=1e9;
-    for(const t of[...rocks,boss,...ufos]){if(!t||dist(ship,t)>1000)continue;const p=project(t);if(!p)continue;const d=Math.hypot(p[0]-x,p[1]-y);if(d<Math.max(24,(t.r||20)*p[2])+16&&d<bd){bd=d;best=t}}
-    return best;
-  }
+  function dirPx(d){gv(d,V).multiplyScalar(1000).add(cam.position).project(cam);return[(V.x+1)/2*W,(1-V.y)/2*H]} // where on screen a direction points
   function hud(c){ // crosshair, lock-on brackets, arrows to the nearest rock and to power-ups, radar
     if(!ship||!running)return;
     const acc=theme.mono||theme.css.accent,F=ship.f,U=ship.u,Rt=cross3(F,U);
     c.lineWidth=1.5;c.strokeStyle=acc;c.globalAlpha=.85;
-    const cp=project({x:ship.x+F[0]*450,y:ship.y+F[1]*450,z:ship.z+F[2]*450});
-    if(cp){const [x,y]=cp;c.globalAlpha=mouseAt?.3:.85;c.beginPath();c.arc(x,y,9,0,6.28);for(const [a,b] of[[1,0],[-1,0],[0,1],[0,-1]]){c.moveTo(x+a*13,y+b*13);c.lineTo(x+a*20,y+b*20)}c.stroke();c.globalAlpha=.85}
+    const cp=mouseAt?dirPx(F):project({x:ship.x+F[0]*450,y:ship.y+F[1]*450,z:ship.z+F[2]*450}); // 3D mouse: the crosshair marks where the nose points, which is the cursor
+    if(cp){const [x,y]=cp;c.beginPath();c.arc(x,y,9,0,6.28);for(const [a,b] of[[1,0],[-1,0],[0,1],[0,-1]]){c.moveTo(x+a*13,y+b*13);c.lineTo(x+a*20,y+b*20)}c.stroke()}
     if(aimT){const p=project(aimT);if(p){const s=Math.max(14,(aimT.r||20)*p[2]*1.1),[x,y]=p,k=s*.35;c.strokeStyle=aimT===boss?"#ff5a4f":acc;c.lineWidth=2;c.beginPath();
       for(const [sx,sy] of[[-1,-1],[1,-1],[1,1],[-1,1]]){c.moveTo(x+sx*s,y+sy*(s-k));c.lineTo(x+sx*s,y+sy*s);c.lineTo(x+sx*(s-k),y+sy*s)}c.stroke()}}
     let near=null,nd=1e9;for(const t of[...rocks,boss]){if(!t)continue;const d=dist(ship,t);if(d<nd){nd=d;near=t}}
@@ -1414,7 +1411,7 @@ const R3=(()=>{
     c.fillStyle=theme.mono||theme.css.fg;c.beginPath();c.moveTo(cx,cy-5);c.lineTo(cx+4,cy+4);c.lineTo(cx-4,cy+4);c.closePath();c.fill();
     c.globalAlpha=1;
   }
-  return{init,resize,applyTheme,draw,project,ray,pick,hud,reset(){camReady=false},get ready(){return!!ren}};
+  return{init,resize,applyTheme,draw,project,ray,hud,reset(){camReady=false},get ready(){return!!ren}};
 })();
 function render(){
   if(mode3d&&R3.ready){R3.draw();g.clearRect(0,0,W,H);R3.hud(g);drawFloaters(g,R3.project);drawFlash(g)}
@@ -1505,8 +1502,8 @@ addEventListener("keydown",e=>{
 addEventListener("keyup",e=>{if(MAP[e.code])keys[MAP[e.code]]=false});
 addEventListener("blur",()=>{for(const k in keys)keys[k]=false;pause()}); // switching away pauses the game
 document.addEventListener("visibilitychange",()=>{if(document.hidden)pause()}); // phones: switching apps pauses too
-// 3D mouse, used with the keyboard: shots go where the cursor is (locking on to what's under it), left click fires, and the view turns only when the cursor
-// is out toward the edges (faster nearer the edge), until a steering key is pressed or the cursor leaves the window. The button is tracked apart from Space, so letting go of one never stops the other.
+// 3D mouse, used with the keyboard: the ship's nose points where the cursor is (the view follows the nose, so it keeps turning while the cursor is off-centre)
+// and left click fires, until a steering key is pressed or the cursor leaves the window. The button is tracked apart from Space, so letting go of one never stops the other.
 addEventListener("pointerdown",e=>{if(e.pointerType==="mouse"&&e.button===0&&mode3d&&running&&!paused&&!e.target.closest?.("button"))mouseFire=clickQ=true});
 addEventListener("pointerup",e=>{if(e.pointerType==="mouse"&&e.button===0)mouseFire=false});
 addEventListener("pointermove",e=>{if(e.pointerType!=="mouse")return;if(!(e.buttons&1))mouseFire=false; // a release the page never heard about
